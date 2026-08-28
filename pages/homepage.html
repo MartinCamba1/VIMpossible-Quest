@@ -17,7 +17,7 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#commands">Commands</a></li>
+                <li><a href="#commands">Available Commands</a></li>
                 <li><a href="#learn">Start Learning</a></li>
             </ul>
         </nav>
@@ -36,33 +36,73 @@
             <h2 class="section-title section-text">About</h2>
 
             <div class="about-content">
-        <h2 class="section-text">What is Vim Trainer?</h2>
+                <h2 class="section-text">What is Vim Trainer?</h2>
 
-        <p class="section-text">
-            Vim Trainer is a browser-based rogue-lite game designed
-            to help you build Vim muscle memory through
-            repetition and trying to beat as many timed challenges as you can.
-        </p>
-    </div>
+                <p class="section-text">
+                    Vim Trainer is a browser-based rogue-lite game designed
+                    to help you build Vim muscle memory through
+                    repetition and trying to beat as many timed challenges as you can.
+                </p>
+            </div>
 
-    <div class="about-features">
-        <div class="feature">
-            <h3 class="feature-title">Endless timed challenge</h3>
-            <p>Short challenges focused on specific Vim commands.</p>
-        </div>
+            <div class="about-features">
+                <div class="feature">
+                    <h3 class="feature-title">Endless timed challenge</h3>
+                    <p>Short challenges focused on specific Vim commands.</p>
+                </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Speed</h3>
-            <p>Improve how quickly you can perform common commands.</p>
-        </div>
+                <div class="feature">
+                    <h3 class="feature-title">Speed</h3>
+                    <p>Improve how quickly you can perform common commands.</p>
+                </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Muscle Memory</h3>
-            <p>Build familiarity through repeated practice.</p>
-        </div>
-    </div>
+                <div class="feature">
+                    <h3 class="feature-title">Muscle Memory</h3>
+                    <p>Build familiarity through repeated practice.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <h2 class="section-title section-text">How It Works</h2>
+
+            <div class="video-container">
+                <div id="how-it-works-video">
+                    <video muted loop autoplay playsinline>
+                        <source src="../data/videos/sample-5mb.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <ol class="list">
+                    <li>Start each run with the most basic commands.</li>
+                    <li>Complete challenges under a time limit.</li>
+                    <li>At the end of each round, choose one of three Vim commands to unlock.</li>
+                    <li>See how far you can get.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="commands">
+            <h2 class="section-title">Available Commands</h2>
+
+            <div id="command-explanation">
+                <h3 id="command-name" class="command-description-text"></h3>
+                <p id="command-category" class="command-description-text"></p>
+                <p id="command-description" class="command-description-text"></p>
+            </div>
+            <div id="commands-grid">
+                <div class="command">h</div>
+                <div class="command">j</div>
+                <div class="command">k</div>
+                <div class="command">l</div>
+                <div class="command">w</div>
+                <div class="command">dw</div>
+                <div class="command">dd</div>
+                <div class="command">x</div>
+                <div class="command">A</div>
+                <div class="command">i</div>
+            </div>
         </section>
     </main>
-
+    <script type="module" src="../js/homepage.js"></script>
   </body>
 </html>

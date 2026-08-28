@@ -6,13 +6,13 @@ body {
     background:
         radial-gradient(
             circle at 50% 0%,
-            rgba(0, 90, 45, 0.25),
+            rgba(0, 90, 45, 0.654),
             transparent 45%
         ),
         linear-gradient(
             135deg,
             #020806 0%,
-            #04140d 50%,
+            #051a11 50%,
             #010403 100%
         );
 
@@ -26,6 +26,21 @@ hr {
     border-color: 3px solid black;
 
 }
+
+.section-title {
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    margin-bottom: 0.5rem;
+    margin-bottom: 4rem;
+    
+}
+
+.section-text {
+    max-width: 650px;
+    margin-bottom: 4rem;
+    line-height: 1.7;
+}
+
+
 
 
 /*      Header section      */
@@ -88,7 +103,7 @@ hr {
     text-align: center;
     font-size: 5rem;
     font-weight: 800;
-    padding-top: clamp(60px, 30vh, 300px);
+    padding-top: clamp(60px, 25vh, 300px);
     margin-bottom: 15px;
 }
 
@@ -99,23 +114,13 @@ hr {
     padding-top: 0;
 }
 
-.section-title {
-    font-size: clamp(2.5rem, 5vw, 5rem);
-    margin-bottom: 0.5rem;
-    
-}
 
-.section-text {
-    max-width: 650px;
-    margin-bottom: 4rem;
-    line-height: 1.7;
-}
 
 /* ---------------------------------------- */
 
 /*      About Section       */
 
-#about {
+section {
     min-height: 100vh;
     padding: 10vh 8vw;
 }
@@ -161,3 +166,108 @@ hr {
     font-weight: 800;
     font-size: 1.3rem;
 }
+
+/* ---------------------------------------- */
+
+/*      How It Works Section        */
+
+.video-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 5vw;
+
+    width: 100%;
+    max-height: 80vh;
+}
+
+.video-container video {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#how-it-works-video {
+    background-color: white;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 5vh;
+
+    font-size: clamp(0.9rem, 1.5vw, 1.4rem);
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.list li {
+    line-height: 1.4;
+}
+
+.list li::marker {
+    color: #3EB489;
+    font-weight: bold;
+}
+
+/* ---------------------------------------- */
+
+/*      Commands Section        */
+
+#command-explanation {
+    margin: 0 auto;
+    width: 80%;
+    background: rgba(4, 16, 11, 0.85);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+    min-height: 30vh;
+    margin-bottom: 5vh;
+}
+
+#commands-grid {
+    width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+}
+
+.command {
+    aspect-ratio: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: monospace;
+    font-size: clamp(1rem, 2vw, 1.8rem);
+    font-weight: 700;
+
+    background: rgba(10, 25, 18, 0.55);
+    backdrop-filter: blur(16px);
+
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.command:hover {
+    transform: translateY(-4px);
+    background: rgba(20, 50, 32, 0.75);
+}
+
+.command-description-text {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+#command-name {
+    padding-top: 5vh;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+
+/* ---------------------------------------- */
