@@ -11,7 +11,7 @@ const commands = document.querySelectorAll(".command");
 
 function updateExplanation(name) {
     const command = commandData[name];
-    commandName.textContent = command["name"];
+    commandName.textContent = name + ": " + command["name"];
     commandCategory.textContent = "Category: " + command["category"];
     commandDescription.textContent = "Description: " + command["description"];
 }

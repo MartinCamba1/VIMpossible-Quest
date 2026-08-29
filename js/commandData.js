@@ -25,7 +25,7 @@ export const commandData = {
 
     w: {
         name: "Next Word",
-        description: "Move the cursor to the beginning of the next word.",
+        description: "Move the cursor to the next word.",
         category: "Motion"
     },
 

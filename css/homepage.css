@@ -12,14 +12,37 @@ body {
         linear-gradient(
             135deg,
             #020806 0%,
-            #051a11 50%,
-            #010403 100%
+            #082217 50%,
+            #041a0d 100%
         );
 
     color: #e8f5e9;
     min-height: 100vh;
 
     font-family: "Inter", sans-serif;
+    overscroll-behavior: none
+}
+
+html {
+    scrollbar-color: rgba(100, 160, 120, 0.7) transparent;
+    scrollbar-width: thin;
+}
+
+html::-webkit-scrollbar {
+    width: 8px;
+}
+
+html::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: rgba(100, 160, 120, 0.7);
+    border-radius: 999px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background: rgba(130, 190, 150, 0.9);
 }
 
 hr {
@@ -84,11 +107,18 @@ hr {
 
     font-size: 0.9rem;
     transition: background-color 0.2s, color 0.2s;
+
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .navbar a:hover {
     background-color: rgba(40, 100, 60, 0.35);
     color: white;
+}
+
+.navbar li {
+    text-align: center;
 }
 
 /* ---------------------------------------- */
@@ -216,11 +246,11 @@ section {
 #command-explanation {
     margin: 0 auto;
     width: 80%;
-    background: rgba(4, 16, 11, 0.85);
     background: rgba(255, 255, 255, 0.08);
     border-radius: 20px;
     backdrop-filter: blur(12px);
     min-height: 30vh;
+    padding-bottom: 3vh;
     margin-bottom: 5vh;
 }
 
@@ -260,14 +290,49 @@ section {
 
 .command-description-text {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.5em;
 }
 
 #command-name {
     padding-top: 5vh;
-    font-size: 3rem;
+    font-size: 2em;
     font-weight: bold;
 }
 
+
+/* ---------------------------------------- */
+
+/*      Start Learning Section      */
+
+#start-learning {
+    min-height: 70vh;
+}
+
+#start-learning-container {
+    display: flex;
+    justify-content: center;
+}
+
+
+#start-learning-btn {
+    padding: 18px 36px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 5vh;
+
+    background: #e8f5e9;
+    color: #06100a;
+
+    font-size: 1.5rem;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#start-learning-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+}
 
 /* ---------------------------------------- */
