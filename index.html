@@ -6,14 +6,33 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Vim Trainer</title>
     <link rel="stylesheet" href="./css/trainer.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="vim-terminal">
-      <div id="start-round-btn" class="button">
-        <h1>Start the game!</h1>
-      </div>
+    <div class="trainer-layout">
       
-      <p id="terminal-text"></p>
+      <div id="left-sidebar">
+        <div class="sidebar-item">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="svg-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+          <span class="sidebar-text">Home</span>
+        </div>
+
+      </div>
+      <div id="vim-terminal">
+        <div id="start-round-btn" class="button">
+          <h1>Start the game!</h1>
+        </div>
+        
+        <p id="terminal-text"></p>
+      </div>
+
+      <div id="unlocked-commands">
+
+      </div>
     </div>
     <script type="module" src="./js/index.js"></script>
   </body>
