@@ -154,7 +154,7 @@ body {
 
 
 #vim-terminal {
-    width: 60vw;
+    width: 100%;
     height: 70vh;
 
     background-color: black;
