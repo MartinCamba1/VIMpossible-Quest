@@ -1,3 +1,5 @@
+/*      General Styling     */
+
 * {
     box-sizing: border-box;
 }
@@ -23,17 +25,34 @@ body {
     width: 100%;
 }
 
+.sidebar {
+    padding-top: 10vh;
+}
+
+.centered {
+    text-align: center;
+}
+
+/* ---------------------------------------- */
+
+
+/*      Left Sidebar        */
+
 #left-sidebar {
     width: 15vw;
+    margin-right: 2vw;
     flex-shrink: 0;
 
     border-right: 1px solid white;
 
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
 
-    padding-top: 10vh;
+#left-sidebar-content {
+    width: 100%;
 }
 
 .svg-icon {
@@ -50,8 +69,16 @@ body {
     font-family: "Inter", sans-serif;
 }
 
-.sidebar-item {
+.sidebar-item-link {
+    display: block;
     width: 90%;
+    margin: 0 auto;
+    text-decoration: none;
+    color: inherit;
+}
+
+.sidebar-item {
+    width: 100%;
     height: 5vh;
 
     display: flex;
@@ -60,7 +87,7 @@ body {
     gap: 10px;
 
     border: 2px solid white;
-    border-radius: 15px;
+    border-radius: 10px;
 
     margin-bottom: 10px;
     padding-top: 5px;
@@ -68,15 +95,62 @@ body {
 }
 
 
-#unlocked-commands {
+/* ---------------------------------------- */
+
+/*      Right Sidebar       */
+
+
+#right-sidebar {
     width: 15vw;
     flex-shrink: 0;
 
     border-left: 1px solid white;
 
-    padding-left: 2vw;
     margin-left: 2vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
+
+    box-sizing: border-box;
 }
+
+#right-sidebar-content {
+    width: 100%;
+}
+
+.sidebar-name {
+    width: 100%;
+    text-align: center;
+    margin-top: 2.5vh;
+    margin-bottom: 2.5vh;
+}
+
+#unlocked-commands {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.command {
+    display: flex;
+    aspect-ratio: 1 / 1;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    border: 1px solid white;
+    border-radius: 15px;
+    
+    background-color: white;
+    color: black;
+    font-size: 1.5rem;
+    font-family: monospace;
+}
+
+
+/* ---------------------------------------- */
+
+
+/*      Terminal        */
 
 
 #vim-terminal {
@@ -92,10 +166,151 @@ body {
     justify-content: flex-start;
     align-items: center;
 
-    margin: auto;
+    margin: 5vh auto;
 
     flex-shrink: 0;
 
+}
+
+#main-layout {
+    display: flex;
+    flex: 1;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 0;
+}
+
+/*      Stats Section       */
+
+#round-stats {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: clamp(40px, 5vh, 70px);
+    padding: 5vh;
+    margin-bottom: 0;
+    margin-top: 3vh;
+    
+    background: rgba(15, 30, 21, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+
+    color: white;;
+}
+
+.stat {
+    font-size: clamp(1.2rem, 1.6vh, 2rem);
+    font-family: monospace;
+}
+
+#time-left {
+    color: red;
+    font-size: clamp(1.2rem, 3vh, 2rem);
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+
+/* ---------------------------------------- */
+
+
+/*      Dialog Window       */
+
+
+#terminal-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    margin: 0;
+    padding: 3rem;
+
+    width: 45%;
+    aspect-ratio: 1.2 / 1;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(220, 235, 225, 0.92),
+            rgba(175, 195, 180, 0.88)
+        );
+
+    color: #07120c;
+
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 24px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.55),
+        0 0 40px rgba(30, 100, 60, 0.15);
+
+    overflow: hidden;
+}
+
+#terminal-dialog:open {
+    display: flex;
+    flex-direction: column;
+}
+
+#terminal-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+}
+
+.dialog-text {
+    color: black;
+    font-family: monospace;
+}
+
+#dialog-title {
+    margin-top: 4vh;
+    margin-bottom: 0.5rem;
+
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+#dialog-title::after {
+    content: "";
+    display: block;
+
+    width: 50px;
+    height: 3px;
+
+    margin: 12px auto 0;
+
+    background: #166534;
+    border-radius: 10px;
+}
+
+.dialog-message {
+    max-width: 450px;
+
+    margin: 2rem auto 0;
+
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    line-height: 1.6;
+
+    color: #26382d;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+
+    margin-top: 5vh;
 }
 
 .button {
@@ -103,12 +318,42 @@ body {
     padding: 10px;
 }
 
-#start-round-btn {
-    background-color: darkgreen;
-    align-self: center;
-    margin-top: auto;
-    margin-bottom: auto;
+#start-round-btn, #start-tutorial-btn {
+    margin: auto auto 1rem;
+
+    padding: 0.9rem 2rem;
+
+    background: #0b3d23;
+    color: white;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+
+    font-family: "Inter", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
+
+#start-round-btn:hover, #start-tutorial-btn:hover {
+    background: #125c34;
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+#start-round-btn:active, #start-tutorial-btn:active {
+    transform: translateY(0);
+}
+
+/* ---------------------------------------- */
+
 
 .cursor {
     position: absolute;
@@ -133,3 +378,5 @@ body {
     overflow: hidden;
 }
 
+
+/* ---------------------------------------- */

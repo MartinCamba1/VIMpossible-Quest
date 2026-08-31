@@ -20,13 +20,20 @@ import {
 } from "./commands.js";
 
 let inputBuffer = [];
+let unlockedCommands = ["h", "j", "k", "l"];
 
 
-const startGameBtn = document.getElementById("start-round-btn");
+
 
 const terminalWindow = document.getElementById("vim-terminal");
 
 const terminalText = document.getElementById("terminal-text");
+
+const dialogEl = document.getElementById("terminal-dialog");
+const dialogTitle = document.getElementById("dialog-title");
+const dialogMessage = document.getElementById("dialog-message");
+const dialogStats = document.getElementById("dialog-stats");
+const startGameBtn = document.getElementById("start-round-btn");
 
 
 
@@ -159,7 +166,7 @@ function handleKeyPress(event) {
 
 
 function startRound() {
-    startGameBtn.style.display = "none";
+    dialogEl.close();
 
     state.cursor.col = 0;
     state.cursor.row = 0;

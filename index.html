@@ -4,36 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Vim Trainer</title>
-    <link rel="stylesheet" href="./css/trainer.css">
+    <title>VIMpossible Quest</title>
+    <link rel="stylesheet" href="./css/homepage.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div class="trainer-layout">
-      
-      <div id="left-sidebar">
-        <div class="sidebar-item">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="svg-icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-          </svg>
-          <span class="sidebar-text">Home</span>
-        </div>
+    <header>
+        <nav>
+            <ul class="navbar">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#commands">Available Commands</a></li>
+                <li><a href="#start-learning">Start Learning</a></li>
+            </ul>
+        </nav>
+    </header>
 
-      </div>
-      <div id="vim-terminal">
-        <div id="start-round-btn" class="button">
-          <h1>Start the game!</h1>
-        </div>
-        
-        <p id="terminal-text"></p>
-      </div>
+    <main>
+        <section id="home">
+            <h1 class="hero-title">VIMpossible Quest</h1>
+            <p class="hero-paragraph">Learn to use Vim. Build <i>real</i> muscle memory!</p>
+        </section>
 
-      <div id="unlocked-commands">
 
-      </div>
-    </div>
-    <script type="module" src="./js/index.js"></script>
+
+
+        <section id="about">
+            <h2 class="section-title section-text">About</h2>
+
+            <div class="about-content">
+                <h2 class="section-text">What is VIMpossible Quest?</h2>
+
+                <p class="section-text">
+                    VIMpossible Quest is a browser-based rogue-lite game designed
+                    to help you build Vim muscle memory through
+                    repetition and trying to beat as many timed challenges as you can.
+                </p>
+            </div>
+
+            <div class="about-features">
+                <div class="feature">
+                    <h3 class="feature-title">Endless timed challenge</h3>
+                    <p>Short challenges focused on specific Vim commands.</p>
+                </div>
+
+                <div class="feature">
+                    <h3 class="feature-title">Speed</h3>
+                    <p>Improve how quickly you can perform common commands.</p>
+                </div>
+
+                <div class="feature">
+                    <h3 class="feature-title">Muscle Memory</h3>
+                    <p>Build familiarity through repeated practice.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <h2 class="section-title section-text">How It Works</h2>
+
+            <div class="video-container">
+                <div id="how-it-works-video">
+                    <video muted loop autoplay playsinline>
+                        <source src="./data/videos/sample-5mb.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <ol class="list">
+                    <li>Start each run with the most basic commands.</li>
+                    <li>Complete challenges under a time limit.</li>
+                    <li>At the end of each round, choose one of three Vim commands to unlock.</li>
+                    <li>See how far you can get.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="commands">
+            <h2 class="section-title">Available Commands</h2>
+
+            <div id="command-explanation">
+                <h3 id="command-name" class="command-description-text">Hower over a command below to see what it does</h3>
+                <p id="command-category" class="command-description-text"></p>
+                <p id="command-description" class="command-description-text"></p>
+            </div>
+            <div id="commands-grid">
+                <div class="command">h</div>
+                <div class="command">j</div>
+                <div class="command">k</div>
+                <div class="command">l</div>
+                <div class="command">w</div>
+                <div class="command">dw</div>
+                <div class="command">dd</div>
+                <div class="command">x</div>
+                <div class="command">A</div>
+                <div class="command">i</div>
+            </div>
+        </section>
+
+        <section id="start-learning">
+            <h2 class="section-title" style="text-align: center">Ready to start up the terminal ?</h2>
+            <p style="text-align: center; font-size: 1.3rem">Practice completely free, forever!</p>
+            <div id="start-learning-container">
+                <button id="start-learning-btn" onclick="window.location.href='./pages/trainer.html'">Start Practicing!</button>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="./js/homepage.js"></script>
   </body>
 </html>
