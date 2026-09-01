@@ -57,5 +57,11 @@ export const commandData = {
         name: "Insert Text",
         description: "Enters insert mode.",
         category: "Editing"
+    },
+
+    b: {
+        name: "Previous Word",
+        description: "Jump backwards to the start of a word",
+        category: "Motion"
     }
 };

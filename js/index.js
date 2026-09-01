@@ -16,7 +16,8 @@ import {
     deleteLine,
     appendAtEndLine,
     wCommand,
-    dwCommand
+    dwCommand,
+    bCommand
 } from "./commands.js";
 
 let inputBuffer = [];
@@ -50,13 +51,14 @@ const commands = new Map([
     ["A", appendAtEndLine],
     ["w", wCommand],
     ["dw", dwCommand],
+    ["b", bCommand]
 ]);
 
 
 
 const texts = [
     "The quick brown fox jumps over the lazy dog.",
-    "JavaScript allows you to manipulate elements on a web page.",
+    "JavaScript allows you, to manipulate elements on a web page.",
     "Learning Vim requires repetition and practice.",
     "Functions allow you to organize reusable pieces of codeeeeeeeeeeeeeeeeeeeeee."
 ];

@@ -2,6 +2,14 @@
 import { state } from "./globals.js";
 import { updateCursor } from "./cursor.js";
 
+const punctuations = [
+  ".", ",", ";", ":", "!", "?", "'", "\"",
+  "(", ")", "[", "]", "{", "}",
+  "-", "+", "=", "*", "/", "\\", "|",
+  "<", ">", "@", "#", "$", "%", "^", "&",
+  "~", "`"
+]
+
 
 
 export function deleteChar() {
@@ -56,6 +64,13 @@ export function wCommand() {
     updateCursor();
 }
 
+export function bCommand() {
+    const pos = findPrevWord(state.cursor.row, state.cursor.col);
+    state.cursor.row = pos.row;
+    state.cursor.col = pos.col;
+    updateCursor();
+}
+
 /* Need to add not deleting whitespace such as . after the word */
 export function dwCommand() {
     const pos = findNextWord(state.cursor.row, state.cursor.col);
@@ -85,22 +100,52 @@ export function appendAtEndLine() {
 function findNextWord(inputRow, inputCol) {
     let row = inputRow;
     let col = inputCol;
+    let foundSpace = false;
 
     for (let i = col + 1; i < state.characters[row].length; i++) {
         const char = state.characters[row][i];
 
-        if (char == ".") return {row, col: i};
+        if (punctuations.includes(char)) return {row, col: i};
         else if (char == " ") {
+            foundSpace = true;
             if (row < state.characters.length - 1 && 
                 i === state.characters[row].length - 1) {
                     return {row: row + 1, col: 0};
             }
-            return {row, col: i + 1};
-            
+        }
+        else {
+            if (foundSpace) return {row, col: i};
         }
     }
     if (row < state.characters.length - 1) {
         return {row: row + 1, col: 0};
     }
     return {row, col};
+}
+
+function findPrevWord(inputRow, inputCol) {
+    let row = inputRow;
+    let col = inputCol;
+    let resCol = null;
+
+    if (row > 0 && col == 0) return findPrevWord(row - 1, state.characters[row - 1].length);
+
+    for (let i = col - 1; i >= 0; i--) {
+        const char = state.characters[row][i];
+
+        if (punctuations.includes(char)) return {row, col: i};
+        else if (char == " ") {
+            if (resCol !== null) return {row, col: resCol};
+        }
+        else {
+            resCol = i;
+        }
+    }
+    if (resCol !== null) {
+        return {row, col: resCol};
+    }
+    if (row > 0) {
+        return findPrevWord(row - 1, state.characters[row - 1].length);
+    }
+    return {row, col: 0};
 }
