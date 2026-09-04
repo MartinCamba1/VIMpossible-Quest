@@ -10,6 +10,7 @@ const punctuations = [
   "~", "`"
 ]
 
+const modeEl = document.getElementById("mode-text");
 
 
 export function deleteChar() {
@@ -92,7 +93,8 @@ export function dwCommand() {
 }
 
 export function appendAtEndLine() {
-    mode = "insert";
+    state.mode = "insert";
+    modeEl.textContent = "INSERT";
     state.cursor.col = state.spans[state.cursor.row].length;
     updateCursor();
 }

@@ -37,7 +37,7 @@ const dialogStats = document.getElementById("dialog-stats");
 const startGameBtn = document.getElementById("start-round-btn");
 
 
-
+const modeEl = document.getElementById("mode-text");
 
 
 const commands = new Map([
@@ -124,28 +124,79 @@ function parseInput(event) {
 
 function insertCommand() {
     state.mode = "insert";
+    modeEl.textContent = "INSERT";
 }
 
 function exitInsertMode() {
     if (state.cursor.col > 0) state.cursor.col--;
     updateCursor();
     state.mode = "normal";
+    modeEl.textContent = "NORMAL";
 }
 
 function handleInsertMode(event) {
     const span = document.createElement("span");
     span.textContent = event.key;
 
-    state.spans[state.cursor.row].splice(state.cursor.col, 0, span);
-    state.characters[state.cursor.row].splice(state.cursor.col, 0, event.key);
+    const row = state.cursor.row;
+    const col = state.cursor.col;
 
-    if (state.spans[state.cursor.row][state.cursor.col + 1]) {
-        state.spans[state.cursor.row][state.cursor.col + 1].before(span);
-    } else {
-        state.brElArr[state.cursor.row].before(span);
+    if (event.key === "Enter") {
+        const text = state.characters[row];
+        const lineStart = text.slice(0, col);
+        const lineEnd = text.slice(col);
+
+        state.characters[row] = lineStart;
+        state.characters.splice(row + 1, 0, lineEnd);
+
+        const newLineSpans = [];
+        
+        for (let i = 0; i < lineEnd.length; i++) {
+            const span = state.spans[row].pop();
+            span.remove();
+        }
+        
+        console.log(state.spans)
+
+        for (const char of lineEnd) {
+            const newSpan = document.createElement("span");
+            newSpan.textContent = char;
+            newLineSpans.push(newSpan);
+        }
+
+        state.spans.splice(row + 1, 0, newLineSpans);
+
+        let brEl = document.createElement("br");
+        state.brElArr.splice(row, 0, brEl);
+
+        const currentBr = state.brElArr[row + 1];
+
+        if (currentBr) {
+            currentBr.before(brEl);
+        } else {
+            state.brElArr[row].before(brEl);
+        }
+
+        for (const span of newLineSpans) {
+            brEl.after(span);
+            brEl = span;
+        }
+
+        state.cursor.row++;
+        state.cursor.col = 0;
     }
+    else {
+        state.spans[state.cursor.row].splice(state.cursor.col, 0, span);
+        state.characters[state.cursor.row].splice(state.cursor.col, 0, event.key);
 
-    state.cursor.col++;
+        if (state.spans[state.cursor.row][state.cursor.col + 1]) {
+            state.spans[state.cursor.row][state.cursor.col + 1].before(span);
+        } else {
+            state.brElArr[state.cursor.row].before(span);
+        }
+
+        state.cursor.col++;
+    }
     updateCursor();
 
 }
@@ -156,7 +207,6 @@ function handleKeyPress(event) {
         if (func !== null) func();
     }
     else {
-        console.log("test");
         if (event.key === "Escape") {
             exitInsertMode();
         }

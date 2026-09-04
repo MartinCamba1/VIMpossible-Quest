@@ -37,8 +37,7 @@
           <span id="points-num" class="stat">Points: 1000</span>
         </div>
 
-        <div id="vim-terminal">
-          <dialog id="terminal-dialog" open>
+        <dialog id="terminal-dialog" open>
             <h2 id="dialog-title" class="centered dialog-text">Ready to begin ?</h2>
 
             <p class="dialog-message centered dialog-text">Your task is to complete all of the challenges before the time runs out.</p>
@@ -55,8 +54,13 @@
                 <span id="start-round-text">Start the round!</span>
               </button>
           </dialog>
-          
-          <p id="terminal-text"></p>
+        <div id="vim-terminal-container">
+          <div id="mode-container">
+            <p id="mode-text">NORMAL</p>
+          </div>
+          <div id="vim-terminal">
+            <p id="terminal-text"></p>
+          </div>
         </div>
       </main>
 

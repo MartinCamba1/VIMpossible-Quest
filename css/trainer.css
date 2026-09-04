@@ -152,6 +152,24 @@ body {
 
 /*      Terminal        */
 
+#vim-terminal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#mode-container {
+    width: 10%;
+    text-align: center;
+    background-color: #545353;
+    color: white;
+
+    font-family: monospace;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    margin-top: 4vh;
+    border-radius: 10px 10px 0 0;
+}
 
 #vim-terminal {
     width: 100%;
@@ -167,6 +185,7 @@ body {
     align-items: center;
 
     margin: 5vh auto;
+    margin-top: 0;
 
     flex-shrink: 0;
 
