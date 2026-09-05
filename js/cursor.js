@@ -69,9 +69,9 @@ export function updateCursor() {
     });
 }
 
-export function isCursorAtEdge() {
-    const cursorRect = cursorElement.getBoundingClientRect();
+export function isElemAtEdge(el) {
+    const elRect = el.getBoundingClientRect();
     const terminalRect = terminal.getBoundingClientRect();
 
-    return cursorRect.right >= terminalRect.right;
+    return elRect.right >= terminalRect.right - terminalRect.width * 0.02;
 }

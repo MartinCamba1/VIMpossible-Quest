@@ -203,6 +203,27 @@ body {
     min-width: 0;
 }
 
+#terminal-text {
+    text-align: left;
+    color: white;
+    font-family: monospace;
+    font-size: clamp(14px, 1.2vw, 20px);
+
+    align-self: flex-start;
+    max-width: 100%;
+
+    margin-top: 10px;
+    margin-left: 10px;
+
+    line-height: 1.8;
+
+    position: relative;
+
+    white-space: nowrap;
+    flex-shrink: 0;
+
+}
+
 /*      Stats Section       */
 
 #round-stats {
@@ -383,24 +404,7 @@ body {
     pointer-events: none;
 }
 
-#terminal-text {
-    text-align: left;
-    color: white;
-    font-family: monospace;
-    font-size: clamp(14px, 1.2vw, 20px);
 
-    align-self: flex-start;
-
-    margin-top: 10px;
-    margin-left: 10px;
-
-    line-height: 1.8;
-
-    position: relative;
-
-    white-space: pre;
-    flex-shrink: 0;
-}
 
 
 /* ---------------------------------------- */

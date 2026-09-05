@@ -9,7 +9,7 @@ import {
     moveUp,
     moveRight,
     updateCursor,
-    isCursorAtEdge
+    isElemAtEdge
 } from "./cursor.js";
 
 import {
@@ -112,7 +112,7 @@ function spanify(text) {
         state.brElArr.push(brEl);
         terminalText.appendChild(brEl);
     }
-    console.log(state.characters, res, state.brElArr);
+
     return res;
     
 }
@@ -137,6 +137,41 @@ function parseInput(event) {
     }
     inputBuffer.length = 0;
     return null;
+}
+
+function handleDeletionLineBreak() {
+    let idx = 0;
+    const row = state.cursor.row;
+    const newCol = state.spans[row - 1].length;
+
+    let prevRowLen = state.characters[row - 1].length;
+    let currRowLen = state.characters[row].length;
+    console.log(currRowLen);
+    if (currRowLen === 0) {
+        state.brElArr[row].remove();
+        state.brElArr.splice(row, 1);
+        return newCol;
+    }
+
+    let prevLastEl = state.spans[row - 1][prevRowLen - 1];
+    while (!isElemAtEdge(prevLastEl) && idx < currRowLen) {
+        prevLastEl = state.spans[row - 1][prevRowLen + idx - 1];
+        let currEl = state.spans[row][idx];
+        currEl.remove();
+
+        if (prevRowLen === 0) {
+            state.brElArr[row - 1].after(state.spans[row][idx]);
+        }
+        else {
+            state.spans[row - 1][state.spans[row - 1].length - 1].after(currEl);
+        }
+        state.spans[row - 1].push(currEl);
+        idx++;
+    }
+    state.characters[row - 1].splice(prevRowLen, 0, ...state.characters[row].splice(0, idx));
+    state.spans[row].splice(0, idx);
+
+    return newCol;
 }
 
 
@@ -174,7 +209,6 @@ function handleInsertMode(event) {
             span.remove();
         }
         
-        console.log(state.spans)
 
         for (const char of lineEnd) {
             const newSpan = document.createElement("span");
@@ -203,11 +237,20 @@ function handleInsertMode(event) {
         state.cursor.row++;
         state.cursor.col = 0;
     }
-    else if ((event.key === "Backspace" || event.key === "Delete") && (state.characters[row].length > 0)) {
-        state.characters[row].splice(col - 1, 1);
-        state.spans[row][col - 1].remove();
-        state.spans[row].splice(col - 1, 1);
-        state.cursor.col--;
+    else if ((event.key === "Backspace" || event.key === "Delete") && (state.characters[row].length >= 0) && ((col != 0) || (row != 0) )) {
+        if (col === 0) {
+            const newCol = handleDeletionLineBreak();
+
+            state.cursor.col = newCol;
+            state.cursor.row = Math.max(0, row - 1);
+            
+        }
+        else {
+            state.characters[row].splice(col - 1, 1);
+            state.spans[row][col - 1].remove();
+            state.spans[row].splice(col - 1, 1);
+            state.cursor.col--;
+        }
     }
     else {
         if (event.key.length === 1) {
@@ -229,7 +272,6 @@ function handleInsertMode(event) {
 
 function handleKeyPress(event) {
     if (state.mode === "normal") {
-        console.log(isCursorAtEdge());
         const func = parseInput(event);
         if (func !== null) func();
     }
