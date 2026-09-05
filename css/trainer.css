@@ -156,6 +156,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
 }
 
 #mode-container {
@@ -180,15 +181,14 @@ body {
 
     display: flex;
     flex-direction: column;
-
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
 
-    margin: 5vh auto;
-    margin-top: 0;
-
+    margin: 0;
     flex-shrink: 0;
 
+    overflow: hidden auto;
+    white-space: pre;
 }
 
 #main-layout {
@@ -200,6 +200,7 @@ body {
     justify-content: flex-start;
 
     gap: 0;
+    min-width: 0;
 }
 
 /*      Stats Section       */
@@ -387,14 +388,18 @@ body {
     color: white;
     font-family: monospace;
     font-size: clamp(14px, 1.2vw, 20px);
-    align-self: stretch;
+
+    align-self: flex-start;
+
     margin-top: 10px;
     margin-left: 10px;
+
     line-height: 1.8;
+
     position: relative;
+
     white-space: pre;
-    overflow-x: auto;
-    overflow: hidden;
+    flex-shrink: 0;
 }
 
 

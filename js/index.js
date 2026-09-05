@@ -8,7 +8,8 @@ import {
     moveDown,
     moveUp,
     moveRight,
-    updateCursor
+    updateCursor,
+    isCursorAtEdge
 } from "./cursor.js";
 
 import {
@@ -26,7 +27,7 @@ let unlockedCommands = ["h", "j", "k", "l"];
 
 
 
-const terminalWindow = document.getElementById("vim-terminal");
+const terminal = document.getElementById("vim-terminal");
 
 const terminalText = document.getElementById("terminal-text");
 
@@ -60,7 +61,7 @@ const texts = [
     "The quick brown fox jumps over the lazy dog.",
     "JavaScript allows you, to manipulate elements on a web page.",
     "Learning Vim requires repetition and practice.",
-    "Functions allow you to organize reusable pieces of codeeeeeeeeeeeeeeeeeeeeee."
+    "Functions allow you to organize reusable pieces of codeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee."
 ];
 
 /*----------------------------------*/
@@ -73,6 +74,8 @@ function spanify(text) {
     state.brElArr.length = 0;
     terminalText.innerHTML = "";
 
+    const terminalRect = terminal.getBoundingClientRect();
+
     const res = [];
     let rowSpans = [];
     let rowChars = [];
@@ -81,20 +84,35 @@ function spanify(text) {
         rowSpans = [];
         rowChars = [];
         for (const char of line) {
-            rowChars.push(char);
             const span = document.createElement("span");
             span.textContent = char;
-            rowSpans.push(span);
-
-            
             terminalText.appendChild(span);
+            let spanRect = span.getBoundingClientRect();
+            
+            if (spanRect.right >= terminalRect.right) {
+                span.remove();
+                state.characters.push(rowChars);
+                res.push(rowSpans);
+                const brEl = document.createElement("br");
+                state.brElArr.push(brEl);
+                terminalText.appendChild(brEl);
+                terminalText.appendChild(span);
+
+                rowSpans = [];
+                rowChars = [];
+
+            }
+            rowChars.push(char);
+            rowSpans.push(span);
         }
+
         state.characters.push(rowChars);
         res.push(rowSpans);
         const brEl = document.createElement("br");
         state.brElArr.push(brEl);
         terminalText.appendChild(brEl);
     }
+    console.log(state.characters, res, state.brElArr);
     return res;
     
 }
@@ -185,17 +203,25 @@ function handleInsertMode(event) {
         state.cursor.row++;
         state.cursor.col = 0;
     }
+    else if ((event.key === "Backspace" || event.key === "Delete") && (state.characters[row].length > 0)) {
+        state.characters[row].splice(col - 1, 1);
+        state.spans[row][col - 1].remove();
+        state.spans[row].splice(col - 1, 1);
+        state.cursor.col--;
+    }
     else {
-        state.spans[state.cursor.row].splice(state.cursor.col, 0, span);
-        state.characters[state.cursor.row].splice(state.cursor.col, 0, event.key);
+        if (event.key.length === 1) {
+            state.spans[state.cursor.row].splice(state.cursor.col, 0, span);
+            state.characters[state.cursor.row].splice(state.cursor.col, 0, event.key);
 
-        if (state.spans[state.cursor.row][state.cursor.col + 1]) {
-            state.spans[state.cursor.row][state.cursor.col + 1].before(span);
-        } else {
-            state.brElArr[state.cursor.row].before(span);
+            if (state.spans[state.cursor.row][state.cursor.col + 1]) {
+                state.spans[state.cursor.row][state.cursor.col + 1].before(span);
+            } else {
+                state.brElArr[state.cursor.row].before(span);
+            }
+
+            state.cursor.col++;
         }
-
-        state.cursor.col++;
     }
     updateCursor();
 
@@ -203,6 +229,7 @@ function handleInsertMode(event) {
 
 function handleKeyPress(event) {
     if (state.mode === "normal") {
+        console.log(isCursorAtEdge());
         const func = parseInput(event);
         if (func !== null) func();
     }

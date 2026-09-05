@@ -2,6 +2,7 @@
 import { state } from "./globals.js";
 const cursorElement = document.createElement("span");
 cursorElement.classList.add("cursor");
+const terminal = document.querySelector("#vim-terminal");
 
 export function moveUp() {
     if (state.cursor.row > 0) {
@@ -66,4 +67,11 @@ export function updateCursor() {
         block: "nearest",
         inline: "nearest"
     });
+}
+
+export function isCursorAtEdge() {
+    const cursorRect = cursorElement.getBoundingClientRect();
+    const terminalRect = terminal.getBoundingClientRect();
+
+    return cursorRect.right >= terminalRect.right;
 }
