@@ -333,6 +333,7 @@ function stopTimer(timer) {
 
 function pickNewChallenge() {
     const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+    state.challengeStartTime = Date.now();
     challenge();
 }
 

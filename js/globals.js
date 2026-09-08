@@ -9,5 +9,6 @@ export const state = {
     inputBuffer: [],    /* An array that cointains the command keys pressed and when no command can be made it is emptied. */
     mode: "normal",     /* A mode that is used, 'normal' or 'insert'. */
     challenge: {},      /* An object for the challenge selected. */
-    challengeStartTime: null    /* A var for when the challenge started so points can be awarded accordingly. */
+    challengeStartTime: null,    /* A var for when the challenge started so points can be awarded accordingly. */
+    points: 0       /* A number of points the player has gained. */
 }
