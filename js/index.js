@@ -21,6 +21,11 @@ import {
     bCommand
 } from "./commands.js";
 
+import {
+    isChallengeFinished,
+    moveToCharChallenge
+} from "./gameMechanics.js";
+
 let inputBuffer = [];
 let unlockedCommands = ["h", "j", "k", "l"];
 
@@ -54,6 +59,10 @@ const commands = new Map([
     ["dw", dwCommand],
     ["b", bCommand]
 ]);
+
+const challenges = [
+    moveToCharChallenge
+];
 
 
 
@@ -237,7 +246,9 @@ function handleInsertMode(event) {
         state.cursor.row++;
         state.cursor.col = 0;
     }
-    else if ((event.key === "Backspace" || event.key === "Delete") && (state.characters[row].length >= 0) && ((col != 0) || (row != 0) )) {
+    /*      Need to fix this part when trying to delete a blank line and also update the use of br elements after deleting a line       */
+    else if ((event.key === "Backspace" || event.key === "Delete") &&
+            (state.characters[row].length >= 0) && ((col != 0) || (row != 0) )) {
         if (col === 0) {
             const newCol = handleDeletionLineBreak();
 
@@ -283,6 +294,46 @@ function handleKeyPress(event) {
             handleInsertMode(event);
         }
     }
+    if (isChallengeFinished()) {
+        pickNewChallenge();
+    }
+}
+
+
+function formatTime(time) {
+    let seconds = time % 60;
+    let minutes = Math.floor(time / 60);
+
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+function updateTimer(timer, totalTime, timeOfStart) {
+    const timerEl = document.getElementById("time-left");
+    let delta = Math.floor((Date.now() - timeOfStart) / 1000);
+    let currTime = totalTime - delta;
+    if (currTime <= 0) {
+        timerEl.textContent = formatTime(0);
+        stopTimer(timer);
+    }
+    else {
+        timerEl.textContent = formatTime(totalTime - delta);
+    }
+}
+
+function startTimer(timer, totalTime, timeOfStart) {
+    if (!timer) {
+        timer = setInterval(() => updateTimer(timer, totalTime, timeOfStart), 1000);
+    }
+}
+
+function stopTimer(timer) {
+    clearInterval(timer);
+    timer = undefined;
+}
+
+function pickNewChallenge() {
+    const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+    challenge();
 }
 
 
@@ -292,11 +343,20 @@ function startRound() {
     state.cursor.col = 0;
     state.cursor.row = 0;
 
+    
+    let totalTime = 60;
+    let timeOfStart = Date.now();
+    let timer;
+    startTimer(timer, totalTime, timeOfStart);
+    
+    
+
     /*const randomText = texts[Math.floor(Math.random() * texts.length)];*/
     let randomText = texts;
 
     state.spans = spanify(randomText);
     updateCursor();
+    pickNewChallenge();
 }
 
 

@@ -408,3 +408,17 @@ body {
 
 
 /* ---------------------------------------- */
+
+
+/*      Challenge styles        */
+
+.move-to-char-challenge {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.2em;
+    box-sizing: border-box;
+    outline: 2px solid white;
+}
+
+
+/* ---------------------------------------- */
