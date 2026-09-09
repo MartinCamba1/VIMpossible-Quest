@@ -141,16 +141,26 @@ function isPossibleCommand(input) {
 }
 
 function parseInput(event) {
+    const inputBufferDiv = document.getElementById("input-buffer");
+    const inputBufferText = document.getElementById("buffer-text");
     inputBuffer.push(event.key);
 
     let input = inputBuffer.join("");
+
     if (commands.get(input)) {
+        inputBufferDiv.style.display = "none";
+        inputBufferText.textContent = "";
         inputBuffer.length = 0;
         return commands.get(input);
+
     }
     else if (isPossibleCommand(input)) {
+        inputBufferDiv.style.display = "flex";
+        inputBufferText.textContent = input;
         return null;
     }
+    inputBufferDiv.style.display = "none";
+    inputBufferText.textContent = "";
     inputBuffer.length = 0;
     return null;
 }
