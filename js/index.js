@@ -26,6 +26,11 @@ import {
     moveToCharChallenge
 } from "./gameMechanics.js";
 
+import {
+    pointsAudio,
+    clickAudio
+} from "./audio.js";
+
 let inputBuffer = [];
 let unlockedCommands = ["h", "j", "k", "l"];
 
@@ -44,6 +49,8 @@ const startGameBtn = document.getElementById("start-round-btn");
 
 
 const modeEl = document.getElementById("mode-text");
+
+const allBtns = document.querySelectorAll(".button");
 
 
 const commands = new Map([
@@ -369,6 +376,10 @@ function startRound() {
 
 startGameBtn.addEventListener("click", () => startRound());
 document.addEventListener("keydown", (event) => handleKeyPress(event));
+
+for (let btn of allBtns) {
+    btn.addEventListener("click", () => clickAudio());
+}
 
 /*setInterval(blinkingCursor, 500);*/
 

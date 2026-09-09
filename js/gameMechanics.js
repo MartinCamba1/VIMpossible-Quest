@@ -1,5 +1,7 @@
 import { state } from "./globals.js";
-
+import {
+    pointsAudio
+} from "./audio.js";
 
 /*      Need to add a way to resolve the issue when the word is deleted     */
 /*      Also there is an issue when the user deletes a line or the word shifts a position so better would be to check for the span right away   */
@@ -40,4 +42,5 @@ export function givePoints(startTime) {
     void pointsEl.offsetWidth;
 
     pointsEl.classList.add("points-scored");
+    pointsAudio();
 }
