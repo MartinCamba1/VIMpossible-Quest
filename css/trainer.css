@@ -220,6 +220,7 @@ body {
     white-space: nowrap;
     flex: 1;
     overflow-y: auto;
+    user-select: none;
 }
 
 #input-buffer {
@@ -332,7 +333,7 @@ body {
     font-family: monospace;
 }
 
-#dialog-title {
+#dialog-title, #dialog-title-rnd-end {
     margin-top: 4vh;
     margin-bottom: 0.5rem;
 
@@ -341,7 +342,7 @@ body {
     letter-spacing: 0.02em;
 }
 
-#dialog-title::after {
+#dialog-title::after, #dialog-title-rnd-end::after {
     content: "";
     display: block;
 
@@ -411,6 +412,54 @@ body {
 
 #start-round-btn:active, #start-tutorial-btn:active {
     transform: translateY(0);
+}
+
+#new-command-div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    gap: clamp(10px, 2vw, 20px);
+
+    margin-top: 3vh;
+}
+
+.new-command {
+    width: 80%;
+    justify-self: center;
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+
+    background: rgba(255, 255, 255, 0.95);
+    color: #07120c;
+
+    font-size: clamp(1rem, 2vw, 2rem);
+    font-family: monospace;
+    font-weight: 700;
+
+    cursor: pointer;
+    user-select: none;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.new-command:hover {
+    transform: translateY(-4px);
+    background-color: #e8f5ec;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(50, 150, 90, 0.2);
 }
 
 /* ---------------------------------------- */

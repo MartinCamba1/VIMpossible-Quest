@@ -23,7 +23,8 @@ import {
 
 import {
     isChallengeFinished,
-    moveToCharChallenge
+    moveToCharChallenge,
+    displayCommands
 } from "./gameMechanics.js";
 
 import {
@@ -33,7 +34,7 @@ import {
 
 let inputBuffer = [];
 let unlockedCommands = ["h", "j", "k", "l"];
-
+let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b"];
 
 
 
@@ -50,7 +51,7 @@ const startGameBtn = document.getElementById("start-round-btn");
 
 const modeEl = document.getElementById("mode-text");
 
-const allBtns = document.querySelectorAll(".button");
+
 
 
 const commands = new Map([
@@ -344,8 +345,16 @@ function startTimer(timer, totalTime, timeOfStart) {
 }
 
 function stopTimer(timer) {
+    const endRoundDg = document.getElementById("round-end-dg");
+    const startRoundDg = document.getElementById("round-start-dg");
     clearInterval(timer);
     timer = undefined;
+    startRoundDg.style.display = "none";
+    endRoundDg.style.display = "block";
+
+    dialogEl.showModal();
+    const idxs = displayCommands(availableCommands);
+    console.log(idxs);
 }
 
 function pickNewChallenge() {
@@ -362,7 +371,7 @@ function startRound() {
     state.cursor.row = 0;
 
     
-    let totalTime = 60;
+    let totalTime = 5;
     let timeOfStart = Date.now();
     let timer;
     startTimer(timer, totalTime, timeOfStart);
@@ -387,10 +396,12 @@ function startRound() {
 startGameBtn.addEventListener("click", () => startRound());
 document.addEventListener("keydown", (event) => handleKeyPress(event));
 
+const allBtns = document.querySelectorAll(".button");
+
 for (let btn of allBtns) {
     btn.addEventListener("click", () => clickAudio());
 }
 
-/*setInterval(blinkingCursor, 500);*/
+
 
 /*----------------------------------*/

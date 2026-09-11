@@ -34,10 +34,11 @@
         <div id="round-stats">
           <span id="round-num" class="stat">Round: 1</span>
           <span id="time-left" class="stat">1:00</span>
-          <span id="points-num" class="stat">Points: 0</span>
+          <span id="points-num" class="stat">Points Left: 0</span>
         </div>
 
         <dialog id="terminal-dialog" open>
+          <div id="round-start-dg">
             <h2 id="dialog-title" class="centered dialog-text">Ready to begin ?</h2>
 
             <p class="dialog-message centered dialog-text">Your task is to complete all of the challenges before the time runs out.</p>
@@ -53,6 +54,20 @@
               <button id="start-round-btn" class="button">
                 <span id="start-round-text">Start the round!</span>
               </button>
+            </div>
+          </div>
+          <div id="round-end-dg" style="display: none">
+            <h2 id="dialog-title-rnd-end" class="centered dialog-text">Round Completed!</h2>
+            <p id="points-scored" class="dialog-message centered dialog-text">Total points scored this round: </p>
+
+            <p class="dialog-message centered dialog-text">Choose one of the commands below to unlock.</p>
+            <div id="new-command-div">
+              <div id="command-1" class="new-command button"></div>
+              <div id="command-2" class="new-command button"></div>
+              <div id="command-3" class="new-command button"></div>
+            </div>
+
+          </div>
           </dialog>
         <div id="vim-terminal-container">
           <div id="mode-container">

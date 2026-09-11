@@ -44,3 +44,27 @@ export function givePoints(startTime) {
     pointsEl.classList.add("points-scored");
     pointsAudio();
 }
+
+export function displayCommands(availableCommands) {
+    //Make it so when there are less than 3 commands to unlock the div itself doesnt show up or even when there is 0 none show up
+    const commDiv1 = document.getElementById("command-1");
+    const commDiv2 = document.getElementById("command-2");
+    const commDiv3 = document.getElementById("command-3");
+
+    const commands = [];
+    const idxs = [];
+    let idx = -1;
+
+    for (let i = 0; i < 3; i++) {
+        do {
+            idx = Math.floor(Math.random() * availableCommands.length);
+        } while (idxs.includes(idx))
+        commands.push(availableCommands[idx]);
+        idxs.push(idx);
+    }
+    commDiv1.textContent = commands[0];
+    commDiv2.textContent = commands[1];
+    commDiv3.textContent = commands[2];
+
+    return idxs;
+}
