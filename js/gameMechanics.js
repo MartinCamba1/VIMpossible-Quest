@@ -68,3 +68,24 @@ export function displayCommands(availableCommands) {
 
     return idxs;
 }
+
+export function unlockCommand(idxs, i, availableCommands) {
+    console.log("UNLOCK CALLED");
+    console.trace();
+    const commands = document.querySelectorAll(".command");
+    const last = commands[commands.length - 1];
+
+    const newComDiv = document.createElement("div");
+    newComDiv.classList.add("command");
+    newComDiv.textContent = availableCommands[idxs[i]];
+
+    last.after(newComDiv);
+    
+    availableCommands.splice(idxs[i], 1);
+
+    const roundStartDiv = document.getElementById("round-start-dg");
+    const roundEndDiv = document.getElementById("round-end-dg");
+
+    roundEndDiv.style.display = "none";
+    roundStartDiv.style.display = "block";
+}

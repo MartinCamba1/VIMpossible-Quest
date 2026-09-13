@@ -24,7 +24,8 @@ import {
 import {
     isChallengeFinished,
     moveToCharChallenge,
-    displayCommands
+    displayCommands,
+    unlockCommand
 } from "./gameMechanics.js";
 
 import {
@@ -347,6 +348,11 @@ function startTimer(timer, totalTime, timeOfStart) {
 function stopTimer(timer) {
     const endRoundDg = document.getElementById("round-end-dg");
     const startRoundDg = document.getElementById("round-start-dg");
+
+    const btn1 = document.getElementById("command-1");
+    const btn2 = document.getElementById("command-2");
+    const btn3 = document.getElementById("command-3");
+
     clearInterval(timer);
     timer = undefined;
     startRoundDg.style.display = "none";
@@ -355,6 +361,10 @@ function stopTimer(timer) {
     dialogEl.showModal();
     const idxs = displayCommands(availableCommands);
     console.log(idxs);
+    console.log(availableCommands);
+    btn1.onclick = () => unlockCommand(idxs, 0, availableCommands);
+    btn2.onclick = () => unlockCommand(idxs, 1, availableCommands);
+    btn3.onclick = () => unlockCommand(idxs, 2, availableCommands);
 }
 
 function pickNewChallenge() {
@@ -392,7 +402,7 @@ function startRound() {
 
 /*      Executable code     */
 
-
+dialogEl.showModal();
 startGameBtn.addEventListener("click", () => startRound());
 document.addEventListener("keydown", (event) => handleKeyPress(event));
 
