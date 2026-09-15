@@ -70,8 +70,6 @@ export function displayCommands(availableCommands) {
 }
 
 export function unlockCommand(idxs, i, availableCommands) {
-    console.log("UNLOCK CALLED");
-    console.trace();
     const commands = document.querySelectorAll(".command");
     const last = commands[commands.length - 1];
 
@@ -83,9 +81,16 @@ export function unlockCommand(idxs, i, availableCommands) {
     
     availableCommands.splice(idxs[i], 1);
 
-    const roundStartDiv = document.getElementById("round-start-dg");
+    const betweenRoundsDiv = document.getElementById("between-round-dg");
     const roundEndDiv = document.getElementById("round-end-dg");
 
     roundEndDiv.style.display = "none";
-    roundStartDiv.style.display = "block";
+    betweenRoundsDiv.style.display = "flex";
+}
+
+export function updateRoundCounter() {
+    const roundNumCounter = document.getElementById("round-num-data");
+
+    const curr = Number(roundNumCounter.textContent);
+    roundNumCounter.textContent = curr + 1;
 }

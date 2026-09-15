@@ -333,7 +333,7 @@ body {
     font-family: monospace;
 }
 
-#dialog-title, #dialog-title-rnd-end {
+#dialog-title, #dialog-title-rnd-end, #dialog-title-between-rnd {
     margin-top: 4vh;
     margin-bottom: 0.5rem;
 
@@ -380,7 +380,7 @@ body {
     padding: 10px;
 }
 
-#start-round-btn, #start-tutorial-btn {
+.start-round-btn, #start-tutorial-btn, .new-rnd-btn {
     margin: auto auto 1rem;
 
     padding: 0.9rem 2rem;
@@ -403,14 +403,14 @@ body {
         box-shadow 0.2s ease;
 }
 
-#start-round-btn:hover, #start-tutorial-btn:hover {
+.start-round-btn:hover, #start-tutorial-btn:hover, .new-rnd-btn:hover {
     background: #125c34;
     transform: translateY(-2px);
 
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
-#start-round-btn:active, #start-tutorial-btn:active {
+.start-round-btn:active, #start-tutorial-btn:active {
     transform: translateY(0);
 }
 
@@ -460,6 +460,33 @@ body {
     box-shadow:
         0 8px 20px rgba(0, 0, 0, 0.3),
         0 0 15px rgba(50, 150, 90, 0.2);
+}
+
+#between-round-dg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#between-round-dg .start-round-btn {
+    margin-top: auto;
+    margin-bottom: 30px;
+    padding: 15px;
+}
+
+#between-round-dg h2 {
+    margin-bottom: 20px;
+}
+
+#between-round-dg p {
+    margin-top: 30px;
+}
+
+#between-round-dg .start-round-btn {
+    margin-top: auto;
+    padding: 10px 25px;
 }
 
 /* ---------------------------------------- */

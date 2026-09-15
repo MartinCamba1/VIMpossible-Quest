@@ -25,7 +25,8 @@ import {
     isChallengeFinished,
     moveToCharChallenge,
     displayCommands,
-    unlockCommand
+    unlockCommand,
+    updateRoundCounter
 } from "./gameMechanics.js";
 
 import {
@@ -47,7 +48,7 @@ const dialogEl = document.getElementById("terminal-dialog");
 const dialogTitle = document.getElementById("dialog-title");
 const dialogMessage = document.getElementById("dialog-message");
 const dialogStats = document.getElementById("dialog-stats");
-const startGameBtn = document.getElementById("start-round-btn");
+const startGameBtns = document.querySelectorAll(".start-round-btn");
 
 
 const modeEl = document.getElementById("mode-text");
@@ -355,6 +356,7 @@ function stopTimer(timer) {
 
     clearInterval(timer);
     timer = undefined;
+    updateRoundCounter();
     startRoundDg.style.display = "none";
     endRoundDg.style.display = "block";
 
@@ -375,6 +377,8 @@ function pickNewChallenge() {
 
 
 function startRound() {
+    const betweenRoundsDiv = document.getElementById("between-round-dg");
+    betweenRoundsDiv.style.display = "none";
     dialogEl.close();
 
     state.cursor.col = 0;
@@ -403,7 +407,8 @@ function startRound() {
 /*      Executable code     */
 
 dialogEl.showModal();
-startGameBtn.addEventListener("click", () => startRound());
+startGameBtns.forEach((btn) => btn.addEventListener("click", () => startRound()));
+/*startGameBtn.addEventListener("click", () => startRound());*/
 document.addEventListener("keydown", (event) => handleKeyPress(event));
 
 const allBtns = document.querySelectorAll(".button");
