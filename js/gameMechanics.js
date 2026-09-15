@@ -34,8 +34,8 @@ export function isChallengeFinished() {
 export function givePoints(startTime) {
     const pointsEl = document.getElementById("points-num");
     let delta = Math.floor((Date.now() - startTime) / 1000);
-    state.points = state.points + Math.round(50 + 350 * Math.exp(-0.3 * delta));
-    pointsEl.textContent =  "Points: " + state.points.toString();
+    state.pointsThisRound = state.pointsThisRound + Math.round(50 + 350 * Math.exp(-0.3 * delta));
+    pointsEl.textContent =  "Points: " + state.pointsThisRound.toString();
 
     pointsEl.classList.remove("points-scored");
 
@@ -69,7 +69,9 @@ export function displayCommands(availableCommands) {
     return idxs;
 }
 
-export function unlockCommand(idxs, i, availableCommands) {
+export function unlockCommand(idxs, i, availableCommands, cmnds) {
+    cmnds.get(availableCommands[idxs[i]]).unlocked = true;
+
     const commands = document.querySelectorAll(".command");
     const last = commands[commands.length - 1];
 

@@ -57,17 +57,17 @@ const modeEl = document.getElementById("mode-text");
 
 
 const commands = new Map([
-    ["h", moveLeft],
-    ["j", moveDown],
-    ["k", moveUp],
-    ["l", moveRight],
-    ["x", deleteChar],
-    ["dd", deleteLine],
-    ["i", insertCommand],
-    ["A", appendAtEndLine],
-    ["w", wCommand],
-    ["dw", dwCommand],
-    ["b", bCommand]
+    ["h", { action: moveLeft, unlocked: true }],
+    ["j", { action: moveDown, unlocked: true }],
+    ["k", { action: moveUp, unlocked: true }],
+    ["l", { action: moveRight, unlocked: true }],
+    ["x", { action: deleteChar, unlocked: false }],
+    ["dd", { action: deleteLine, unlocked: false }],
+    ["i", { action: insertCommand, unlocked: false }],
+    ["A", { action: appendAtEndLine, unlocked: false }],
+    ["w", { action: wCommand, unlocked: true }],
+    ["dw", { action: dwCommand, unlocked: false }],
+    ["b", { action: bCommand, unlocked: false }]
 ]);
 
 const challenges = [
@@ -150,11 +150,11 @@ function parseInput(event) {
 
     let input = inputBuffer.join("");
 
-    if (commands.get(input)) {
+    if (commands.get(input) && commands.get(input).unlocked === true) {
         inputBufferDiv.style.display = "none";
         inputBufferText.textContent = "";
         inputBuffer.length = 0;
-        return commands.get(input);
+        return commands.get(input).action;
 
     }
     else if (isPossibleCommand(input)) {
@@ -350,6 +350,14 @@ function stopTimer(timer) {
     const endRoundDg = document.getElementById("round-end-dg");
     const startRoundDg = document.getElementById("round-start-dg");
 
+    const pointsScoredSpan = document.getElementById("points-scored");
+    const pointsNeededNextRnd = document.getElementById("points-needed");
+
+    pointsScoredSpan.textContent = state.pointsThisRound;
+    state.pointsThisRound = 0;
+    state.pointsNeeded = Math.round(state.pointsNeeded * 1.25);
+    pointsNeededNextRnd.textContent = state.pointsNeeded;
+
     const btn1 = document.getElementById("command-1");
     const btn2 = document.getElementById("command-2");
     const btn3 = document.getElementById("command-3");
@@ -364,9 +372,9 @@ function stopTimer(timer) {
     const idxs = displayCommands(availableCommands);
     console.log(idxs);
     console.log(availableCommands);
-    btn1.onclick = () => unlockCommand(idxs, 0, availableCommands);
-    btn2.onclick = () => unlockCommand(idxs, 1, availableCommands);
-    btn3.onclick = () => unlockCommand(idxs, 2, availableCommands);
+    btn1.onclick = () => unlockCommand(idxs, 0, availableCommands, commands);
+    btn2.onclick = () => unlockCommand(idxs, 1, availableCommands, commands);
+    btn3.onclick = () => unlockCommand(idxs, 2, availableCommands, commands);
 }
 
 function pickNewChallenge() {

@@ -10,5 +10,7 @@ export const state = {
     mode: "normal",     /* A mode that is used, 'normal' or 'insert'. */
     challenge: {},      /* An object for the challenge selected. */
     challengeStartTime: null,    /* A var for when the challenge started so points can be awarded accordingly. */
-    points: 0       /* A number of points the player has gained. */
+    /*totalPoints: 0,        A number of points the player has gained throughout the run. */
+    pointsThisRound: 0,      /* A number of points the player has gained this round. */
+    pointsNeeded: 200
 }
