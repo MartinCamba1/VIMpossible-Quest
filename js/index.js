@@ -370,8 +370,7 @@ function stopTimer(timer) {
 
     dialogEl.showModal();
     const idxs = displayCommands(availableCommands);
-    console.log(idxs);
-    console.log(availableCommands);
+
     btn1.onclick = () => unlockCommand(idxs, 0, availableCommands, commands);
     btn2.onclick = () => unlockCommand(idxs, 1, availableCommands, commands);
     btn3.onclick = () => unlockCommand(idxs, 2, availableCommands, commands);
@@ -393,10 +392,14 @@ function startRound() {
     state.cursor.row = 0;
 
     
-    let totalTime = 5;
+    let totalTime = 30;
     let timeOfStart = Date.now();
     let timer;
     startTimer(timer, totalTime, timeOfStart);
+
+    const pointsNeededEl = document.getElementById("points-num");
+    pointsNeededEl.style.color = "#ffffff";
+    pointsNeededEl.textContent = "Points Left: " + state.pointsNeeded.toString();
     
     
 

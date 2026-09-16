@@ -5,7 +5,7 @@ import {
 
 /*      Need to add a way to resolve the issue when the word is deleted     */
 /*      Also there is an issue when the user deletes a line or the word shifts a position so better would be to check for the span right away   */
-
+/*      Bug where if you delete some part of the line where the challenge is active it doesnt register the change in positioning in globals.js. */
 export function moveToCharChallenge() {
     let row = Math.floor(Math.random() * state.characters.length);
     let col = Math.floor(Math.random() * state.characters[row].length)
@@ -35,13 +35,22 @@ export function givePoints(startTime) {
     const pointsEl = document.getElementById("points-num");
     let delta = Math.floor((Date.now() - startTime) / 1000);
     state.pointsThisRound = state.pointsThisRound + Math.round(50 + 350 * Math.exp(-0.3 * delta));
-    pointsEl.textContent =  "Points: " + state.pointsThisRound.toString();
 
-    pointsEl.classList.remove("points-scored");
+    const pointsLeft = state.pointsNeeded - state.pointsThisRound;
+    if (pointsLeft > 0) {
+        pointsEl.textContent =  "Points Left: " + (pointsLeft).toString();
 
-    void pointsEl.offsetWidth;
+        pointsEl.classList.remove("points-scored");
 
-    pointsEl.classList.add("points-scored");
+        void pointsEl.offsetWidth;
+
+        pointsEl.classList.add("points-scored");
+    }
+    else {
+        pointsEl.textContent = "ROUND COMPLETED!";
+        pointsEl.style.color = "#90EE90";
+    }
+    
     pointsAudio();
 }
 
