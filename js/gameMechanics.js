@@ -9,26 +9,102 @@ import {
 export function moveToCharChallenge() {
     let row = Math.floor(Math.random() * state.characters.length);
     let col = Math.floor(Math.random() * state.characters[row].length)
-    let target = state.characters[row][col];
-    let span = state.spans[row][col];
+    let target = state.spans[row][col];
 
-    span.classList.add("move-to-char-challenge");
+    target.classList.add("move-to-char-challenge");
     state.challenge.type = "move-to-char";
-    state.challenge.row = row;
-    state.challenge.col = col;
+    state.challenge.target = target;
 }
 
-export function isChallengeFinished() {
+export function deleteWordChallenge() {
+    const targets = findRandWord();
+    if (targets == undefined) {
+        return undefined;
+    }
+
+    targets.forEach((target) => {
+        target.classList.add("delete-word-challenge");
+    })
+
+    state.challenge.type = "delete-word";
+    state.challenge.targets = targets;
+}
+
+function findRandWord() {
+    let row = Math.floor(Math.random() * state.characters.length);
+    let col = Math.floor(Math.random() * state.characters[row].length)
+
+    let i = 0;
+    while (col - i >= 0 && col + i < state.characters[row].length && 
+        (state.characters[row][col + i] == " " && state.characters[row][col - i] == " ")) {
+            i++;
+        }
+    
+    if (state.characters[row][col - i] == " " && state.characters[row][col + i] == " ") return undefined;
+    if (state.characters[row][col - i] != " ") {
+        col -=i;
+    }
+    else {
+        col += i;
+    }
+
+    return findEdgeOfWord(row, col);
+}
+
+function findEdgeOfWord(row, col) {
+    const res = [state.spans[row][col]];
+
+    let aux = 1;
+
+    while (col - aux >= 0 && state.characters[row][col - aux] != " ") {
+        res.push(state.spans[row][col - aux]);
+        aux++;
+    }
+
+    aux = 1;
+
+    while (col + aux < state.characters[row].length && state.characters[row][col + aux] != " ") {
+        res.push(state.spans[row][col + aux]);
+        aux++;
+    }
+
+    return res;
+}
+
+export function isChallengeFinished(typeOfAction) {
     let col = state.cursor.col;
     let row = state.cursor.row;
-    if (state.challenge?.type === "move-to-char") {
-        if (state.challenge.row === row && state.challenge.col === col) {
-            state.spans[state.challenge.row][state.challenge.col].classList.remove("move-to-char-challenge");
-            givePoints(state.challengeStartTime);
-            return true;
+    console.log(typeOfAction);
+    if (typeOfAction === "movement") {
+        if (state.challenge?.type === "move-to-char") {
+            const cursorEl = state.spans[row][col];
+            if (cursorEl === state.challenge.target) {
+                state.challenge.target.classList.remove("move-to-char-challenge");
+                state.challenge = {};
+                givePoints(state.challengeStartTime);
+                return true;
+            }
         }
     }
-    return false;
+    
+    //Need to add a way to verify when using dw because now it is on a basis of one span per command which doesnt work.
+    //Also using x to clear this challenge doesnt work either.
+    else if (typeOfAction === "deletion") {
+        if (state.challenge.type === "delete-word") {
+            const cursorEl = state.spans[row][col];
+            if (state.challenge.targets.includes(cursorEl)) {
+                cursorEl.classList.remove("delete-word-challenge");
+                state.challenge.targets.splice(state.challenge.targets.findIndex((el) => el === cursorEl), 1);
+            }
+
+            if (state.challenge.targets.length === 0) {
+                state.challenge = {};
+                givePoints(state.challengeStartTime);
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 export function givePoints(startTime) {
@@ -79,14 +155,37 @@ export function displayCommands(availableCommands) {
 }
 
 export function unlockCommand(idxs, i, availableCommands, cmnds) {
-    cmnds.get(availableCommands[idxs[i]]).unlocked = true;
+    const commandTypes = new Map([
+        ["h", "movement"],
+        ["j", "movement"],
+        ["k", "movement"],
+        ["l", "movement"],
+
+        ["x", "deletion"],
+        ["dd", "deletion"],
+        ["dw", "deletion"],
+
+        ["i", "inserting"],
+        ["A", "inserting"],
+
+        ["w", "movement"],
+        ["b", "movement"]
+    ]);
+
+    const newCommand = availableCommands[idxs[i]];
+    cmnds.get(newCommand).unlocked = true;
+    
+
+    if (!state.unlockedTypes.includes(commandTypes.get(newCommand))) {
+        state.unlockedTypes.push(commandTypes.get(newCommand));
+    }
 
     const commands = document.querySelectorAll(".command");
     const last = commands[commands.length - 1];
 
     const newComDiv = document.createElement("div");
     newComDiv.classList.add("command");
-    newComDiv.textContent = availableCommands[idxs[i]];
+    newComDiv.textContent = newCommand;
 
     last.after(newComDiv);
     

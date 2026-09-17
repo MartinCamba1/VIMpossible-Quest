@@ -23,7 +23,10 @@ import {
 
 import {
     isChallengeFinished,
+
     moveToCharChallenge,
+    deleteWordChallenge,
+
     displayCommands,
     unlockCommand,
     updateRoundCounter
@@ -37,6 +40,33 @@ import {
 let inputBuffer = [];
 let unlockedCommands = ["h", "j", "k", "l"];
 let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b"];
+
+const commands = new Map([
+    ["h",  { action: moveLeft,        unlocked: true,  type: "movement" }],
+    ["j",  { action: moveDown,        unlocked: true,  type: "movement" }],
+    ["k",  { action: moveUp,          unlocked: true,  type: "movement" }],
+    ["l",  { action: moveRight,       unlocked: true,  type: "movement" }],
+
+    ["x",  { action: deleteChar,      unlocked: false, type: "deletion" }],
+    ["dd", { action: deleteLine,      unlocked: false, type: "deletion" }],
+    ["dw", { action: dwCommand,       unlocked: false, type: "deletion" }],
+
+    ["i",  { action: insertCommand,   unlocked: false, type: "inserting" }],
+    ["A",  { action: appendAtEndLine, unlocked: false, type: "inserting" }],
+
+    ["w",  { action: wCommand,        unlocked: true,  type: "movement" }],
+    ["b",  { action: bCommand,        unlocked: false, type: "movement" }]
+]);
+
+const typesOfChallenges = new Map([
+    ["movement", [
+        moveToCharChallenge,
+    ]],
+
+    ["deletion", [
+        deleteWordChallenge
+    ]]
+]);
 
 
 
@@ -52,28 +82,6 @@ const startGameBtns = document.querySelectorAll(".start-round-btn");
 
 
 const modeEl = document.getElementById("mode-text");
-
-
-
-
-const commands = new Map([
-    ["h", { action: moveLeft, unlocked: true }],
-    ["j", { action: moveDown, unlocked: true }],
-    ["k", { action: moveUp, unlocked: true }],
-    ["l", { action: moveRight, unlocked: true }],
-    ["x", { action: deleteChar, unlocked: false }],
-    ["dd", { action: deleteLine, unlocked: false }],
-    ["i", { action: insertCommand, unlocked: false }],
-    ["A", { action: appendAtEndLine, unlocked: false }],
-    ["w", { action: wCommand, unlocked: true }],
-    ["dw", { action: dwCommand, unlocked: false }],
-    ["b", { action: bCommand, unlocked: false }]
-]);
-
-const challenges = [
-    moveToCharChallenge
-];
-
 
 
 const texts = [
@@ -314,8 +322,12 @@ function handleKeyPress(event) {
             handleInsertMode(event);
         }
     }
-    if (isChallengeFinished()) {
-        pickNewChallenge();
+
+    if (unlockedCommands.includes(event.key) && commands.has(event.key)) {
+        const type = commands.get(event.key).type;
+        if (isChallengeFinished(type)) {
+            pickNewChallenge();
+        }
     }
 }
 
@@ -377,7 +389,11 @@ function stopTimer(timer) {
 }
 
 function pickNewChallenge() {
-    const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+    const type = state.unlockedTypes[Math.floor(Math.random() * state.unlockedTypes.length)];
+    console.log(type, state.unlockedTypes);
+
+    const i = Math.floor(Math.random() * typesOfChallenges.get(type).length);
+    const challenge = typesOfChallenges.get(type)[i];
     state.challengeStartTime = Date.now();
     challenge();
 }

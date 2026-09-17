@@ -12,5 +12,6 @@ export const state = {
     challengeStartTime: null,    /* A var for when the challenge started so points can be awarded accordingly. */
     totalPoints: 0,       /* A number of points the player has gained throughout the run. */
     pointsThisRound: 0,      /* A number of points the player has gained this round. */
-    pointsNeeded: 1000      /* The number of points needed to pass the round. */
+    pointsNeeded: 1000,      /* The number of points needed to pass the round. */
+    unlockedTypes: ["movement"]     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
 }
