@@ -359,33 +359,51 @@ function startTimer(timer, totalTime, timeOfStart) {
 }
 
 function stopTimer(timer) {
-    const endRoundDg = document.getElementById("round-end-dg");
-    const startRoundDg = document.getElementById("round-start-dg");
-
-    const pointsScoredSpan = document.getElementById("points-scored");
-    const pointsNeededNextRnd = document.getElementById("points-needed");
-
-    pointsScoredSpan.textContent = state.pointsThisRound;
-    state.pointsThisRound = 0;
-    state.pointsNeeded = Math.round(state.pointsNeeded * 1.25);
-    pointsNeededNextRnd.textContent = state.pointsNeeded;
-
-    const btn1 = document.getElementById("command-1");
-    const btn2 = document.getElementById("command-2");
-    const btn3 = document.getElementById("command-3");
-
     clearInterval(timer);
     timer = undefined;
     updateRoundCounter();
+
+    let pointsScoredSpan;
+    let pointsNeeded;
+    const startRoundDg = document.getElementById("round-start-dg");
     startRoundDg.style.display = "none";
-    endRoundDg.style.display = "block";
+
+    if (state.pointsThisRound < state.pointsNeeded) {
+        const roundLostDg = document.getElementById("round-lost-dg");
+        roundLostDg.style.display = "flex";
+
+        pointsScoredSpan = document.getElementById("points-scored-lost");
+        pointsNeeded = document.getElementById("points-needed-lost");
+    }
+
+    else {
+        const endRoundDg = document.getElementById("round-end-dg");
+        
+
+        pointsScoredSpan = document.getElementById("points-scored");
+        pointsNeeded = document.getElementById("points-needed");
+
+        const btn1 = document.getElementById("command-1");
+        const btn2 = document.getElementById("command-2");
+        const btn3 = document.getElementById("command-3");
+
+        state.pointsNeeded = Math.round(state.pointsNeeded * 1.25);
+        
+        endRoundDg.style.display = "block";
+
+        const idxs = displayCommands(availableCommands);
+
+        btn1.onclick = () => unlockCommand(idxs, 0, availableCommands, commands);
+        btn2.onclick = () => unlockCommand(idxs, 1, availableCommands, commands);
+        btn3.onclick = () => unlockCommand(idxs, 2, availableCommands, commands);
+    }
+
+    pointsScoredSpan.textContent = state.pointsThisRound;
+    state.pointsThisRound = 0;
+    pointsNeeded.textContent = state.pointsNeeded;
 
     dialogEl.showModal();
-    const idxs = displayCommands(availableCommands);
-
-    btn1.onclick = () => unlockCommand(idxs, 0, availableCommands, commands);
-    btn2.onclick = () => unlockCommand(idxs, 1, availableCommands, commands);
-    btn3.onclick = () => unlockCommand(idxs, 2, availableCommands, commands);
+    
 }
 
 function pickNewChallenge() {
@@ -408,7 +426,7 @@ function startRound() {
     state.cursor.row = 0;
 
     
-    let totalTime = 30;
+    let totalTime = 5;
     let timeOfStart = Date.now();
     let timer;
     startTimer(timer, totalTime, timeOfStart);

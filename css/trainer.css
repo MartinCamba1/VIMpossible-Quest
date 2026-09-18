@@ -333,7 +333,7 @@ body {
     font-family: monospace;
 }
 
-#dialog-title, #dialog-title-rnd-end, #dialog-title-between-rnd {
+#dialog-title, #dialog-title-rnd-end, #dialog-title-between-rnd, #dialog-title-rnd-lost {
     margin-top: 4vh;
     margin-bottom: 0.5rem;
 
@@ -342,7 +342,7 @@ body {
     letter-spacing: 0.02em;
 }
 
-#dialog-title::after, #dialog-title-rnd-end::after {
+#dialog-title::after, #dialog-title-rnd-end::after, #dialog-title-between-rnd::after, #dialog-title-rnd-lost::after {
     content: "";
     display: block;
 
@@ -462,7 +462,7 @@ body {
         0 0 15px rgba(50, 150, 90, 0.2);
 }
 
-#between-round-dg {
+#between-round-dg, #round-lost-dg {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -484,7 +484,7 @@ body {
     margin-top: 30px;
 }
 
-#between-round-dg .start-round-btn {
+#between-round-dg .start-round-btn, #round-lost-dg .start-round-btn {
     margin-top: auto;
     padding: 10px 25px;
 }

@@ -76,6 +76,18 @@
               <span class="start-round-text">Start the next round!</span>
             </button>
           </div>
+
+          <div id="round-lost-dg" style="display: none">
+            <h2 id="dialog-title-rnd-lost" class="centered dialog-text">You Lost!</h2>
+
+            <p class="dialog-message centered dialog-text">You did not manage to score enough points.</p>
+            <p class="dialog-message centered dialog-text">Points scored this round: <span id="points-scored-lost"></span></p>
+            <p class="dialog-message centered dialog-text">Points needed to complete the round: <span id="points-needed-lost"></span></p>
+
+            <button class="start-round-btn button">
+              <span class="start-round-text">Try Again!</span>
+            </button>
+          </div>
           </dialog>
         <div id="vim-terminal-container">
           <div id="mode-container">
