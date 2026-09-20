@@ -204,3 +204,13 @@ export function updateRoundCounter() {
     const curr = Number(roundNumCounter.textContent);
     roundNumCounter.textContent = curr + 1;
 }
+
+export function updateObjectiveText(challenge) {
+    const challengeObjectives = new Map([
+        [moveToCharChallenge, "Reach target"],
+        [deleteWordChallenge, "Delete word"]
+    ]);
+
+    const objectiveSpan = document.getElementById("objective-data");
+    objectiveSpan.textContent = challengeObjectives.get(challenge);
+}

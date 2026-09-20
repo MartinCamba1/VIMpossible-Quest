@@ -23,6 +23,7 @@ import {
 
 import {
     isChallengeFinished,
+    updateObjectiveText,
 
     moveToCharChallenge,
     deleteWordChallenge,
@@ -36,6 +37,11 @@ import {
     pointsAudio,
     clickAudio
 } from "./audio.js";
+
+import {
+    startTimer,
+    spanify
+} from "./ui.js";
 
 let inputBuffer = [];
 let unlockedCommands = ["h", "j", "k", "l"];
@@ -68,16 +74,7 @@ const typesOfChallenges = new Map([
     ]]
 ]);
 
-
-
-const terminal = document.getElementById("vim-terminal");
-
-const terminalText = document.getElementById("terminal-text");
-
 const dialogEl = document.getElementById("terminal-dialog");
-const dialogTitle = document.getElementById("dialog-title");
-const dialogMessage = document.getElementById("dialog-message");
-const dialogStats = document.getElementById("dialog-stats");
 const startGameBtns = document.querySelectorAll(".start-round-btn");
 
 
@@ -96,53 +93,6 @@ const texts = [
 
 /*      Functions       */
 
-function spanify(text) {
-    state.characters.length = 0;
-    state.brElArr.length = 0;
-    terminalText.innerHTML = "";
-
-    const terminalRect = terminal.getBoundingClientRect();
-
-    const res = [];
-    let rowSpans = [];
-    let rowChars = [];
-
-    for (const line of text) {
-        rowSpans = [];
-        rowChars = [];
-        for (const char of line) {
-            const span = document.createElement("span");
-            span.textContent = char;
-            terminalText.appendChild(span);
-            let spanRect = span.getBoundingClientRect();
-            
-            if (spanRect.right >= terminalRect.right) {
-                span.remove();
-                state.characters.push(rowChars);
-                res.push(rowSpans);
-                const brEl = document.createElement("br");
-                state.brElArr.push(brEl);
-                terminalText.appendChild(brEl);
-                terminalText.appendChild(span);
-
-                rowSpans = [];
-                rowChars = [];
-
-            }
-            rowChars.push(char);
-            rowSpans.push(span);
-        }
-
-        state.characters.push(rowChars);
-        res.push(rowSpans);
-        const brEl = document.createElement("br");
-        state.brElArr.push(brEl);
-        terminalText.appendChild(brEl);
-    }
-
-    return res;
-    
-}
 
 function isPossibleCommand(input) {
     for(const command of commands.keys()) {
@@ -331,81 +281,6 @@ function handleKeyPress(event) {
     }
 }
 
-
-function formatTime(time) {
-    let seconds = time % 60;
-    let minutes = Math.floor(time / 60);
-
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
-
-function updateTimer(timer, totalTime, timeOfStart) {
-    const timerEl = document.getElementById("time-left");
-    let delta = Math.floor((Date.now() - timeOfStart) / 1000);
-    let currTime = totalTime - delta;
-    if (currTime <= 0) {
-        timerEl.textContent = formatTime(0);
-        stopTimer(timer);
-    }
-    else {
-        timerEl.textContent = formatTime(totalTime - delta);
-    }
-}
-
-function startTimer(timer, totalTime, timeOfStart) {
-    if (!timer) {
-        timer = setInterval(() => updateTimer(timer, totalTime, timeOfStart), 1000);
-    }
-}
-
-function stopTimer(timer) {
-    clearInterval(timer);
-    timer = undefined;
-    updateRoundCounter();
-
-    let pointsScoredSpan;
-    let pointsNeeded;
-    const startRoundDg = document.getElementById("round-start-dg");
-    startRoundDg.style.display = "none";
-
-    if (state.pointsThisRound < state.pointsNeeded) {
-        const roundLostDg = document.getElementById("round-lost-dg");
-        roundLostDg.style.display = "flex";
-
-        pointsScoredSpan = document.getElementById("points-scored-lost");
-        pointsNeeded = document.getElementById("points-needed-lost");
-    }
-
-    else {
-        const endRoundDg = document.getElementById("round-end-dg");
-        
-
-        pointsScoredSpan = document.getElementById("points-scored");
-        pointsNeeded = document.getElementById("points-needed");
-
-        const btn1 = document.getElementById("command-1");
-        const btn2 = document.getElementById("command-2");
-        const btn3 = document.getElementById("command-3");
-
-        state.pointsNeeded = Math.round(state.pointsNeeded * 1.25);
-        
-        endRoundDg.style.display = "block";
-
-        const idxs = displayCommands(availableCommands);
-
-        btn1.onclick = () => unlockCommand(idxs, 0, availableCommands, commands);
-        btn2.onclick = () => unlockCommand(idxs, 1, availableCommands, commands);
-        btn3.onclick = () => unlockCommand(idxs, 2, availableCommands, commands);
-    }
-
-    pointsScoredSpan.textContent = state.pointsThisRound;
-    state.pointsThisRound = 0;
-    pointsNeeded.textContent = state.pointsNeeded;
-
-    dialogEl.showModal();
-    
-}
-
 function pickNewChallenge() {
     const type = state.unlockedTypes[Math.floor(Math.random() * state.unlockedTypes.length)];
     console.log(type, state.unlockedTypes);
@@ -413,6 +288,7 @@ function pickNewChallenge() {
     const i = Math.floor(Math.random() * typesOfChallenges.get(type).length);
     const challenge = typesOfChallenges.get(type)[i];
     state.challengeStartTime = Date.now();
+    updateObjectiveText(challenge);
     challenge();
 }
 
@@ -426,7 +302,7 @@ function startRound() {
     state.cursor.row = 0;
 
     
-    let totalTime = 5;
+    let totalTime = 60;
     let timeOfStart = Date.now();
     let timer;
     startTimer(timer, totalTime, timeOfStart);

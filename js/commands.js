@@ -88,8 +88,6 @@ export function dwCommand() {
         state.spans[state.cursor.row][i].remove();
     }
     state.spans[state.cursor.row].splice(state.cursor.col, (newCol - state.cursor.col));
-
-
 }
 
 export function appendAtEndLine() {
