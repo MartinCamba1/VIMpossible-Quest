@@ -1,6 +1,10 @@
 
 import { state } from "./globals.js";
 import { updateCursor } from "./cursor.js";
+import { 
+    isChallengeFinished, 
+    pickNewChallenge 
+} from "./gameMechanics.js";
 
 const punctuations = [
   ".", ",", ";", ":", "!", "?", "'", "\"",
@@ -34,6 +38,9 @@ export function deleteLine() {
         }
 
         for (const span of state.spans[state.cursor.row]) {
+            if (isChallengeFinished("deletion", span)) {
+                pickNewChallenge();
+            }
             span.remove();
         }
         if (state.spans.length === 1) {
@@ -85,7 +92,11 @@ export function dwCommand() {
     state.characters[state.cursor.row].splice(state.cursor.col, (newCol - state.cursor.col));
     
     for (let i = state.cursor.col; i < newCol; i++) {
+        if (isChallengeFinished("deletion", state.spans[state.cursor.row][i])) {
+            pickNewChallenge();
+        }
         state.spans[state.cursor.row][i].remove();
+        
     }
     state.spans[state.cursor.row].splice(state.cursor.col, (newCol - state.cursor.col));
 }

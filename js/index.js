@@ -23,14 +23,11 @@ import {
 
 import {
     isChallengeFinished,
+    pickNewChallenge,
     updateObjectiveText,
 
     moveToCharChallenge,
     deleteWordChallenge,
-
-    displayCommands,
-    unlockCommand,
-    updateRoundCounter
 } from "./gameMechanics.js";
 
 import {
@@ -40,14 +37,17 @@ import {
 
 import {
     startTimer,
-    spanify
+    spanify,
+
+    displayCommands,
+    unlockCommand
 } from "./ui.js";
 
 let inputBuffer = [];
 let unlockedCommands = ["h", "j", "k", "l"];
-let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b"];
 
-const commands = new Map([
+
+export const commands = new Map([
     ["h",  { action: moveLeft,        unlocked: true,  type: "movement" }],
     ["j",  { action: moveDown,        unlocked: true,  type: "movement" }],
     ["k",  { action: moveUp,          unlocked: true,  type: "movement" }],
@@ -55,7 +55,7 @@ const commands = new Map([
 
     ["x",  { action: deleteChar,      unlocked: false, type: "deletion" }],
     ["dd", { action: deleteLine,      unlocked: false, type: "deletion" }],
-    ["dw", { action: dwCommand,       unlocked: false, type: "deletion" }],
+    ["dw", { action: dwCommand,       unlocked: true, type: "deletion" }],
 
     ["i",  { action: insertCommand,   unlocked: false, type: "inserting" }],
     ["A",  { action: appendAtEndLine, unlocked: false, type: "inserting" }],
@@ -64,15 +64,7 @@ const commands = new Map([
     ["b",  { action: bCommand,        unlocked: false, type: "movement" }]
 ]);
 
-const typesOfChallenges = new Map([
-    ["movement", [
-        moveToCharChallenge,
-    ]],
 
-    ["deletion", [
-        deleteWordChallenge
-    ]]
-]);
 
 const dialogEl = document.getElementById("terminal-dialog");
 const startGameBtns = document.querySelectorAll(".start-round-btn");
@@ -133,7 +125,7 @@ function handleDeletionLineBreak() {
 
     let prevRowLen = state.characters[row - 1].length;
     let currRowLen = state.characters[row].length;
-    console.log(currRowLen);
+
     if (currRowLen === 0) {
         state.brElArr[row].remove();
         state.brElArr.splice(row, 1);
@@ -275,22 +267,13 @@ function handleKeyPress(event) {
 
     if (unlockedCommands.includes(event.key) && commands.has(event.key)) {
         const type = commands.get(event.key).type;
-        if (isChallengeFinished(type)) {
+        if (isChallengeFinished(type, state.spans[state.cursor.row][state.cursor.col])) {
             pickNewChallenge();
         }
     }
 }
 
-function pickNewChallenge() {
-    const type = state.unlockedTypes[Math.floor(Math.random() * state.unlockedTypes.length)];
-    console.log(type, state.unlockedTypes);
 
-    const i = Math.floor(Math.random() * typesOfChallenges.get(type).length);
-    const challenge = typesOfChallenges.get(type)[i];
-    state.challengeStartTime = Date.now();
-    updateObjectiveText(challenge);
-    challenge();
-}
 
 
 function startRound() {
@@ -302,7 +285,7 @@ function startRound() {
     state.cursor.row = 0;
 
     
-    let totalTime = 60;
+    let totalTime = 20;
     let timeOfStart = Date.now();
     let timer;
     startTimer(timer, totalTime, timeOfStart);

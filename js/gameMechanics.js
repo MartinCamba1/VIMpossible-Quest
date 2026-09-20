@@ -71,14 +71,13 @@ function findEdgeOfWord(row, col) {
     return res;
 }
 
-export function isChallengeFinished(typeOfAction) {
+export function isChallengeFinished(typeOfAction, span) {
     let col = state.cursor.col;
     let row = state.cursor.row;
-    console.log(typeOfAction);
+
     if (typeOfAction === "movement") {
         if (state.challenge?.type === "move-to-char") {
-            const cursorEl = state.spans[row][col];
-            if (cursorEl === state.challenge.target) {
+            if (span === state.challenge.target) {
                 state.challenge.target.classList.remove("move-to-char-challenge");
                 state.challenge = {};
                 givePoints(state.challengeStartTime);
@@ -87,14 +86,12 @@ export function isChallengeFinished(typeOfAction) {
         }
     }
     
-    //Need to add a way to verify when using dw because now it is on a basis of one span per command which doesnt work.
-    //Also using x to clear this challenge doesnt work either.
+    //There is a known bug where the spans when you complete deletion challenge and a new deletion is picked the spans are weird somehow.
     else if (typeOfAction === "deletion") {
         if (state.challenge.type === "delete-word") {
-            const cursorEl = state.spans[row][col];
-            if (state.challenge.targets.includes(cursorEl)) {
-                cursorEl.classList.remove("delete-word-challenge");
-                state.challenge.targets.splice(state.challenge.targets.findIndex((el) => el === cursorEl), 1);
+            if (state.challenge.targets.includes(span)) {
+                span.classList.remove("delete-word-challenge");
+                state.challenge.targets.splice(state.challenge.targets.findIndex((el) => el === span), 1);
             }
 
             if (state.challenge.targets.length === 0) {
@@ -105,6 +102,25 @@ export function isChallengeFinished(typeOfAction) {
         }
         return false;
     }
+}
+
+export function pickNewChallenge() {
+    const type = state.unlockedTypes[Math.floor(Math.random() * state.unlockedTypes.length)];
+    const typesOfChallenges = new Map([
+        ["movement", [
+            moveToCharChallenge,
+        ]],
+
+        ["deletion", [
+            deleteWordChallenge
+        ]]
+    ]);
+
+    const i = Math.floor(Math.random() * typesOfChallenges.get(type).length);
+    const challenge = typesOfChallenges.get(type)[i];
+    state.challengeStartTime = Date.now();
+    updateObjectiveText(challenge);
+    challenge();
 }
 
 export function givePoints(startTime) {
@@ -130,73 +146,6 @@ export function givePoints(startTime) {
     pointsAudio();
 }
 
-export function displayCommands(availableCommands) {
-    //Make it so when there are less than 3 commands to unlock the div itself doesnt show up or even when there is 0 none show up
-    const commDiv1 = document.getElementById("command-1");
-    const commDiv2 = document.getElementById("command-2");
-    const commDiv3 = document.getElementById("command-3");
-
-    const commands = [];
-    const idxs = [];
-    let idx = -1;
-
-    for (let i = 0; i < 3; i++) {
-        do {
-            idx = Math.floor(Math.random() * availableCommands.length);
-        } while (idxs.includes(idx))
-        commands.push(availableCommands[idx]);
-        idxs.push(idx);
-    }
-    commDiv1.textContent = commands[0];
-    commDiv2.textContent = commands[1];
-    commDiv3.textContent = commands[2];
-
-    return idxs;
-}
-
-export function unlockCommand(idxs, i, availableCommands, cmnds) {
-    const commandTypes = new Map([
-        ["h", "movement"],
-        ["j", "movement"],
-        ["k", "movement"],
-        ["l", "movement"],
-
-        ["x", "deletion"],
-        ["dd", "deletion"],
-        ["dw", "deletion"],
-
-        ["i", "inserting"],
-        ["A", "inserting"],
-
-        ["w", "movement"],
-        ["b", "movement"]
-    ]);
-
-    const newCommand = availableCommands[idxs[i]];
-    cmnds.get(newCommand).unlocked = true;
-    
-
-    if (!state.unlockedTypes.includes(commandTypes.get(newCommand))) {
-        state.unlockedTypes.push(commandTypes.get(newCommand));
-    }
-
-    const commands = document.querySelectorAll(".command");
-    const last = commands[commands.length - 1];
-
-    const newComDiv = document.createElement("div");
-    newComDiv.classList.add("command");
-    newComDiv.textContent = newCommand;
-
-    last.after(newComDiv);
-    
-    availableCommands.splice(idxs[i], 1);
-
-    const betweenRoundsDiv = document.getElementById("between-round-dg");
-    const roundEndDiv = document.getElementById("round-end-dg");
-
-    roundEndDiv.style.display = "none";
-    betweenRoundsDiv.style.display = "flex";
-}
 
 export function updateRoundCounter() {
     const roundNumCounter = document.getElementById("round-num-data");

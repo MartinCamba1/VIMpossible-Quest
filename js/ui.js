@@ -1,5 +1,8 @@
 import { state } from "./globals.js";
 
+let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b"];
+import {commands} from "./index.js";
+
 export function spanify(text) {
     const terminal = document.getElementById("vim-terminal");
 
@@ -85,6 +88,7 @@ export function stopTimer(timer) {
     timer = undefined;
     /*updateRoundCounter();*/
 
+    const dialogEl = document.getElementById("terminal-dialog");
     let pointsScoredSpan;
     let pointsNeeded;
     const startRoundDg = document.getElementById("round-start-dg");
@@ -126,4 +130,75 @@ export function stopTimer(timer) {
 
     dialogEl.showModal();
     
+}
+
+
+export function displayCommands(availableCommands) {
+    
+
+    //Make it so when there are less than 3 commands to unlock the div itself doesnt show up or even when there is 0 none show up
+    const commDiv1 = document.getElementById("command-1");
+    const commDiv2 = document.getElementById("command-2");
+    const commDiv3 = document.getElementById("command-3");
+
+    const commands = [];
+    const idxs = [];
+    let idx = -1;
+
+    for (let i = 0; i < 3; i++) {
+        do {
+            idx = Math.floor(Math.random() * availableCommands.length);
+        } while (idxs.includes(idx))
+        commands.push(availableCommands[idx]);
+        idxs.push(idx);
+    }
+    commDiv1.textContent = commands[0];
+    commDiv2.textContent = commands[1];
+    commDiv3.textContent = commands[2];
+
+    return idxs;
+}
+
+export function unlockCommand(idxs, i, availableCommands, cmnds) {
+    const commandTypes = new Map([
+        ["h", "movement"],
+        ["j", "movement"],
+        ["k", "movement"],
+        ["l", "movement"],
+
+        ["x", "deletion"],
+        ["dd", "deletion"],
+        ["dw", "deletion"],
+
+        ["i", "inserting"],
+        ["A", "inserting"],
+
+        ["w", "movement"],
+        ["b", "movement"]
+    ]);
+
+    const newCommand = availableCommands[idxs[i]];
+    cmnds.get(newCommand).unlocked = true;
+    
+
+    if (!state.unlockedTypes.includes(commandTypes.get(newCommand))) {
+        state.unlockedTypes.push(commandTypes.get(newCommand));
+    }
+
+    const commands = document.querySelectorAll(".command");
+    const last = commands[commands.length - 1];
+
+    const newComDiv = document.createElement("div");
+    newComDiv.classList.add("command");
+    newComDiv.textContent = newCommand;
+
+    last.after(newComDiv);
+    
+    availableCommands.splice(idxs[i], 1);
+
+    const betweenRoundsDiv = document.getElementById("between-round-dg");
+    const roundEndDiv = document.getElementById("round-end-dg");
+
+    roundEndDiv.style.display = "none";
+    betweenRoundsDiv.style.display = "flex";
 }
