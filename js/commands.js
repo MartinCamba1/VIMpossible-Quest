@@ -1,3 +1,4 @@
+/*      Constants and Global Variables      */
 
 import { state } from "./globals.js";
 import { updateCursor } from "./cursor.js";
@@ -16,7 +17,12 @@ const punctuations = [
 
 const modeEl = document.getElementById("mode-text");
 
+/*----------------------------------*/
 
+
+/*      Commands available for the player to unlock.        */
+
+// Deletes the character the cursor is on currently.
 export function deleteChar() {
     state.characters[state.cursor.row].splice(state.cursor.col, 1);
 
@@ -29,6 +35,7 @@ export function deleteChar() {
     updateCursor();
 }
 
+// Deletes a whole line the cursor is on
 export function deleteLine() {
     if (state.brElArr.length > 0) {
         const cursorWasOnLastLine = state.cursor.row == state.characters.length - 1;
@@ -65,6 +72,7 @@ export function deleteLine() {
     }
 }
 
+// Jumps to the next word ahead of the cursor.
 export function wCommand() {
     const pos = findNextWord(state.cursor.row, state.cursor.col);
     state.cursor.row = pos.row;
@@ -72,6 +80,7 @@ export function wCommand() {
     updateCursor();
 }
 
+// Jumps backwards to the previous word behind the cursor.
 export function bCommand() {
     const pos = findPrevWord(state.cursor.row, state.cursor.col);
     state.cursor.row = pos.row;
@@ -79,7 +88,10 @@ export function bCommand() {
     updateCursor();
 }
 
+// Deletes the next word ahead of the cursor.
+
 /* Need to add not deleting whitespace such as . after the word */
+/* Doesnt delete the first character of the word for some reason. */
 export function dwCommand() {
     const pos = findNextWord(state.cursor.row, state.cursor.col);
     const newRow = pos.row;
@@ -101,6 +113,7 @@ export function dwCommand() {
     state.spans[state.cursor.row].splice(state.cursor.col, (newCol - state.cursor.col));
 }
 
+// Enters insert mode and jumps to the end of the current line.
 export function appendAtEndLine() {
     state.mode = "insert";
     modeEl.textContent = "INSERT";
@@ -108,6 +121,7 @@ export function appendAtEndLine() {
     updateCursor();
 }
 
+// Helper Function used in wCommand
 function findNextWord(inputRow, inputCol) {
     let row = inputRow;
     let col = inputCol;
@@ -134,6 +148,7 @@ function findNextWord(inputRow, inputCol) {
     return {row, col};
 }
 
+// Helper Function used in bCommand.
 function findPrevWord(inputRow, inputCol) {
     let row = inputRow;
     let col = inputCol;

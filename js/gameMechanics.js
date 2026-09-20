@@ -3,6 +3,9 @@ import {
     pointsAudio
 } from "./audio.js";
 
+
+/*      Challenges      */
+
 /*      Need to add a way to resolve the issue when the word is deleted     */
 /*      Also there is an issue when the user deletes a line or the word shifts a position so better would be to check for the span right away   */
 /*      Bug where if you delete some part of the line where the challenge is active it doesnt register the change in positioning in globals.js. */
@@ -30,6 +33,7 @@ export function deleteWordChallenge() {
     state.challenge.targets = targets;
 }
 
+//Used in deleteWordChallenge to pick a random word to make the target
 function findRandWord() {
     let row = Math.floor(Math.random() * state.characters.length);
     let col = Math.floor(Math.random() * state.characters[row].length)
@@ -51,6 +55,7 @@ function findRandWord() {
     return findEdgeOfWord(row, col);
 }
 
+// Used in findRandWord to find the edge spans of the random word
 function findEdgeOfWord(row, col) {
     const res = [state.spans[row][col]];
 
@@ -71,6 +76,11 @@ function findEdgeOfWord(row, col) {
     return res;
 }
 
+/*----------------------------------*/
+
+/*      Challenge Completion Handling       */
+
+//Checks if a challenge that is currently active is completed and gives points and picks a new challenge
 export function isChallengeFinished(typeOfAction, span) {
     let col = state.cursor.col;
     let row = state.cursor.row;
@@ -104,6 +114,7 @@ export function isChallengeFinished(typeOfAction, span) {
     }
 }
 
+// Function used to pick a new challenge when the previous one is completed
 export function pickNewChallenge() {
     const type = state.unlockedTypes[Math.floor(Math.random() * state.unlockedTypes.length)];
     const typesOfChallenges = new Map([
@@ -123,6 +134,7 @@ export function pickNewChallenge() {
     challenge();
 }
 
+// Function to give points when a challenge is completed
 export function givePoints(startTime) {
     const pointsEl = document.getElementById("points-num");
     let delta = Math.floor((Date.now() - startTime) / 1000);
@@ -146,6 +158,10 @@ export function givePoints(startTime) {
     pointsAudio();
 }
 
+/*----------------------------------*/
+
+
+/*      Not used currently      */
 
 export function updateRoundCounter() {
     const roundNumCounter = document.getElementById("round-num-data");
@@ -163,3 +179,5 @@ export function updateObjectiveText(challenge) {
     const objectiveSpan = document.getElementById("objective-data");
     objectiveSpan.textContent = challengeObjectives.get(challenge);
 }
+
+/*----------------------------------*/

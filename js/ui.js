@@ -2,7 +2,11 @@ import { state } from "./globals.js";
 
 let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b"];
 import {commands} from "./index.js";
+import { isElemAtEdge } from "./cursor.js";
 
+// Function which comverts the terminal text into spans in the global 'state'.
+// Each row has its own array of spans.
+// Also creates a 'states.characters' array where each row has all of the characters in it.
 export function spanify(text) {
     const terminal = document.getElementById("vim-terminal");
 
@@ -54,9 +58,46 @@ export function spanify(text) {
     return res;
     
 }
+// Handles when the user deletes a blank line but doesnt work sometimes, needs debugging.
+export function handleDeletionLineBreak() {
+    let idx = 0;
+    const row = state.cursor.row;
+    const newCol = state.spans[row - 1].length;
+
+    let prevRowLen = state.characters[row - 1].length;
+    let currRowLen = state.characters[row].length;
+
+    if (currRowLen === 0) {
+        state.brElArr[row].remove();
+        state.brElArr.splice(row, 1);
+        return newCol;
+    }
+
+    let prevLastEl = state.spans[row - 1][prevRowLen - 1];
+    while (!isElemAtEdge(prevLastEl) && idx < currRowLen) {
+        prevLastEl = state.spans[row - 1][prevRowLen + idx - 1];
+        let currEl = state.spans[row][idx];
+        currEl.remove();
+
+        if (prevRowLen === 0) {
+            state.brElArr[row - 1].after(state.spans[row][idx]);
+        }
+        else {
+            state.spans[row - 1][state.spans[row - 1].length - 1].after(currEl);
+        }
+        state.spans[row - 1].push(currEl);
+        idx++;
+    }
+    state.characters[row - 1].splice(prevRowLen, 0, ...state.characters[row].splice(0, idx));
+    state.spans[row].splice(0, idx);
+
+    return newCol;
+}
 
 
+/*      Time Formatting     */
 
+// Converts input time into text, which can be shown to the player.
 export function formatTime(time) {
     let seconds = time % 60;
     let minutes = Math.floor(time / 60);
@@ -64,6 +105,7 @@ export function formatTime(time) {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
+// Updates the time remaining in the current round each second.
 export function updateTimer(timer, totalTime, timeOfStart) {
     const timerEl = document.getElementById("time-left");
     let delta = Math.floor((Date.now() - timeOfStart) / 1000);
@@ -77,12 +119,15 @@ export function updateTimer(timer, totalTime, timeOfStart) {
     }
 }
 
+// Starts the timer when the round starts.
 export function startTimer(timer, totalTime, timeOfStart) {
     if (!timer) {
         timer = setInterval(() => updateTimer(timer, totalTime, timeOfStart), 1000);
     }
 }
 
+// Stops the timer when the round ends. Also displays the dialog based on whether the user lost or not.
+// Displays three commands for the user to pick one of them to unlock.
 export function stopTimer(timer) {
     clearInterval(timer);
     timer = undefined;
@@ -132,7 +177,11 @@ export function stopTimer(timer) {
     
 }
 
+/*----------------------------------*/
 
+/*      Unlocking New Commands      */
+
+// Displays functions available to unlock after the player finishes a round.
 export function displayCommands(availableCommands) {
     
 
@@ -159,6 +208,7 @@ export function displayCommands(availableCommands) {
     return idxs;
 }
 
+// Function used to unlock the command the user has chosen.
 export function unlockCommand(idxs, i, availableCommands, cmnds) {
     const commandTypes = new Map([
         ["h", "movement"],
@@ -202,3 +252,4 @@ export function unlockCommand(idxs, i, availableCommands, cmnds) {
     roundEndDiv.style.display = "none";
     betweenRoundsDiv.style.display = "flex";
 }
+/*----------------------------------*/

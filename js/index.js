@@ -38,6 +38,7 @@ import {
 import {
     startTimer,
     spanify,
+    handleDeletionLineBreak,
 
     displayCommands,
     unlockCommand
@@ -86,6 +87,8 @@ const texts = [
 /*      Functions       */
 
 
+/*      Input Parsing       */
+//Checks whether a string in inputBuffer can lead to an existing command
 function isPossibleCommand(input) {
     for(const command of commands.keys()) {
         if (command.startsWith(input)) return true;
@@ -93,6 +96,8 @@ function isPossibleCommand(input) {
     return false;
 }
 
+// Handles key updating in the bottom of the terminal and clears inputBuffer when the input no longer makes sense.
+// Calls a function for existing command
 function parseInput(event) {
     const inputBufferDiv = document.getElementById("input-buffer");
     const inputBufferText = document.getElementById("buffer-text");
@@ -118,47 +123,45 @@ function parseInput(event) {
     return null;
 }
 
-function handleDeletionLineBreak() {
-    let idx = 0;
-    const row = state.cursor.row;
-    const newCol = state.spans[row - 1].length;
-
-    let prevRowLen = state.characters[row - 1].length;
-    let currRowLen = state.characters[row].length;
-
-    if (currRowLen === 0) {
-        state.brElArr[row].remove();
-        state.brElArr.splice(row, 1);
-        return newCol;
+// Function that handles each key press and decides on whether to look for a command or insert the text.
+function handleKeyPress(event) {
+    if (state.mode === "normal") {
+        const func = parseInput(event);
+        if (func !== null) func();
     }
-
-    let prevLastEl = state.spans[row - 1][prevRowLen - 1];
-    while (!isElemAtEdge(prevLastEl) && idx < currRowLen) {
-        prevLastEl = state.spans[row - 1][prevRowLen + idx - 1];
-        let currEl = state.spans[row][idx];
-        currEl.remove();
-
-        if (prevRowLen === 0) {
-            state.brElArr[row - 1].after(state.spans[row][idx]);
+    else {
+        if (event.key === "Escape") {
+            exitInsertMode();
         }
         else {
-            state.spans[row - 1][state.spans[row - 1].length - 1].after(currEl);
+            handleInsertMode(event);
         }
-        state.spans[row - 1].push(currEl);
-        idx++;
     }
-    state.characters[row - 1].splice(prevRowLen, 0, ...state.characters[row].splice(0, idx));
-    state.spans[row].splice(0, idx);
 
-    return newCol;
+    if (unlockedCommands.includes(event.key) && commands.has(event.key)) {
+        const type = commands.get(event.key).type;
+        if (isChallengeFinished(type, state.spans[state.cursor.row][state.cursor.col])) {
+            pickNewChallenge();
+        }
+    }
 }
 
 
+
+
+/*----------------------------------*/
+
+
+
+/*      Handling Insert Mode        */
+
+// Function which enters the INSERT mode.
 function insertCommand() {
     state.mode = "insert";
     modeEl.textContent = "INSERT";
 }
 
+// Function which exits the INSERT mode.
 function exitInsertMode() {
     if (state.cursor.col > 0) state.cursor.col--;
     updateCursor();
@@ -166,6 +169,7 @@ function exitInsertMode() {
     modeEl.textContent = "NORMAL";
 }
 
+// Function which handles parsing the text and other inputs such as Enter.
 function handleInsertMode(event) {
     const span = document.createElement("span");
     span.textContent = event.key;
@@ -248,34 +252,13 @@ function handleInsertMode(event) {
         }
     }
     updateCursor();
-
 }
 
-function handleKeyPress(event) {
-    if (state.mode === "normal") {
-        const func = parseInput(event);
-        if (func !== null) func();
-    }
-    else {
-        if (event.key === "Escape") {
-            exitInsertMode();
-        }
-        else {
-            handleInsertMode(event);
-        }
-    }
+/*----------------------------------*/
 
-    if (unlockedCommands.includes(event.key) && commands.has(event.key)) {
-        const type = commands.get(event.key).type;
-        if (isChallengeFinished(type, state.spans[state.cursor.row][state.cursor.col])) {
-            pickNewChallenge();
-        }
-    }
-}
+/*      Starting A Round        */
 
-
-
-
+// Resets the timer and points, picks a challenge, starts a new round
 function startRound() {
     const betweenRoundsDiv = document.getElementById("between-round-dg");
     betweenRoundsDiv.style.display = "none";
