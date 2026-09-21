@@ -277,12 +277,7 @@ function startRound() {
     pointsNeededEl.style.color = "#ffffff";
     pointsNeededEl.textContent = "Points Left: " + state.pointsNeeded.toString();
     
-    
-
-    /*const randomText = texts[Math.floor(Math.random() * texts.length)];*/
-    let randomText = texts;
-
-    state.spans = spanify(randomText);
+    state.spans = spanify();
     updateCursor();
     pickNewChallenge();
 }

@@ -1,13 +1,19 @@
-import { state } from "./globals.js";
+import { 
+    state,
+    codeLines
+} from "./globals.js";
 
 let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b"];
 import {commands} from "./index.js";
 import { isElemAtEdge } from "./cursor.js";
 
+
 // Function which comverts the terminal text into spans in the global 'state'.
 // Each row has its own array of spans.
 // Also creates a 'states.characters' array where each row has all of the characters in it.
-export function spanify(text) {
+
+// Need to fix creating the text the way it checks if it reached the edges doesnt work.
+export function spanify() {
     const terminal = document.getElementById("vim-terminal");
 
     const terminalText = document.getElementById("terminal-text");
@@ -16,22 +22,39 @@ export function spanify(text) {
     state.brElArr.length = 0;
     terminalText.innerHTML = "";
 
+    const lineHeight = parseFloat(
+        getComputedStyle(terminalText).lineHeight
+    );
+
     const terminalRect = terminal.getBoundingClientRect();
+    const horizontalEdge = terminalRect.right;
+    const verticalEdge = terminalRect.bottom - lineHeight;
+    
 
     const res = [];
     let rowSpans = [];
     let rowChars = [];
 
-    for (const line of text) {
+    while (true) {
         rowSpans = [];
         rowChars = [];
+
+        const line = getRandomLine();
         for (const char of line) {
             const span = document.createElement("span");
             span.textContent = char;
             terminalText.appendChild(span);
             let spanRect = span.getBoundingClientRect();
             
-            if (spanRect.right >= terminalRect.right) {
+            if (spanRect.bottom > verticalEdge) {
+                span.remove();
+                for (const delSpan of rowSpans) {
+                    delSpan.remove();
+                }
+                return res;
+            }
+
+            if (spanRect.right > horizontalEdge) {
                 span.remove();
                 state.characters.push(rowChars);
                 res.push(rowSpans);
@@ -56,7 +79,11 @@ export function spanify(text) {
     }
 
     return res;
-    
+}
+
+// Return a random line from the codeLines array
+function getRandomLine() {
+    return codeLines[Math.floor(Math.random() * codeLines.length)];
 }
 // Handles when the user deletes a blank line but doesnt work sometimes, needs debugging.
 export function handleDeletionLineBreak() {

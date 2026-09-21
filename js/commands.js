@@ -92,6 +92,7 @@ export function bCommand() {
 
 /* Need to add not deleting whitespace such as . after the word */
 /* Doesnt delete the first character of the word for some reason. */
+    // Need to test it properly on a single punctuation mark.
 export function dwCommand() {
     const pos = findNextWord(state.cursor.row, state.cursor.col);
     const newRow = pos.row;
