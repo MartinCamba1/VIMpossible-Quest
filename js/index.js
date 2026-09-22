@@ -50,20 +50,20 @@ let unlockedCommands = ["h", "j", "k", "l"];
 
 
 export const commands = new Map([
-    ["h",  { action: moveLeft,        unlocked: true,  type: "movement" }],
-    ["j",  { action: moveDown,        unlocked: true,  type: "movement" }],
-    ["k",  { action: moveUp,          unlocked: true,  type: "movement" }],
-    ["l",  { action: moveRight,       unlocked: true,  type: "movement" }],
+    ["h",  { action: moveLeft,        unlocked: true,  type: ["movement"] }],
+    ["j",  { action: moveDown,        unlocked: true,  type: ["movement"] }],
+    ["k",  { action: moveUp,          unlocked: true,  type: ["movement"] }],
+    ["l",  { action: moveRight,       unlocked: true,  type: ["movement"] }],
 
-    ["x",  { action: deleteChar,      unlocked: false, type: "deletion" }],
-    ["dd", { action: deleteLine,      unlocked: false, type: "deletion" }],
-    ["dw", { action: dwCommand,       unlocked: true, type: "deletion" }],
+    ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
+    ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
+    ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
 
-    ["i",  { action: insertCommand,   unlocked: false, type: "inserting" }],
-    ["A",  { action: appendAtEndLine, unlocked: false, type: "inserting" }],
+    ["i",  { action: insertCommand,   unlocked: false, type: ["inserting"] }],
+    ["A",  { action: appendAtEndLine, unlocked: false, type: ["inserting"] }],
 
-    ["w",  { action: wCommand,        unlocked: true,  type: "movement" }],
-    ["b",  { action: bCommand,        unlocked: false, type: "movement" }]
+    ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
+    ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }]
 ]);
 
 
@@ -74,14 +74,14 @@ const startGameBtns = document.querySelectorAll(".start-round-btn");
 
 const modeEl = document.getElementById("mode-text");
 
-
+/*
 const texts = [
     "The quick brown fox jumps over the lazy dog.",
     "JavaScript allows you, to manipulate elements on a web page.",
     "Learning Vim requires repetition and practice.",
     "Functions allow you to organize reusable pieces of codeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee."
 ];
-
+*/
 /*----------------------------------*/
 
 
@@ -131,7 +131,9 @@ function handleKeyPress(event) {
     }
     if (state.mode === "normal") {
         const func = parseInput(event);
-        if (func !== null) func();
+        if (func !== null) {
+            func();
+        }
     }
     else {
         if (event.key === "Escape") {
@@ -142,9 +144,17 @@ function handleKeyPress(event) {
         }
     }
 
-    if (unlockedCommands.includes(event.key) && commands.has(event.key)) {
+    if (
+        state.mode === "normal" &&
+        unlockedCommands.includes(event.key) &&
+        commands.has(event.key)
+    ) {
         const type = commands.get(event.key).type;
-        if (isChallengeFinished(type, state.spans[state.cursor.row][state.cursor.col])) {
+
+        if (isChallengeFinished(
+            type,
+            state.spans[state.cursor.row][state.cursor.col]
+        )) {
             pickNewChallenge();
         }
     }
@@ -275,7 +285,7 @@ function startRound() {
     state.paused = false;
 
     
-    state.remainingTime = 20;
+    state.remainingTime = 100;
     state.timeOfStart = Date.now();
     state.timer = undefined;
     resumeTimer();

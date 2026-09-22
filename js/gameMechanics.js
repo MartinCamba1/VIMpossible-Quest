@@ -11,23 +11,46 @@ import {
 /*      Bug where if you delete some part of the line where the challenge is active it doesnt register the change in positioning in globals.js. */
 export function moveToCharChallenge() {
     let row = Math.floor(Math.random() * state.characters.length);
-    let col = Math.floor(Math.random() * state.characters[row].length)
+
+    while (state.characters[row].length === 0) {
+        row = Math.floor(Math.random() * state.characters.length);
+    }
+
+    let col = Math.floor(Math.random() * state.characters[row].length);
     let target = state.spans[row][col];
 
     target.classList.add("move-to-char-challenge");
     state.challenge.type = "move-to-char";
     state.challenge.target = target;
+
+    
+}
+
+function deleteCharChallenge() {
+    let row = Math.floor(Math.random() * state.characters.length);
+
+    while (state.characters[row].length === 0) {
+        row = Math.floor(Math.random() * state.characters.length);
+    }
+
+    let col = Math.floor(Math.random() * state.characters[row].length);
+    let target = state.spans[row][col];
+
+    target.classList.add("delete-word-challenge");
+    state.challenge.type = "delete-char";
+    state.challenge.target = target;
 }
 
 export function deleteWordChallenge() {
-    const targets = findRandWord();
-    if (targets == undefined) {
-        return undefined;
-    }
+    let targets;
+
+    do {
+        targets = findRandWord();
+    } while (targets === undefined);
 
     targets.forEach((target) => {
         target.classList.add("delete-word-challenge");
-    })
+    });
 
     state.challenge.type = "delete-word";
     state.challenge.targets = targets;
@@ -36,13 +59,22 @@ export function deleteWordChallenge() {
 //Used in deleteWordChallenge to pick a random word to make the target
 function findRandWord() {
     let row = Math.floor(Math.random() * state.characters.length);
-    let col = Math.floor(Math.random() * state.characters[row].length)
+
+    while (state.characters[row].length === 0) {
+        row = Math.floor(Math.random() * state.characters.length);
+    }
+
+    let col = Math.floor(Math.random() * state.characters[row].length);
 
     let i = 0;
     while (col - i >= 0 && col + i < state.characters[row].length && 
         (state.characters[row][col + i] == " " && state.characters[row][col - i] == " ")) {
             i++;
         }
+    
+    if (col - i < 0 || col + i >= state.characters[row].length) {
+        return undefined;
+    }
     
     if (state.characters[row][col - i] == " " && state.characters[row][col + i] == " ") return undefined;
     if (state.characters[row][col - i] != " ") {
@@ -85,7 +117,7 @@ export function isChallengeFinished(typeOfAction, span) {
     let col = state.cursor.col;
     let row = state.cursor.row;
 
-    if (typeOfAction === "movement") {
+    if (typeOfAction.includes("movement")) {
         if (state.challenge?.type === "move-to-char") {
             if (span === state.challenge.target) {
                 state.challenge.target.classList.remove("move-to-char-challenge");
@@ -97,7 +129,7 @@ export function isChallengeFinished(typeOfAction, span) {
     }
     
     //There is a known bug where the spans when you complete deletion challenge and a new deletion is picked the spans are weird somehow.
-    else if (typeOfAction === "deletion") {
+    else if (typeOfAction.includes("deletion")) {
         if (state.challenge.type === "delete-word") {
             if (state.challenge.targets.includes(span)) {
                 span.classList.remove("delete-word-challenge");
@@ -112,6 +144,17 @@ export function isChallengeFinished(typeOfAction, span) {
         }
         return false;
     }
+
+    else if (typeOfAction.includes("single-char-deletion")) {
+        if (state.challenge.type === "delete-char") {
+            if (state.challenge.target === span) {
+                state.challenge.target.classList.remove("delete-word-challenge");
+                state.challenge = {};
+                givePoints(state.challengeStartTime);
+                return true;
+            }
+        }
+    }
 }
 
 // Function used to pick a new challenge when the previous one is completed
@@ -124,6 +167,10 @@ export function pickNewChallenge() {
 
         ["deletion", [
             deleteWordChallenge
+        ]],
+
+        ["single-char-deletion", [
+            deleteCharChallenge
         ]]
     ]);
 

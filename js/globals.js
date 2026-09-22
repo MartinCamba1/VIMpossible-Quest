@@ -15,13 +15,16 @@ export const state = {
 
     timeOfStart: null,    /* A var for when the challenge started so points can be awarded accordingly. */
     timer: undefined,       /* Timer var. */
-    remainingTime: 30,     /* Remaining time of the round. */
+    remainingTime: 100,     /* Remaining time of the round. */
 
     totalPoints: 0,       /* A number of points the player has gained throughout the run. */
     pointsThisRound: 0,      /* A number of points the player has gained this round. */
     pointsNeeded: 1000,      /* The number of points needed to pass the round. */
 
+    soundDisabled: false,       /* Bool value deciding whether SFX play. */
+
     unlockedTypes: ["movement", "deletion"]     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
+                                                // Possible values: "movement", "deletion", "single-char-deletion"
 }
 
 // Lines used for creating text for the player

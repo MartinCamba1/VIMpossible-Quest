@@ -272,13 +272,14 @@ export function unlockCommand(idxs, i, availableCommands, cmnds) {
     const newCommand = availableCommands[idxs[i]];
     cmnds.get(newCommand).unlocked = true;
     
-
-    if (!state.unlockedTypes.includes(commandTypes.get(newCommand))) {
-        state.unlockedTypes.push(commandTypes.get(newCommand));
+    for (const type of commands.get(newCommand).type) {
+        if (!state.unlockedTypes.includes(type)) {
+            state.unlockedTypes.push(type);
+        }
     }
 
-    const commands = document.querySelectorAll(".command");
-    const last = commands[commands.length - 1];
+    const comms = document.querySelectorAll(".command");
+    const last = comms[comms.length - 1];
 
     const newComDiv = document.createElement("div");
     newComDiv.classList.add("command");
@@ -320,19 +321,21 @@ function toggleIcon(event) {
     const pressedSvg = event.currentTarget;
 
     if (pressedSvg === volumeOn) {
+        state.soundDisabled = true;
+
         volumeOn.classList.add("hidden");
         volumeOff.classList.remove("hidden");
     } else if (pressedSvg === volumeOff) {
+        state.soundDisabled = false;
+        
         volumeOff.classList.add("hidden");
         volumeOn.classList.remove("hidden");
     } else if (pressedSvg === pauseButton) {
-        //Need to add functionality to pausing the game.
         pauseTimer();
 
         pauseButton.classList.add("hidden");
         playButton.classList.remove("hidden");
     } else if (pressedSvg === playButton) {
-        //Need to add functionality to resuming the game.
         state.timeOfStart = Date.now();
         resumeTimer();
 

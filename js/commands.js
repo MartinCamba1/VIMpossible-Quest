@@ -96,24 +96,32 @@ export function bCommand() {
 export function dwCommand() {
     const row = state.cursor.row;
     const col = state.cursor.col;
+    let needNewChallenge = false;
     if (punctuations.includes(state.characters[row][col])) {
         const span = state.spans[row][col];
 
         if (isChallengeFinished("deletion", span)) {
-            pickNewChallenge();
+            needNewChallenge = true;
         }
 
         state.characters[row].splice(col, 1);
         span.remove();
         state.spans[row].splice(col, 1);
 
+        if (needNewChallenge === true) {
+            pickNewChallenge();
+        }
         return;
     }
 
 
     const pos = findNextWord(state.cursor.row, state.cursor.col);
     const newRow = pos.row;
-    const newCol = pos.col;
+    let newCol = pos.col;
+
+    if (newRow === row && newCol === col) {
+        newCol++;
+    }
 
     if (state.cursor.row !== newRow) {
         /* Add deleting backwards with function findPrevWord() */
@@ -123,12 +131,16 @@ export function dwCommand() {
     
     for (let i = state.cursor.col; i < newCol; i++) {
         if (isChallengeFinished("deletion", state.spans[state.cursor.row][i])) {
-            pickNewChallenge();
+            needNewChallenge = true;
         }
         state.spans[state.cursor.row][i].remove();
         
     }
     state.spans[state.cursor.row].splice(state.cursor.col, (newCol - state.cursor.col));
+
+    if (needNewChallenge === true) {
+        pickNewChallenge();
+    }
 }
 
 // Enters insert mode and jumps to the end of the current line.
