@@ -6,13 +6,21 @@ export const state = {
     spans: [],      /* Array for each line and span for each character in each array. */
     characters: [],        /* Array(44) [ "T", "h", "e", … ] */
     brElArr: [],       /* <br> for each line */
+
     inputBuffer: [],    /* An array that cointains the command keys pressed and when no command can be made it is emptied. */
     mode: "normal",     /* A mode that is used, 'normal' or 'insert'. */
+    paused: true,       /* A bool value representing whether the user has paused the game. */
+
     challenge: {},      /* An object for the challenge selected. */
-    challengeStartTime: null,    /* A var for when the challenge started so points can be awarded accordingly. */
+
+    timeOfStart: null,    /* A var for when the challenge started so points can be awarded accordingly. */
+    timer: undefined,       /* Timer var. */
+    remainingTime: 30,     /* Remaining time of the round. */
+
     totalPoints: 0,       /* A number of points the player has gained throughout the run. */
     pointsThisRound: 0,      /* A number of points the player has gained this round. */
     pointsNeeded: 1000,      /* The number of points needed to pass the round. */
+
     unlockedTypes: ["movement", "deletion"]     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
 }
 

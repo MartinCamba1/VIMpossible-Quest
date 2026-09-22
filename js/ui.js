@@ -133,13 +133,16 @@ export function formatTime(time) {
 }
 
 // Updates the time remaining in the current round each second.
-export function updateTimer(timer, totalTime, timeOfStart) {
+export function updateTimer() {
+    const totalTime = state.remainingTime;
+    const timeOfStart = state.timeOfStart;
+
     const timerEl = document.getElementById("time-left");
     let delta = Math.floor((Date.now() - timeOfStart) / 1000);
     let currTime = totalTime - delta;
     if (currTime <= 0) {
         timerEl.textContent = formatTime(0);
-        stopTimer(timer);
+        stopTimer();
     }
     else {
         timerEl.textContent = formatTime(totalTime - delta);
@@ -147,18 +150,20 @@ export function updateTimer(timer, totalTime, timeOfStart) {
 }
 
 // Starts the timer when the round starts.
-export function startTimer(timer, totalTime, timeOfStart) {
-    if (!timer) {
-        timer = setInterval(() => updateTimer(timer, totalTime, timeOfStart), 1000);
+export function resumeTimer() {
+    if (!state.timer) {
+        state.paused = false;
+        state.timeOfStart = Date.now();
+        state.timer = setInterval(() => updateTimer(state.timer, state.totalTime, ), 1000);
     }
 }
 
 // Stops the timer when the round ends. Also displays the dialog based on whether the user lost or not.
 // Displays three commands for the user to pick one of them to unlock.
-export function stopTimer(timer) {
-    clearInterval(timer);
-    timer = undefined;
-    /*updateRoundCounter();*/
+export function stopTimer() {
+    clearInterval(state.timer);
+    state.timer = undefined;
+    state.paused = true;
 
     const dialogEl = document.getElementById("terminal-dialog");
     let pointsScoredSpan;
@@ -202,7 +207,16 @@ export function stopTimer(timer) {
     pointsNeeded.textContent = state.pointsNeeded;
 
     dialogEl.showModal();
-    
+}
+
+export function pauseTimer() {
+    clearInterval(state.timer);
+    state.timer = undefined;
+    state.paused = true;
+
+    let delta = Math.floor((Date.now() - state.timeOfStart) / 1000);
+    console.log(delta);
+    state.remainingTime = state.remainingTime - delta;
 }
 
 /*----------------------------------*/
@@ -313,10 +327,15 @@ function toggleIcon(event) {
         volumeOn.classList.remove("hidden");
     } else if (pressedSvg === pauseButton) {
         //Need to add functionality to pausing the game.
+        pauseTimer();
+
         pauseButton.classList.add("hidden");
         playButton.classList.remove("hidden");
     } else if (pressedSvg === playButton) {
         //Need to add functionality to resuming the game.
+        state.timeOfStart = Date.now();
+        resumeTimer();
+
         playButton.classList.add("hidden");
         pauseButton.classList.remove("hidden");
     }

@@ -36,7 +36,8 @@ import {
 } from "./audio.js";
 
 import {
-    startTimer,
+    resumeTimer,
+    pauseTimer,
     spanify,
     handleDeletionLineBreak,
 
@@ -125,6 +126,9 @@ function parseInput(event) {
 
 // Function that handles each key press and decides on whether to look for a command or insert the text.
 function handleKeyPress(event) {
+    if (state.paused === true) {
+        return;
+    }
     if (state.mode === "normal") {
         const func = parseInput(event);
         if (func !== null) func();
@@ -268,12 +272,13 @@ function startRound() {
 
     state.cursor.col = 0;
     state.cursor.row = 0;
+    state.paused = false;
 
     
-    let totalTime = 20;
-    let timeOfStart = Date.now();
-    let timer;
-    startTimer(timer, totalTime, timeOfStart);
+    state.remainingTime = 20;
+    state.timeOfStart = Date.now();
+    state.timer = undefined;
+    resumeTimer();
 
     const pointsNeededEl = document.getElementById("points-num");
     pointsNeededEl.style.color = "#ffffff";
@@ -292,7 +297,6 @@ function startRound() {
 
 dialogEl.showModal();
 startGameBtns.forEach((btn) => btn.addEventListener("click", () => startRound()));
-/*startGameBtn.addEventListener("click", () => startRound());*/
 document.addEventListener("keydown", (event) => handleKeyPress(event));
 
 const allBtns = document.querySelectorAll(".button");
@@ -300,7 +304,5 @@ const allBtns = document.querySelectorAll(".button");
 for (let btn of allBtns) {
     btn.addEventListener("click", () => clickAudio());
 }
-
-
 
 /*----------------------------------*/
