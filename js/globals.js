@@ -15,7 +15,7 @@ export const state = {
 
     timeOfStart: null,    /* A var for when the challenge started so points can be awarded accordingly. */
     timer: undefined,       /* Timer var. */
-    remainingTime: 100,     /* Remaining time of the round. */
+    remainingTime: 20,     /* Remaining time of the round. */
 
     totalPoints: 0,       /* A number of points the player has gained throughout the run. */
     pointsThisRound: 0,      /* A number of points the player has gained this round. */

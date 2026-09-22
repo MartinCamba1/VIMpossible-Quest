@@ -113,9 +113,13 @@ function findEdgeOfWord(row, col) {
 /*      Challenge Completion Handling       */
 
 //Checks if a challenge that is currently active is completed and gives points and picks a new challenge
+
+// !!!!!!!!!!!!!!!!!!!!!!!! There is still a bug where a challenge with delete word does not display the spans still not sure why it happens. !!!!!!!!!!!!!!!!!!!!
 export function isChallengeFinished(typeOfAction, span) {
     let col = state.cursor.col;
     let row = state.cursor.row;
+
+    let penalty = false;
 
     if (typeOfAction.includes("movement")) {
         if (state.challenge?.type === "move-to-char") {
@@ -142,6 +146,7 @@ export function isChallengeFinished(typeOfAction, span) {
                 return true;
             }
         }
+        else if (state.challenge.type === "delete-char") deductPoints();
         return false;
     }
 
@@ -152,6 +157,10 @@ export function isChallengeFinished(typeOfAction, span) {
                 state.challenge = {};
                 givePoints(state.challengeStartTime);
                 return true;
+            }
+
+            else {
+                deductPoints();
             }
         }
     }
@@ -186,7 +195,6 @@ export function givePoints(startTime) {
     const pointsEl = document.getElementById("points-num");
     let delta = Math.floor((Date.now() - startTime) / 1000);
     state.pointsThisRound = state.pointsThisRound + Math.round(50 + 350 * Math.exp(-0.3 * delta));
-    console.log(state.pointsThisRound, state.pointsNeeded);
 
     const pointsLeft = state.pointsNeeded - state.pointsThisRound;
     if (pointsLeft > 0) {
@@ -206,6 +214,25 @@ export function givePoints(startTime) {
     pointsAudio();
 }
 
+// Function to deduce points when an objective was completed wrongly or it is impossible to complete it due to the actions of the player.
+function deductPoints() {
+    if (state.pointsThisRound < state.pointsNeeded) {
+        const pointsEl = document.getElementById("points-num");
+        const left = state.pointsNeeded - state.pointsThisRound + 100;
+        state.pointsThisRound -= 100;
+        
+        
+        pointsEl.textContent = "Points Left: " + (left).toString();
+
+        pointsEl.classList.remove("points-deduced");
+
+        void pointsEl.offsetWidth;
+
+        pointsEl.classList.add("points-deduced");
+    }
+    
+}
+
 /*----------------------------------*/
 
 
@@ -221,7 +248,8 @@ export function updateRoundCounter() {
 export function updateObjectiveText(challenge) {
     const challengeObjectives = new Map([
         [moveToCharChallenge, "Reach target"],
-        [deleteWordChallenge, "Delete word"]
+        [deleteWordChallenge, "Delete word"],
+        [deleteCharChallenge, "Delete ONLY the letter"]
     ]);
 
     const objectiveSpan = document.getElementById("objective-data");

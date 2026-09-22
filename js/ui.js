@@ -3,6 +3,11 @@ import {
     codeLines
 } from "./globals.js";
 
+import {
+    roundComplete,
+    roundLost
+} from "./audio.js";
+
 let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b"];
 import {commands} from "./index.js";
 import { isElemAtEdge } from "./cursor.js";
@@ -170,9 +175,9 @@ export function stopTimer() {
     let pointsNeeded;
     const startRoundDg = document.getElementById("round-start-dg");
     startRoundDg.style.display = "none";
-    console.log(state.pointsThisRound, state.pointsNeeded);
 
     if (state.pointsThisRound < state.pointsNeeded) {
+        roundLost();
         const roundLostDg = document.getElementById("round-lost-dg");
         roundLostDg.style.display = "flex";
 
@@ -181,6 +186,7 @@ export function stopTimer() {
     }
 
     else {
+        roundComplete();
         const endRoundDg = document.getElementById("round-end-dg");
         
 
@@ -228,6 +234,7 @@ export function displayCommands(availableCommands) {
     
 
     //Make it so when there are less than 3 commands to unlock the div itself doesnt show up or even when there is 0 none show up
+    // Or make it so when there are less than 3 to unlock the remaining ones give the player points.
     const commDiv1 = document.getElementById("command-1");
     const commDiv2 = document.getElementById("command-2");
     const commDiv3 = document.getElementById("command-3");
@@ -252,6 +259,7 @@ export function displayCommands(availableCommands) {
 
 // Function used to unlock the command the user has chosen.
 export function unlockCommand(idxs, i, availableCommands, cmnds) {
+    /*
     const commandTypes = new Map([
         ["h", "movement"],
         ["j", "movement"],
@@ -268,7 +276,7 @@ export function unlockCommand(idxs, i, availableCommands, cmnds) {
         ["w", "movement"],
         ["b", "movement"]
     ]);
-
+    */
     const newCommand = availableCommands[idxs[i]];
     cmnds.get(newCommand).unlocked = true;
     

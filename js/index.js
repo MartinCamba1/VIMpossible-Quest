@@ -285,7 +285,7 @@ function startRound() {
     state.paused = false;
 
     
-    state.remainingTime = 100;
+    state.remainingTime = 20;
     state.timeOfStart = Date.now();
     state.timer = undefined;
     resumeTimer();
