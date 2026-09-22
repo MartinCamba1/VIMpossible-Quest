@@ -139,6 +139,7 @@ export function givePoints(startTime) {
     const pointsEl = document.getElementById("points-num");
     let delta = Math.floor((Date.now() - startTime) / 1000);
     state.pointsThisRound = state.pointsThisRound + Math.round(50 + 350 * Math.exp(-0.3 * delta));
+    console.log(state.pointsThisRound, state.pointsNeeded);
 
     const pointsLeft = state.pointsNeeded - state.pointsThisRound;
     if (pointsLeft > 0) {

@@ -261,7 +261,9 @@ function handleInsertMode(event) {
 // Resets the timer and points, picks a challenge, starts a new round
 function startRound() {
     const betweenRoundsDiv = document.getElementById("between-round-dg");
+    const roundLostDg = document.getElementById("round-lost-dg");
     betweenRoundsDiv.style.display = "none";
+    roundLostDg.style.display = "none";
     dialogEl.close();
 
     state.cursor.col = 0;

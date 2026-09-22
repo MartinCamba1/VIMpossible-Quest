@@ -94,13 +94,30 @@ export function bCommand() {
 /* Doesnt delete the first character of the word for some reason. */
     // Need to test it properly on a single punctuation mark.
 export function dwCommand() {
+    const row = state.cursor.row;
+    const col = state.cursor.col;
+    if (punctuations.includes(state.characters[row][col])) {
+        const span = state.spans[row][col];
+
+        if (isChallengeFinished("deletion", span)) {
+            pickNewChallenge();
+        }
+
+        state.characters[row].splice(col, 1);
+        span.remove();
+        state.spans[row].splice(col, 1);
+
+        return;
+    }
+
+
     const pos = findNextWord(state.cursor.row, state.cursor.col);
     const newRow = pos.row;
     const newCol = pos.col;
 
     if (state.cursor.row !== newRow) {
         /* Add deleting backwards with function findPrevWord() */
-        return;
+        newCol = state.characters[state.cursor.row].length;
     }
     state.characters[state.cursor.row].splice(state.cursor.col, (newCol - state.cursor.col));
     
@@ -122,7 +139,7 @@ export function appendAtEndLine() {
     updateCursor();
 }
 
-// Helper Function used in wCommand
+// Helper Function used in wCommand and dwCommand
 function findNextWord(inputRow, inputCol) {
     let row = inputRow;
     let col = inputCol;

@@ -165,6 +165,7 @@ export function stopTimer(timer) {
     let pointsNeeded;
     const startRoundDg = document.getElementById("round-start-dg");
     startRoundDg.style.display = "none";
+    console.log(state.pointsThisRound, state.pointsNeeded);
 
     if (state.pointsThisRound < state.pointsNeeded) {
         const roundLostDg = document.getElementById("round-lost-dg");
