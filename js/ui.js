@@ -281,3 +281,54 @@ export function unlockCommand(idxs, i, availableCommands, cmnds) {
     betweenRoundsDiv.style.display = "flex";
 }
 /*----------------------------------*/
+
+/*      Bottom Controls     */
+
+const volumeOn = document.querySelector(".volume-on");
+const volumeOff = document.querySelector(".volume-off");
+
+const pauseButton = document.querySelector(".pause");
+const playButton = document.querySelector(".play");
+
+const darkMode = document.querySelector(".dark-mode");
+const lightMode = document.querySelector(".light-mode");
+
+volumeOn.addEventListener("click", toggleIcon);
+volumeOff.addEventListener("click", toggleIcon);
+
+pauseButton.addEventListener("click", toggleIcon);
+playButton.addEventListener("click", toggleIcon);
+
+darkMode.addEventListener("click", toggleIcon);
+lightMode.addEventListener("click", toggleIcon);
+
+function toggleIcon(event) {
+    const pressedSvg = event.currentTarget;
+
+    if (pressedSvg === volumeOn) {
+        volumeOn.classList.add("hidden");
+        volumeOff.classList.remove("hidden");
+    } else if (pressedSvg === volumeOff) {
+        volumeOff.classList.add("hidden");
+        volumeOn.classList.remove("hidden");
+    } else if (pressedSvg === pauseButton) {
+        //Need to add functionality to pausing the game.
+        pauseButton.classList.add("hidden");
+        playButton.classList.remove("hidden");
+    } else if (pressedSvg === playButton) {
+        //Need to add functionality to resuming the game.
+        playButton.classList.add("hidden");
+        pauseButton.classList.remove("hidden");
+    }
+    else if (pressedSvg === darkMode) {
+        darkMode.classList.add("hidden");
+        lightMode.classList.remove("hidden");
+    } else if (pressedSvg === lightMode) {
+        lightMode.classList.add("hidden");
+        darkMode.classList.remove("hidden");
+    }
+}
+
+
+
+/*----------------------------------*/

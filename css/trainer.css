@@ -1,28 +1,35 @@
-/*      General Styling     */
+/* =========================================================
+   General
+   ========================================================= */
 
 * {
     box-sizing: border-box;
 }
 
+html,
 body {
-  background:
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    background:
         radial-gradient(
             circle at 50% 0%,
             rgba(0, 100, 50, 0.25),
             transparent 45%
         ),
         #091910;
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .trainer-layout {
     display: flex;
-    min-height: 100vh;
     width: 100%;
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .sidebar {
@@ -33,22 +40,23 @@ body {
     text-align: center;
 }
 
-/* ---------------------------------------- */
 
-
-/*      Left Sidebar        */
+/* =========================================================
+   Left Sidebar
+   ========================================================= */
 
 #left-sidebar {
-    width: 15vw;
-    margin-right: 2vw;
-    flex-shrink: 0;
-
-    border-right: 1px solid white;
-
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    width: 15vw;
+    height: 100%;
+    margin-right: 2vw;
+
+    flex-shrink: 0;
+
+    border-right: 1px solid white;
 }
 
 #left-sidebar-content {
@@ -56,61 +64,60 @@ body {
 }
 
 .svg-icon {
-     width: clamp(16px, 1.5vw, 24px);
+    width: clamp(16px, 1.5vw, 24px);
     height: clamp(16px, 1.5vw, 24px);
+
     color: white;
     flex-shrink: 0;
 }
 
 .sidebar-text {
     color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
     font-family: "Inter", sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    font-weight: bold;
 }
 
 .sidebar-item-link {
     display: block;
     width: 90%;
     margin: 0 auto;
-    text-decoration: none;
+
     color: inherit;
+    text-decoration: none;
 }
 
 .sidebar-item {
-    width: 100%;
-    height: 5vh;
-
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+
+    width: 100%;
+    min-height: 45px;
+    height: 5vh;
+
+    margin-bottom: 10px;
+    padding: 5px 0;
 
     border: 2px solid white;
     border-radius: 10px;
-
-    margin-bottom: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
 }
 
 
-/* ---------------------------------------- */
-
-/*      Right Sidebar       */
-
+/* =========================================================
+   Right Sidebar
+   ========================================================= */
 
 #right-sidebar {
     width: 15vw;
+    height: 100%;
+
+    margin-left: 2vw;
+    padding: 0 1vw;
+
     flex-shrink: 0;
 
     border-left: 1px solid white;
-
-    margin-left: 2vw;
-    padding-left: 1vw;
-    padding-right: 1vw;
-
-    box-sizing: border-box;
 }
 
 #right-sidebar-content {
@@ -119,120 +126,209 @@ body {
 
 .sidebar-name {
     width: 100%;
-    text-align: center;
+
     margin-top: 2.5vh;
     margin-bottom: 2.5vh;
+
+    text-align: center;
 }
 
 #unlocked-commands {
     display: grid;
-    gap: 10px;
+
     grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 }
 
 .command {
     display: flex;
-    aspect-ratio: 1 / 1;
+
     justify-content: center;
     align-items: center;
 
-    text-align: center;
+    aspect-ratio: 1 / 1;
+
     border: 1px solid white;
     border-radius: 15px;
-    
+
     background-color: white;
     color: black;
-    font-size: 1.5rem;
+
     font-family: monospace;
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    text-align: center;
 }
 
 
-/* ---------------------------------------- */
+/* =========================================================
+   Main Layout
+   ========================================================= */
+
+#main-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1;
+}
 
 
-/*      Terminal        */
+/* =========================================================
+   Stats
+   ========================================================= */
+
+#round-stats {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    min-height: 40px;
+    height: clamp(50px, 7vh, 70px);
+
+    margin-top: 3vh;
+    margin-bottom: 0;
+
+    padding: 0 2vw;
+
+    flex-shrink: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+
+    background: rgba(15, 30, 21, 0.8);
+    color: white;
+}
+
+.stat {
+    font-family: monospace;
+    font-size: clamp(0.9rem, 1.6vh, 2rem);
+}
+
+#time-left {
+    position: absolute;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    color: red;
+    font-size: clamp(1.1rem, 3vh, 2rem);
+}
+
+
+/* =========================================================
+   Main Terminal Area
+   ========================================================= */
 
 #vim-terminal-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
     width: 100%;
+
+    flex: 1;
+    min-height: 0;
+
+    overflow: hidden;
 }
 
 #mode-container {
     width: 10%;
-    text-align: center;
+
+    margin-top: 2vh;
+    margin-bottom: 0;
+
+    border-radius: 10px 10px 0 0;
+
     background-color: #545353;
     color: white;
 
     font-family: monospace;
-    font-size: 0.9rem;
-    margin-bottom: 0;
-    margin-top: 4vh;
-    border-radius: 10px 10px 0 0;
+    font-size: clamp(0.7rem, 0.9rem, 1rem);
+
+    text-align: center;
+
+    flex-shrink: 0;
 }
 
 #vim-terminal {
-    width: 100%;
-    height: 70vh;
-
-    background-color: black;
-    border-radius: 10px;
-
     display: flex;
     flex-direction: column;
+
     justify-content: flex-start;
     align-items: flex-start;
 
+    width: 100%;
+    min-height: 0;
+
+    flex: 1;
+
     margin: 0;
-    flex-shrink: 0;
 
     overflow: hidden;
+
+    border-radius: 10px;
+
+    background-color: black;
+
     white-space: pre;
 }
 
-#main-layout {
-    display: flex;
-    flex: 1;
-
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-
-    gap: 0;
-    min-width: 0;
-}
-
 #terminal-text {
-    text-align: left;
-    color: white;
-    font-family: monospace;
-    font-size: clamp(14px, 1.2vw, 20px);
-
     align-self: flex-start;
+
+    width: 100%;
     max-width: 100%;
+    min-height: 0;
 
     margin-top: 10px;
     margin-left: 10px;
 
+    flex: 1;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    color: white;
+
+    font-family: monospace;
+    font-size: clamp(14px, 1.2vw, 20px);
     line-height: 1.8;
 
+    text-align: left;
+
     white-space: pre;
-    flex: 1;
-    overflow-y: auto;
+
     user-select: none;
 }
 
+
+/* =========================================================
+   Input Buffer
+   ========================================================= */
+
 #input-buffer {
-    width: 100%;
-    flex-shrink: 0;
-
-    box-sizing: border-box;
-    background-color: 	#2d2d2d;
-    border-top: 1px solid #333;
-
     display: flex;
     align-items: center;
+
+    width: 100%;
+    min-height: 0;
+
+    flex-shrink: 0;
+
+    border-top: 1px solid #333;
+
+    background-color: #2d2d2d;
 }
 
 #buffer-text {
@@ -240,64 +336,85 @@ body {
     padding: 0 10px;
 
     color: white;
+
     font-family: monospace;
     font-size: 1.2em;
     line-height: 1.3;
 }
 
-/*      Stats Section       */
 
-#round-stats {
+/* =========================================================
+   Bottom Controls
+   ========================================================= */
+
+#bottom-controls {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+
+    gap: 1.5rem;
+
     width: 100%;
-    height: clamp(40px, 5vh, 70px);
-    padding: 5vh;
-    margin-bottom: 0;
-    margin-top: 3vh;
-    
-    background: rgba(15, 30, 21, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
+    height: 70px;
+    min-height: 70px;
 
-    color: white;;
+    padding: 10px 0;
+
+    flex-shrink: 0;
 }
 
-.stat {
-    font-size: clamp(1.2rem, 1.6vh, 2rem);
-    font-family: monospace;
+.control-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 8px;
+
+    background: transparent;
+    color: white;
+
+    cursor: pointer;
 }
 
-#time-left {
-    color: red;
-    font-size: clamp(1.2rem, 3vh, 2rem);
-
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+.control-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
+.hidden {
+    display: none;
+}
 
-
-/* ---------------------------------------- */
-
-
-/*      Dialog Window       */
-
+/* =========================================================
+   Dialog
+   ========================================================= */
 
 #terminal-dialog {
     position: fixed;
+
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+
+    width: min(45%, 700px);
+    max-height: 90vh;
 
     margin: 0;
     padding: 3rem;
 
-    width: 45%;
+    transform: translate(-50%, -50%);
+
     aspect-ratio: 1.2 / 1;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 24px;
 
     background:
         linear-gradient(
@@ -308,14 +425,9 @@ body {
 
     color: #07120c;
 
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 24px;
-
     box-shadow:
         0 25px 70px rgba(0, 0, 0, 0.55),
         0 0 40px rgba(30, 100, 60, 0.15);
-
-    overflow: hidden;
 }
 
 #terminal-dialog:open {
@@ -328,22 +440,35 @@ body {
     backdrop-filter: blur(4px);
 }
 
+
+/* =========================================================
+   Dialog Content
+   ========================================================= */
+
 .dialog-text {
     color: black;
     font-family: monospace;
 }
 
-#dialog-title, #dialog-title-rnd-end, #dialog-title-between-rnd, #dialog-title-rnd-lost {
+#dialog-title,
+#dialog-title-rnd-end,
+#dialog-title-between-rnd,
+#dialog-title-rnd-lost {
     margin-top: 4vh;
     margin-bottom: 0.5rem;
 
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
     font-weight: 800;
+
     letter-spacing: 0.02em;
 }
 
-#dialog-title::after, #dialog-title-rnd-end::after, #dialog-title-between-rnd::after, #dialog-title-rnd-lost::after {
+#dialog-title::after,
+#dialog-title-rnd-end::after,
+#dialog-title-between-rnd::after,
+#dialog-title-rnd-lost::after {
     content: "";
+
     display: block;
 
     width: 50px;
@@ -351,8 +476,9 @@ body {
 
     margin: 12px auto 0;
 
-    background: #166534;
     border-radius: 10px;
+
+    background: #166534;
 }
 
 .dialog-message {
@@ -360,15 +486,22 @@ body {
 
     margin: 2rem auto 0;
 
+    color: #26382d;
+
     font-size: clamp(1rem, 1.5vw, 1.3rem);
     line-height: 1.6;
-
-    color: #26382d;
 }
+
+
+/* =========================================================
+   Buttons
+   ========================================================= */
 
 .button-container {
     display: flex;
+
     flex-direction: row;
+
     justify-content: center;
     align-content: center;
 
@@ -376,20 +509,23 @@ body {
 }
 
 .button {
-    border-radius: 15px;
     padding: 10px;
+
+    border-radius: 15px;
 }
 
-.start-round-btn, #start-tutorial-btn, .new-rnd-btn {
+.start-round-btn,
+#start-tutorial-btn,
+.new-rnd-btn {
     margin: auto auto 1rem;
 
     padding: 0.9rem 2rem;
 
-    background: #0b3d23;
-    color: white;
-
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
+
+    background: #0b3d23;
+    color: white;
 
     font-family: "Inter", sans-serif;
     font-size: 1rem;
@@ -403,36 +539,50 @@ body {
         box-shadow 0.2s ease;
 }
 
-.start-round-btn:hover, #start-tutorial-btn:hover, .new-rnd-btn:hover {
+.start-round-btn:hover,
+#start-tutorial-btn:hover,
+.new-rnd-btn:hover {
     background: #125c34;
+
     transform: translateY(-2px);
 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
-.start-round-btn:active, #start-tutorial-btn:active {
+.start-round-btn:active,
+#start-tutorial-btn:active {
     transform: translateY(0);
 }
 
+
+/* =========================================================
+   New Command Selection
+   ========================================================= */
+
 #new-command-div {
     display: grid;
+
     grid-template-columns: repeat(3, 1fr);
+
     justify-content: center;
+
     gap: clamp(10px, 2vw, 20px);
 
     margin-top: 3vh;
 }
 
 .new-command {
-    width: 80%;
-    justify-self: center;
-    aspect-ratio: 1 / 1;
-
     display: flex;
+
     justify-content: center;
     align-items: center;
 
-    text-align: center;
+    width: 80%;
+
+    aspect-ratio: 1 / 1;
+
+    justify-self: center;
 
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 15px;
@@ -440,9 +590,11 @@ body {
     background: rgba(255, 255, 255, 0.95);
     color: #07120c;
 
-    font-size: clamp(1rem, 2vw, 2rem);
     font-family: monospace;
+    font-size: clamp(1rem, 2vw, 2rem);
     font-weight: 700;
+
+    text-align: center;
 
     cursor: pointer;
     user-select: none;
@@ -454,25 +606,42 @@ body {
 }
 
 .new-command:hover {
-    transform: translateY(-4px);
     background-color: #e8f5ec;
+
+    transform: translateY(-4px);
 
     box-shadow:
         0 8px 20px rgba(0, 0, 0, 0.3),
         0 0 15px rgba(50, 150, 90, 0.2);
 }
 
-#between-round-dg, #round-lost-dg {
+
+/* =========================================================
+   Between-Round / Round-Lost Dialogs
+   ========================================================= */
+
+#between-round-dg,
+#round-lost-dg {
     display: flex;
+
     flex-direction: column;
     align-items: center;
+
     height: 100%;
+
     box-sizing: border-box;
 }
 
-#between-round-dg .start-round-btn {
+#between-round-dg .start-round-btn,
+#round-lost-dg .start-round-btn {
     margin-top: auto;
+
+    padding: 10px 25px;
+}
+
+#between-round-dg .start-round-btn {
     margin-bottom: 30px;
+
     padding: 15px;
 }
 
@@ -484,35 +653,35 @@ body {
     margin-top: 30px;
 }
 
-#between-round-dg .start-round-btn, #round-lost-dg .start-round-btn {
-    margin-top: auto;
-    padding: 10px 25px;
-}
 
-/* ---------------------------------------- */
-
+/* =========================================================
+   Cursor
+   ========================================================= */
 
 .cursor {
     position: absolute;
+
     width: 0.6em;
     height: 1.2em;
+
     background-color: white;
+
     pointer-events: none;
 }
 
 
-
-
-/* ---------------------------------------- */
-
-
-/*      Challenge styles        */
+/* =========================================================
+   Challenge Styles
+   ========================================================= */
 
 .move-to-char-challenge {
     display: inline-block;
+
     width: 0.6em;
     height: 1.2em;
+
     box-sizing: border-box;
+
     outline: 2px solid white;
 
     animation: challengePulse 0.7s ease-out;
@@ -540,11 +709,14 @@ body {
 
 .delete-word-challenge {
     display: inline-block;
+
     width: 0.6em;
     height: 1.2em;
+
     box-sizing: border-box;
 
     background-color: red;
+
     outline: 2px solid red;
 
     animation: deleteWordPulse 0.7s ease-out;
@@ -605,6 +777,3 @@ body {
         filter: brightness(1);
     }
 }
-
-
-/* ---------------------------------------- */
