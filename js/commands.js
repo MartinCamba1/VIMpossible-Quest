@@ -205,3 +205,20 @@ function findPrevWord(inputRow, inputCol) {
     }
     return {row, col: 0};
 }
+
+// gg command jumps to the start of the terminal window
+export function ggCommand() {
+    state.cursor.row = 0;
+    state.cursor.col = 0;
+    
+    updateCursor();
+}
+
+// G command jumps to the last line of the file
+export function GCommand() {
+    const lastRow = state.spans.length - 1;
+    state.cursor.row = lastRow;
+    state.cursor.col = 0;
+
+    updateCursor();
+}

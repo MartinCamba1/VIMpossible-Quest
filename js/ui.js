@@ -172,7 +172,11 @@ export function stopTimer() {
 
     const dialogEl = document.getElementById("terminal-dialog");
     let pointsScoredSpan;
-    let pointsNeeded;
+    let pointsNeededEl;
+    
+    let pointsNeeded = state.pointsNeeded;
+    let pointsScored = state.pointsThisRound;
+    
     const startRoundDg = document.getElementById("round-start-dg");
     startRoundDg.style.display = "none";
 
@@ -182,7 +186,8 @@ export function stopTimer() {
         roundLostDg.style.display = "flex";
 
         pointsScoredSpan = document.getElementById("points-scored-lost");
-        pointsNeeded = document.getElementById("points-needed-lost");
+        pointsNeededEl = document.getElementById("points-needed-lost");
+        resetGlobals();
     }
 
     else {
@@ -191,13 +196,14 @@ export function stopTimer() {
         
 
         pointsScoredSpan = document.getElementById("points-scored");
-        pointsNeeded = document.getElementById("points-needed");
+        pointsNeededEl = document.getElementById("points-needed");
 
         const btn1 = document.getElementById("command-1");
         const btn2 = document.getElementById("command-2");
         const btn3 = document.getElementById("command-3");
 
         state.pointsNeeded = Math.round(state.pointsNeeded * 1.25);
+        pointsNeeded = state.pointsNeeded;
         
         endRoundDg.style.display = "block";
 
@@ -207,10 +213,10 @@ export function stopTimer() {
         btn2.onclick = () => unlockCommand(idxs, 1, availableCommands, commands);
         btn3.onclick = () => unlockCommand(idxs, 2, availableCommands, commands);
     }
-
-    pointsScoredSpan.textContent = state.pointsThisRound;
+    console.log(pointsScored, pointsNeeded);
+    pointsScoredSpan.textContent = pointsScored;
     state.pointsThisRound = 0;
-    pointsNeeded.textContent = state.pointsNeeded;
+    pointsNeededEl.textContent = pointsNeeded;
 
     dialogEl.showModal();
 }
@@ -223,6 +229,13 @@ export function pauseTimer() {
     let delta = Math.floor((Date.now() - state.timeOfStart) / 1000);
     console.log(delta);
     state.remainingTime = state.remainingTime - delta;
+}
+
+
+function resetGlobals() {
+    state.pointsNeeded = 1000;
+    state.pointsScored = 0;
+    state.totalPoints = 0;
 }
 
 /*----------------------------------*/

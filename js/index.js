@@ -18,7 +18,9 @@ import {
     appendAtEndLine,
     wCommand,
     dwCommand,
-    bCommand
+    bCommand,
+    ggCommand,
+    GCommand
 } from "./commands.js";
 
 import {
@@ -63,7 +65,9 @@ export const commands = new Map([
     ["A",  { action: appendAtEndLine, unlocked: false, type: ["inserting"] }],
 
     ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
-    ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }]
+    ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],
+    ["gg", { action: ggCommand,       unlocked: true, type: ["movement"]}],
+    ["G",  { action: GCommand,        unlocked: true, type: ["movement"]}]
 ]);
 
 
