@@ -7,7 +7,7 @@
 }
 
 :root {
-    /* Dark mode vals
+    /* Dark mode vals */
     /* Landing page */
     /*
     --bg-color: #121212;
@@ -49,21 +49,85 @@
     --shadow-color: rgba(0, 0, 0, 0.3);
     */
     
-    /* Landing Page */
-    --body-bg: #e8f5ef;
-    --body-gradient-color: rgba(20, 160, 120, 0.18);
+    --bg-color: #f4fbf8;
+    --text-color: #17201e;
+    --secondary-text-color: #52635e;
+    --body-bg: #eefaf6;
+    --body-gradient-color: rgba(255, 255, 255, 0.85);
 
-    --text-color: #16352a;
-    --secondary-text-color: #527067;
+    --terminal-bg: #dff5ed;
+    --terminal-text: #17201e;
+    --terminal-border: #9aada7;
+    --terminal-border-color: #9aada7;
 
-    --terminal-bg: #f7fffb;
-    --terminal-text: #16352a;
-    --terminal-border: #9ac7b7;
+    --cursor-color: black;
 
-    --button-bg: #d4eee4;
-    --button-text: #16352a;
-    --button-hover-bg: #bde3d4;
+    --button-bg: #d5ebe5;
+    --button-text: #17201e;
+    --button-hover-bg: #bdded5;
 
+    --sidebar-text-color: #17201e;
+
+    --challenge-color: #dc3f3f;
+    --protected-text-color: #238b45;
+
+    --success-color: #238b45;
+    --error-color: #dc3f3f;
+    --warning-color: #b87900;
+
+    --border-color: #9aada7;
+    --shadow-color: rgba(20, 60, 50, 0.18);
+
+    --dialog-bg: #f4fbf8;
+    --dialog-text: #17201e;
+
+    --new-command-bg: #ffffff;
+    --new-command-text: #17201e;
+    --new-command-border: rgba(20, 80, 65, 0.25);
+    --new-command-hover-bg: #e1f3ee;
+
+    --move-to-char-color: #000000;
+    --delete-word-color: #dc3f3f;
+    --delete-char-color: #dc3f3f;
+}
+.darkmode {
+    --bg-color: #121212;
+    --text-color: #f5f5f5;
+    --secondary-text-color: #b0b0b0;
+    --body-bg: #091910;
+    --body-gradient-color: rgba(0, 100, 50, 0.25);
+
+    --terminal-bg: #000000;
+    --terminal-text: #ffffff;
+    --terminal-border: #3a3a3a;
+
+    --button-bg: #2c2c2c;
+    --button-text: #ffffff;
+    --button-hover-bg: #414141;
+
+    --sidebar-text-color: #ffffff;
+
+    --challenge-color: #ff5555;
+    --protected-text-color: #90ee90;
+
+    --success-color: #90ee90;
+    --error-color: #ff5555;
+    --warning-color: #ffcc66;
+
+    --border-color: #444444;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+
+    --dialog-bg: #dcebe1;
+    --dialog-text: #07120c;
+
+    --new-command-bg: #f5f5f5;
+    --new-command-text: #07120c;
+    --new-command-border: rgba(255, 255, 255, 0.5);
+    --new-command-hover-bg: #e8f5ec;
+
+    --move-to-char-color: #ffffff;
+    --delete-word-color: #ff5555;
+    --delete-char-color: #ff5555;
 }
 
 html,
@@ -127,12 +191,12 @@ body {
     width: clamp(16px, 1.5vw, 24px);
     height: clamp(16px, 1.5vw, 24px);
 
-    color: white;
+    color: var(--sidebar-text-color);
     flex-shrink: 0;
 }
 
 .sidebar-text {
-    color: white;
+    color: var(--sidebar-text-color);
     font-family: "Inter", sans-serif;
     font-size: clamp(1rem, 1.5vw, 1.5rem);
     font-weight: bold;
@@ -159,7 +223,7 @@ body {
     margin-bottom: 10px;
     padding: 5px 0;
 
-    border: 2px solid white;
+    border: 2px solid var(--border-color);
     border-radius: 10px;
 }
 
@@ -177,7 +241,7 @@ body {
 
     flex-shrink: 0;
 
-    border-left: 1px solid white;
+    border-left: 1px solid var(--border-color);
 }
 
 #right-sidebar-content {
@@ -208,11 +272,11 @@ body {
 
     aspect-ratio: 1 / 1;
 
-    border: 1px solid white;
+    border: 1px solid var(--border-color);
     border-radius: 15px;
 
-    background-color: white;
-    color: black;
+    background-color: var(--button-text);
+    color: var(--button-bg);
 
     font-family: monospace;
     font-size: clamp(1rem, 1.5vw, 1.5rem);
@@ -262,11 +326,11 @@ body {
 
     flex-shrink: 0;
 
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
 
-    background: rgba(15, 30, 21, 0.8);
-    color: white;
+    background: var(--bg-color);
+    color: var(--text-color);
 }
 
 .stat {
@@ -308,10 +372,12 @@ body {
     margin-top: 2vh;
     margin-bottom: 0;
 
+    border: 2px solid var(--terminal-border-color);
+    border-bottom: 0;
     border-radius: 10px 10px 0 0;
 
-    background-color: #545353;
-    color: white;
+    background-color: var(--terminal-bg);
+    color: var(--terminal-text);
 
     font-family: monospace;
     font-size: clamp(0.7rem, 0.9rem, 1rem);
@@ -337,9 +403,10 @@ body {
 
     overflow: hidden;
 
+    border: 2px solid var(--terminal-border-color);
     border-radius: 10px;
 
-    background-color: black;
+    background-color: var(--terminal-bg);
 
     white-space: pre;
 }
@@ -359,7 +426,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
 
-    color: white;
+    color: var(--terminal-text);
 
     font-family: monospace;
     font-size: clamp(14px, 1.2vw, 20px);
@@ -386,16 +453,16 @@ body {
 
     flex-shrink: 0;
 
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--terminal-border);
 
-    background-color: #2d2d2d;
+    background-color: var(--button-bg);
 }
 
 #buffer-text {
     margin: 0;
     padding: 0 10px;
 
-    color: white;
+    color: var(--button-text);
 
     font-family: monospace;
     font-size: 1.2em;
@@ -437,7 +504,7 @@ body {
     border-radius: 8px;
 
     background: transparent;
-    color: white;
+    color: var(--text-color);
 
     cursor: pointer;
 }
@@ -473,17 +540,12 @@ body {
 
     overflow: hidden;
 
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--terminal-border);
     border-radius: 24px;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(220, 235, 225, 0.92),
-            rgba(175, 195, 180, 0.88)
-        );
+    background: var(--dialog-bg);
 
-    color: #07120c;
+    color: var(--dialog-text);
 
     box-shadow:
         0 25px 70px rgba(0, 0, 0, 0.55),
@@ -506,7 +568,7 @@ body {
    ========================================================= */
 
 .dialog-text {
-    color: black;
+    color: var(--dialog-text);
     font-family: monospace;
 }
 
@@ -538,7 +600,7 @@ body {
 
     border-radius: 10px;
 
-    background: #166534;
+    background: var(--dialog-text);
 }
 
 .dialog-message {
@@ -546,7 +608,7 @@ body {
 
     margin: 2rem auto 0;
 
-    color: #26382d;
+    color: var(--dialog-text);
 
     font-size: clamp(1rem, 1.5vw, 1.3rem);
     line-height: 1.6;
@@ -581,11 +643,11 @@ body {
 
     padding: 0.9rem 2rem;
 
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--button-border);
     border-radius: 12px;
 
-    background: #0b3d23;
-    color: white;
+    background: var(--button-bg);
+    color: var(--button-text);
 
     font-family: "Inter", sans-serif;
     font-size: 1rem;
@@ -602,7 +664,7 @@ body {
 .start-round-btn:hover,
 #start-tutorial-btn:hover,
 .new-rnd-btn:hover {
-    background: #125c34;
+    background: var(--button-hover-bg);
 
     transform: translateY(-2px);
 
@@ -644,11 +706,11 @@ body {
 
     justify-self: center;
 
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--new-command-border);
     border-radius: 15px;
 
-    background: rgba(255, 255, 255, 0.95);
-    color: #07120c;
+    background: var(--new-command-bg);
+    color: var(--new-command-text);
 
     font-family: monospace;
     font-size: clamp(1rem, 2vw, 2rem);
@@ -666,7 +728,7 @@ body {
 }
 
 .new-command:hover {
-    background-color: #e8f5ec;
+    background-color: var(--new-command-hover-bg);
 
     transform: translateY(-4px);
 
@@ -724,7 +786,7 @@ body {
     width: 0.6em;
     height: 1.2em;
 
-    background-color: white;
+    background-color: var(--terminal-text);
 
     pointer-events: none;
 }
@@ -742,7 +804,7 @@ body {
 
     box-sizing: border-box;
 
-    outline: 2px solid white;
+    outline: 2px solid var(--move-to-char-color);
 
     animation: challengePulse 0.7s ease-out;
 }
@@ -775,9 +837,9 @@ body {
 
     box-sizing: border-box;
 
-    background-color: red;
+    background-color: var(--delete-word-color);
 
-    outline: 2px solid red;
+    outline: 2px solid var(--delete-word-color);
 
     animation: deleteWordPulse 0.7s ease-out;
 }

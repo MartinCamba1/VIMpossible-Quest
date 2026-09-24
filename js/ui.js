@@ -165,6 +165,7 @@ export function resumeTimer() {
 
 // Stops the timer when the round ends. Also displays the dialog based on whether the user lost or not.
 // Displays three commands for the user to pick one of them to unlock.
+// Lost round seems to play again after a while after losing a round.
 export function stopTimer() {
     clearInterval(state.timer);
     state.timer = undefined;
