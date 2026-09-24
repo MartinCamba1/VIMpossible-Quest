@@ -6,6 +6,66 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Dark mode vals
+    /* Landing page */
+    /*
+    --bg-color: #121212;
+    --text-color: #f5f5f5;
+    --secondary-text-color: #b0b0b0;
+    --body-bg: #091910;
+    --body-gradient-color: rgba(0, 100, 50, 0.25);
+
+    /* Terminal Window */
+    /*
+    --terminal-bg: #000000;
+    --terminal-text: #ffffff;
+    --terminal-border: #3a3a3a;
+
+    /* Buttons */
+    /*
+    --button-bg: #2c2c2c;
+    --button-text: #ffffff;
+    --button-hover-bg: #414141;
+
+    /* Sidebar */
+    /*
+    --sidebar-text-color: 
+
+    /* Challenge colors */
+    /*
+    --challenge-color: #ff5555;
+    --protected-text-color: #90ee90;
+
+    /* Feedback */
+    /*
+    --success-color: #90ee90;
+    --error-color: #ff5555;
+    --warning-color: #ffcc66;
+
+    /* Other */
+    /*
+    --border-color: #444444;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    */
+    
+    /* Landing Page */
+    --body-bg: #e8f5ef;
+    --body-gradient-color: rgba(20, 160, 120, 0.18);
+
+    --text-color: #16352a;
+    --secondary-text-color: #527067;
+
+    --terminal-bg: #f7fffb;
+    --terminal-text: #16352a;
+    --terminal-border: #9ac7b7;
+
+    --button-bg: #d4eee4;
+    --button-text: #16352a;
+    --button-hover-bg: #bde3d4;
+
+}
+
 html,
 body {
     width: 100%;
@@ -18,10 +78,10 @@ body {
     background:
         radial-gradient(
             circle at 50% 0%,
-            rgba(0, 100, 50, 0.25),
+            var(--body-gradient-color),
             transparent 45%
         ),
-        #091910;
+        var(--body-bg);
 }
 
 .trainer-layout {
@@ -56,7 +116,7 @@ body {
 
     flex-shrink: 0;
 
-    border-right: 1px solid white;
+    border-right: 1px solid var(--border-color);
 }
 
 #left-sidebar-content {

@@ -1,10 +1,163 @@
 /*      General Styling     */
 
+:root {
+    /* ===== General ===== */
+
+    --body-bg: #e8f5ef;
+    --body-text-color: black;
+    --body-gradient-color: rgba(20, 160, 120, 0.25);
+
+    --gradient-color-1: #e8f5ef;
+    --gradient-color-2: #c9eadc;
+    --gradient-color-3: #a8d9d0;
+    --gradient-color-4: #8abfc4;
+    --gradient-color-5: #739fb0;
+
+    --text-color: #16352a;
+    --secondary-text-color: #527067;
+
+    --scrollbar-color: #6faeaa;
+    --scrollbar-track: #d5ebe4;
+    --scrollbar-thumb: #579b98;
+
+
+    /* ===== Navbar ===== */
+
+    --navbar-bg: rgba(232, 245, 239, 0.78);
+    --navbar-border: rgba(45, 110, 100, 0.25);
+    --navbar-text: #24483e;
+    --navbar-hover-bg: rgba(70, 160, 145, 0.18);
+    --navbar-hover-text: #123b32;
+
+
+    /* ===== Feature cards ===== */
+
+    --card-bg: rgba(255, 255, 255, 0.48);
+    --card-border: rgba(45, 110, 100, 0.18);
+    --card-hover-bg: rgba(255, 255, 255, 0.65);
+    --card-hover-border: rgba(45, 130, 115, 0.45);
+    --card-shadow: rgba(40, 90, 80, 0.15);
+    --card-inset: rgba(255, 255, 255, 0.45);
+
+    --feature-title-color: #237b6d;
+
+
+    /* ===== How It Works ===== */
+
+    --video-bg: #f8fcfa;
+
+    --list-marker-color: #329d89;
+
+
+    /* ===== Commands ===== */
+
+    --command-explanation-bg: rgba(255, 255, 255, 0.42);
+
+    --command-bg: rgba(255, 255, 255, 0.48);
+    --command-border: rgba(45, 110, 100, 0.3);
+    --command-hover-bg: rgba(220, 242, 236, 0.8);
+    --command-text: #16352a;
+
+
+    /* ===== Start Learning ===== */
+
+    --start-button-bg: #237b6d;
+    --start-button-text: #ffffff;
+    --start-button-hover-shadow: rgba(35, 123, 109, 0.3);
+}
+.darkmode {
+    /* ===== General ===== */
+
+    --body-bg: #020806;
+    --body-text-color: #e8f5e9;
+    --body-gradient-color: rgba(0, 90, 45, 0.654);
+
+    --gradient-color-1: #020806;
+    --gradient-color-2: #082217;
+    --gradient-color-3: #041a0d;
+    --gradient-color-4: #061f11;
+    --gradient-color-5: #03140a;
+
+    --text-color: #e8f5e9;
+    --secondary-text-color: #9ab5a2;
+
+    --scrollbar-color: #3f7f56;
+    --scrollbar-track: #07150d;
+    --scrollbar-thumb: #579b68;
+
+
+    /* ===== Navbar ===== */
+
+    --navbar-bg: rgba(3, 15, 10, 0.8);
+    --navbar-border: rgba(60, 140, 90, 0.25);
+    --navbar-text: #dce9df;
+    --navbar-hover-bg: rgba(40, 100, 60, 0.35);
+    --navbar-hover-text: #ffffff;
+
+
+    /* ===== Feature cards ===== */
+
+    --card-bg: rgba(10, 25, 18, 0.55);
+    --card-border: rgba(150, 200, 165, 0.15);
+    --card-hover-bg: rgba(5, 30, 17, 0.8);
+    --card-hover-border: rgba(100, 180, 120, 0.5);
+    --card-shadow: rgba(0, 0, 0, 0.25);
+    --card-inset: rgba(255, 255, 255, 0.04);
+
+    --feature-title-color: #8fcea0;
+
+
+    /* ===== How It Works ===== */
+
+    --video-bg: #ffffff;
+
+    --list-marker-color: #3EB489;
+
+
+    /* ===== Commands ===== */
+
+    --command-explanation-bg: rgba(255, 255, 255, 0.08);
+
+    --command-bg: rgba(10, 25, 18, 0.55);
+    --command-border: rgba(255, 255, 255, 0.5);
+    --command-hover-bg: rgba(20, 50, 32, 0.75);
+    --command-text: #e8f5e9;
+
+
+    /* ===== Start Learning ===== */
+
+    --start-button-bg: #e8f5e9;
+    --start-button-text: #06100a;
+    --start-button-hover-shadow: rgba(255, 255, 255, 0.15);
+}
 html {
     scroll-behavior: smooth;
 }
 
 body {
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    background: var(--body-bg);
+    color: var(--body-text-color);
+    font-family: "Inter", sans-serif;
+    overscroll-behavior: none;
+
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+/* Dark theme gradient */
+body::before {
     background:
         radial-gradient(
             circle at 50% 0%,
@@ -18,15 +171,40 @@ body {
             #041a0d 100%
         );
 
-    color: #e8f5e9;
-    min-height: 100vh;
+    opacity: 0;
+}
 
-    font-family: "Inter", sans-serif;
-    overscroll-behavior: none
+/* Light theme gradient */
+body::after {
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(20, 160, 120, 0.25),
+            transparent 45%
+        ),
+        linear-gradient(
+            135deg,
+            #e8f5ef 0%,
+            #c9eadc 30%,
+            #a8d9d0 55%,
+            #8abfc4 75%,
+            #739fb0 100%
+        );
+
+    opacity: 1;
+}
+
+/* When dark mode is active */
+html.darkmode body::before {
+    opacity: 1;
+}
+
+html.darkmode body::after {
+    opacity: 0;
 }
 
 html {
-    scrollbar-color: rgba(100, 160, 120, 0.7) transparent;
+    scrollbar-color: var(--scrollbar-color) transparent;
     scrollbar-width: thin;
 }
 
@@ -35,11 +213,11 @@ html::-webkit-scrollbar {
 }
 
 html::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--scrollbar-track);
 }
 
 html::-webkit-scrollbar-thumb {
-    background: rgba(100, 160, 120, 0.7);
+    background: var(--scrollbar-thumb);
     border-radius: 999px;
 }
 
@@ -70,6 +248,18 @@ hr {
 
 
 /*      Header section      */
+.navbar-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    z-index: 1000;
+}
 
 .navbar {
     display: flex;
@@ -78,37 +268,27 @@ hr {
     justify-content: center;
     gap: 8px;
 
-    position: fixed;
-    top: 20px;
-    z-index: 1000;
-
     width: fit-content;
-    left: 50%;
-    transform: translateX(-50%);
 
     padding: 5px;
-
-    background: rgba(3, 15, 10, 0.8);
-    border: 1px solid rgba(60, 140, 90, 0.25);
+    background: var(--navbar-bg);
+    border: 1px solid var(--navbar-border);
     border-radius: 20px;
-
     backdrop-filter: blur(12px);
+
     list-style: none;
-
 }
-
 
 .navbar a {
     display: block;
-
     padding: 10px 18px;
 
-    color: #dce9df;
+    color: var(--navbar-text);
     text-decoration: none;
-
     border-radius: 9px;
 
     font-size: 0.9rem;
+
     transition: background-color 0.2s, color 0.2s;
 
     overflow: hidden;
@@ -116,14 +296,23 @@ hr {
 }
 
 .navbar a:hover {
-    background-color: rgba(40, 100, 60, 0.35);
-    color: white;
+    background-color: var(--navbar-hover-bg);
+    color: var(--navbar-hover-text);
 }
 
 .navbar li {
     text-align: center;
 }
 
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
 /* ---------------------------------------- */
 
 /*      Hero section        */
@@ -168,15 +357,15 @@ section {
    padding: 2rem;
    padding-top: 1rem;
 
-    background: rgba(10, 25, 18, 0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
 
-    border: 1px solid rgba(150, 200, 165, 0.15);
+    border: 1px solid var(--card-border);
     border-radius: 20px;
 
     box-shadow:
-        0 8px 30px rgba(0, 0, 0, 0.25),
+        0 8px 30px var(--card-shadow),
         inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
     transition:
@@ -187,14 +376,14 @@ section {
 
 .feature:hover {
     transform: translateY(-5px);
-    border-color: rgba(100, 180, 120, 0.5);
-    background: rgba(5, 30, 17, 0.8);
+    border-color: var(--card-hover-border);
+    background: var(--card-hover-bg);
     
 }
 
 
 .feature-title {
-    color: #8fcea0;
+    color: var(--feature-title-color);
     text-align: center;
     font-weight: 800;
     font-size: 1.3rem;
@@ -220,7 +409,7 @@ section {
 }
 
 #how-it-works-video {
-    background-color: white;
+    background-color: var(--video-bg);
 }
 
 .list {
@@ -238,7 +427,7 @@ section {
 }
 
 .list li::marker {
-    color: #3EB489;
+    color: var(--list-marker-color);
     font-weight: bold;
 }
 
@@ -249,7 +438,7 @@ section {
 #command-explanation {
     margin: 0 auto;
     width: 80%;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--command-explanation-bg);
     border-radius: 20px;
     backdrop-filter: blur(12px);
     min-height: 30vh;
@@ -276,10 +465,10 @@ section {
     font-size: clamp(1rem, 2vw, 1.8rem);
     font-weight: 700;
 
-    background: rgba(10, 25, 18, 0.55);
+    background: var(--command-bg);
     backdrop-filter: blur(16px);
 
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--command-border);
     border-radius: 12px;
 
     cursor: pointer;
@@ -288,7 +477,7 @@ section {
 
 .command:hover {
     transform: translateY(-4px);
-    background: rgba(20, 50, 32, 0.75);
+    background: var(--command-hover-bg);
 }
 
 .command-description-text {
@@ -323,8 +512,8 @@ section {
     border-radius: 12px;
     margin-top: 5vh;
 
-    background: #e8f5e9;
-    color: #06100a;
+    background: var(--start-button-bg);
+    color: var(--start-button-text);
 
     font-size: 1.5rem;
     font-weight: 700;
@@ -335,7 +524,24 @@ section {
 
 #start-learning-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px var(--start-button-hover-shadow);
 }
 
 /* ---------------------------------------- */
+
+
+/*      Animations      */
+
+body,
+.navbar,
+.navbar a,
+.feature,
+.command,
+#command-explanation,
+#start-learning-btn {
+    transition:
+        background-color 0.4s ease,
+        color 0.4s ease,
+        border-color 0.4s ease,
+        box-shadow 0.4s ease;
+}

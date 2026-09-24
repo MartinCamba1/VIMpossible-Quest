@@ -20,3 +20,24 @@ function updateExplanation(name) {
 commands.forEach(command => {
     command.addEventListener("mouseenter", () => updateExplanation(command.textContent));
 });
+
+let darkmode = localStorage.getItem("darkmode");
+if (darkmode === "active") {
+    enableDarkMode();
+}
+
+const themeSwitch = document.querySelector(".theme-toggle");
+themeSwitch.addEventListener("click", () => {
+    darkmode = localStorage.getItem("darkmode");
+    darkmode !== "active" ? enableDarkMode() : disableDarkMode();
+})
+
+function enableDarkMode() {
+    document.documentElement.classList.add("darkmode");
+    localStorage.setItem("darkmode", "active");
+}
+
+function disableDarkMode() {
+    document.documentElement.classList.remove("darkmode");
+    localStorage.setItem("darkmode", null);
+}
