@@ -1,3 +1,31 @@
+import {
+    moveLeft,
+    moveDown,
+    moveUp,
+    moveRight,
+    updateCursor,
+    isElemAtEdge
+} from "./cursor.js";
+
+import {
+    deleteChar,
+    deleteLine,
+    appendAtEndLine,
+    wCommand,
+    dwCommand,
+    bCommand,
+    ggCommand,
+    GCommand
+} from "./commands.js";
+
+import {
+    insertCommand,
+    handleInsertMode,
+    exitInsertMode
+} from "./index.js";
+
+
+
 export const state = {
     cursor:  {      /* An object containing the position of the cursor. */
         col: 0,
@@ -16,6 +44,7 @@ export const state = {
     timeOfStart: null,    /* A var for when the challenge started so points can be awarded accordingly. */
     timer: undefined,       /* Timer var. */
     remainingTime: 20,     /* Remaining time of the round. */
+    pausedTime: 0,         /* Time while the game is paused so it can be reduced from the total time of the challenge. */
 
     totalPoints: 0,       /* A number of points the player has gained throughout the run. */
     pointsThisRound: 0,      /* A number of points the player has gained this round. */
@@ -23,8 +52,65 @@ export const state = {
 
     soundDisabled: false,       /* Bool value deciding whether SFX play. */
 
-    unlockedTypes: ["movement"]     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
+    unlockedTypes: ["movement"],     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
                                                 // Possible values: "movement", "deletion", "single-char-deletion"
+    
+    unlockedCommands: ["h", "j", "k", "l"],     /* Unlocked commands this run. */
+    commands: new Map([         /* Contains each commands and corresponding information about the command. */
+        ["h",  { action: moveLeft,        unlocked: true,  type: ["movement"] }],
+        ["j",  { action: moveDown,        unlocked: true,  type: ["movement"] }],
+        ["k",  { action: moveUp,          unlocked: true,  type: ["movement"] }],
+        ["l",  { action: moveRight,       unlocked: true,  type: ["movement"] }],
+
+        ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
+        ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
+        ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
+
+        ["i",  { action: insertCommand,   unlocked: false, type: ["inserting"] }],
+        ["A",  { action: appendAtEndLine, unlocked: false, type: ["inserting"] }],
+
+        ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
+        ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],
+        ["gg", { action: ggCommand,       unlocked: false, type: ["movement"]}],
+        ["G",  { action: GCommand,        unlocked: false, type: ["movement"]}]
+    ]),
+    availableCommands: ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"],        /* A list of commands available to be unlocked. */
+    unlockedCommandsDivs: []        /* All the new divs for the commands the player unlocks, used for reseting the round. */
+
+}
+
+// Resets all of the values to the starting ones when restarting the game
+export function resetGlobals() {
+    state.pointsNeeded = 1000;
+    state.pointsScored = 0;
+    state.totalPoints = 0;
+
+    state.unlockedTypes = ["movement"];     
+    
+    state.unlockedCommands = ["h", "j", "k", "l"];     
+    state.commands =  new Map([         
+        ["h",  { action: moveLeft,        unlocked: true,  type: ["movement"] }],
+        ["j",  { action: moveDown,        unlocked: true,  type: ["movement"] }],
+        ["k",  { action: moveUp,          unlocked: true,  type: ["movement"] }],
+        ["l",  { action: moveRight,       unlocked: true,  type: ["movement"] }],
+
+        ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
+        ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
+        ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
+
+        ["i",  { action: insertCommand,   unlocked: false, type: ["inserting"] }],
+        ["A",  { action: appendAtEndLine, unlocked: false, type: ["inserting"] }],
+
+        ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
+        ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],
+        ["gg", { action: ggCommand,       unlocked: false, type: ["movement"]}],
+        ["G",  { action: GCommand,        unlocked: false, type: ["movement"]}]
+    ]);
+    state.availableCommands = ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"];
+
+    for (const div of state.unlockedCommandsDivs) {
+        div.remove();
+    }
 }
 
 // Lines used for creating text for the player

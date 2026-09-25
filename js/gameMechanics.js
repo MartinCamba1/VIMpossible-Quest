@@ -115,6 +115,7 @@ function findEdgeOfWord(row, col) {
 //Checks if a challenge that is currently active is completed and gives points and picks a new challenge
 
 // !!!!!!!!!!!!!!!!!!!!!!!! There is still a bug where a challenge with delete word does not display the spans still not sure why it happens. !!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!! Another bug where if you use "x" to delete a word it doesnt count as completion, probably need to redo everything about this functions cause its fu****.
 export function isChallengeFinished(typeOfAction, span) {
     let col = state.cursor.col;
     let row = state.cursor.row;
@@ -126,7 +127,7 @@ export function isChallengeFinished(typeOfAction, span) {
             if (span === state.challenge.target) {
                 state.challenge.target.classList.remove("move-to-char-challenge");
                 state.challenge = {};
-                givePoints(state.challengeStartTime);
+                givePoints();
                 return true;
             }
         }
@@ -142,7 +143,7 @@ export function isChallengeFinished(typeOfAction, span) {
 
             if (state.challenge.targets.length === 0) {
                 state.challenge = {};
-                givePoints(state.challengeStartTime);
+                givePoints();
                 return true;
             }
         }
@@ -155,7 +156,7 @@ export function isChallengeFinished(typeOfAction, span) {
             if (state.challenge.target === span) {
                 state.challenge.target.classList.remove("delete-word-challenge");
                 state.challenge = {};
-                givePoints(state.challengeStartTime);
+                givePoints();
                 return true;
             }
 
@@ -182,18 +183,21 @@ export function pickNewChallenge() {
             deleteCharChallenge
         ]]
     ]);
-
+    console.log(type);
     const i = Math.floor(Math.random() * typesOfChallenges.get(type).length);
     const challenge = typesOfChallenges.get(type)[i];
     state.challengeStartTime = Date.now();
+    state.pausedTime = 0;
     updateObjectiveText(challenge);
     challenge();
 }
 
 // Function to give points when a challenge is completed
-export function givePoints(startTime) {
+export function givePoints() {
     const pointsEl = document.getElementById("points-num");
-    let delta = Math.floor((Date.now() - startTime) / 1000);
+    let delta = Math.floor((Date.now() - state.challengeStartTime) / 1000) - state.pausedTime;
+
+    state.pausedTime = 0;
     state.pointsThisRound = state.pointsThisRound + Math.round(50 + 350 * Math.exp(-0.3 * delta));
 
     const pointsLeft = state.pointsNeeded - state.pointsThisRound;
@@ -208,7 +212,7 @@ export function givePoints(startTime) {
     }
     else {
         pointsEl.textContent = "ROUND COMPLETED!";
-        pointsEl.style.color = "#90EE90";
+        pointsEl.classList.add("round-complete");
     }
     
     pointsAudio();

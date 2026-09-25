@@ -1,6 +1,7 @@
 import { 
     state,
-    codeLines
+    codeLines,
+    resetGlobals
 } from "./globals.js";
 
 import {
@@ -8,8 +9,6 @@ import {
     roundLost
 } from "./audio.js";
 
-let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"];
-import {commands} from "./index.js";
 import { isElemAtEdge } from "./cursor.js";
 
 
@@ -152,14 +151,37 @@ export function updateTimer() {
     }
 }
 
+
+//!!!!!!!!!!!!!!!!!!!!!!!!! For some reason when you pause the game and resume the timer goes back to the starting value i dont have enough power to resolve it now.
 // Starts the timer when the round starts.
 export function resumeTimer() {
     if (!state.timer) {
+        const now = Date.now();
+
         state.paused = false;
-        state.timeOfStart = Date.now();
-        state.timer = setInterval(() => updateTimer(state.timer, state.totalTime, ), 1000);
+        state.timeOfStart = now;
+
+        if (state.pauseStart !== null) {
+            state.pausedTime += Math.floor((Date.now() - state.pauseStart) / 1000);
+            state.pauseStart = null;
+        }
+
+        state.timer = setInterval(
+            () => updateTimer(state.timer, state.totalTime),
+            1000
+        );
     }
 }
+
+
+export function pauseTimer() {
+    clearInterval(state.timer);
+    state.timer = undefined;
+
+    state.paused = true;
+    state.pauseStart = Date.now();
+}
+
 
 // Stops the timer when the round ends. Also displays the dialog based on whether the user lost or not.
 // Displays three commands for the user to pick one of them to unlock.
@@ -206,11 +228,11 @@ export function stopTimer() {
         
         endRoundDg.style.display = "block";
 
-        const idxs = displayCommands(availableCommands);
+        const idxs = displayCommands();
 
-        btn1.onclick = () => unlockCommand(idxs, 0, availableCommands, commands);
-        btn2.onclick = () => unlockCommand(idxs, 1, availableCommands, commands);
-        btn3.onclick = () => unlockCommand(idxs, 2, availableCommands, commands);
+        btn1.onclick = () => unlockCommand(idxs, 0);
+        btn2.onclick = () => unlockCommand(idxs, 1);
+        btn3.onclick = () => unlockCommand(idxs, 2);
     }
     console.log(pointsScored, pointsNeeded);
     pointsScoredSpan.textContent = pointsScored;
@@ -220,29 +242,15 @@ export function stopTimer() {
     dialogEl.showModal();
 }
 
-export function pauseTimer() {
-    clearInterval(state.timer);
-    state.timer = undefined;
-    state.paused = true;
-
-    let delta = Math.floor((Date.now() - state.timeOfStart) / 1000);
-    console.log(delta);
-    state.remainingTime = state.remainingTime - delta;
-}
 
 
-function resetGlobals() {
-    state.pointsNeeded = 1000;
-    state.pointsScored = 0;
-    state.totalPoints = 0;
-}
 
 /*----------------------------------*/
 
 /*      Unlocking New Commands      */
 
 // Displays functions available to unlock after the player finishes a round.
-export function displayCommands(availableCommands) {
+export function displayCommands() {
     
 
     //Make it so when there are less than 3 commands to unlock the div itself doesnt show up or even when there is 0 none show up
@@ -257,9 +265,9 @@ export function displayCommands(availableCommands) {
 
     for (let i = 0; i < 3; i++) {
         do {
-            idx = Math.floor(Math.random() * availableCommands.length);
+            idx = Math.floor(Math.random() * state.availableCommands.length);
         } while (idxs.includes(idx))
-        commands.push(availableCommands[idx]);
+        commands.push(state.availableCommands[idx]);
         idxs.push(idx);
     }
     commDiv1.textContent = commands[0];
@@ -270,29 +278,11 @@ export function displayCommands(availableCommands) {
 }
 
 // Function used to unlock the command the user has chosen.
-export function unlockCommand(idxs, i, availableCommands, cmnds) {
-    /*
-    const commandTypes = new Map([
-        ["h", "movement"],
-        ["j", "movement"],
-        ["k", "movement"],
-        ["l", "movement"],
-
-        ["x", "deletion"],
-        ["dd", "deletion"],
-        ["dw", "deletion"],
-
-        ["i", "inserting"],
-        ["A", "inserting"],
-
-        ["w", "movement"],
-        ["b", "movement"]
-    ]);
-    */
-    const newCommand = availableCommands[idxs[i]];
-    cmnds.get(newCommand).unlocked = true;
+export function unlockCommand(idxs, i) {
+    const newCommand = state.availableCommands[idxs[i]];
+    state.commands.get(newCommand).unlocked = true;
     
-    for (const type of commands.get(newCommand).type) {
+    for (const type of state.commands.get(newCommand).type) {
         if (!state.unlockedTypes.includes(type)) {
             state.unlockedTypes.push(type);
         }
@@ -305,9 +295,11 @@ export function unlockCommand(idxs, i, availableCommands, cmnds) {
     newComDiv.classList.add("command");
     newComDiv.textContent = newCommand;
 
+    state.unlockedCommandsDivs.push(newComDiv);
+
     last.after(newComDiv);
     
-    availableCommands.splice(idxs[i], 1);
+    state.availableCommands.splice(idxs[i], 1);
 
     const betweenRoundsDiv = document.getElementById("between-round-dg");
     const roundEndDiv = document.getElementById("round-end-dg");
@@ -331,8 +323,11 @@ const lightMode = document.querySelector(".light-mode");
 volumeOn.addEventListener("click", toggleIcon);
 volumeOff.addEventListener("click", toggleIcon);
 */
-pauseButton.addEventListener("click", toggleIcon);
-playButton.addEventListener("click", toggleIcon);
+
+if (pauseButton && playButton) {
+    pauseButton.addEventListener("click", toggleIcon);
+    playButton.addEventListener("click", toggleIcon);
+}
 
 darkMode.addEventListener("click", toggleIcon);
 lightMode.addEventListener("click", toggleIcon);

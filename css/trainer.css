@@ -348,6 +348,10 @@ body {
     font-size: clamp(1.1rem, 3vh, 2rem);
 }
 
+.round-complete {
+    color: #90EE90;
+}
+
 
 /* =========================================================
    Main Terminal Area

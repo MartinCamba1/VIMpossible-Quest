@@ -48,29 +48,6 @@ import {
 } from "./ui.js";
 
 let inputBuffer = [];
-let unlockedCommands = ["h", "j", "k", "l"];
-
-
-export const commands = new Map([
-    ["h",  { action: moveLeft,        unlocked: true,  type: ["movement"] }],
-    ["j",  { action: moveDown,        unlocked: true,  type: ["movement"] }],
-    ["k",  { action: moveUp,          unlocked: true,  type: ["movement"] }],
-    ["l",  { action: moveRight,       unlocked: true,  type: ["movement"] }],
-
-    ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
-    ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
-    ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
-
-    ["i",  { action: insertCommand,   unlocked: false, type: ["inserting"] }],
-    ["A",  { action: appendAtEndLine, unlocked: false, type: ["inserting"] }],
-
-    ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
-    ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],
-    ["gg", { action: ggCommand,       unlocked: false, type: ["movement"]}],
-    ["G",  { action: GCommand,        unlocked: false, type: ["movement"]}]
-]);
-
-
 
 const dialogEl = document.getElementById("terminal-dialog");
 const startGameBtns = document.querySelectorAll(".start-round-btn");
@@ -95,7 +72,7 @@ const texts = [
 /*      Input Parsing       */
 //Checks whether a string in inputBuffer can lead to an existing command
 function isPossibleCommand(input) {
-    for(const command of commands.keys()) {
+    for(const command of state.commands.keys()) {
         if (command.startsWith(input)) return true;
     }
     return false;
@@ -110,11 +87,11 @@ function parseInput(event) {
 
     let input = inputBuffer.join("");
 
-    if (commands.get(input) && commands.get(input).unlocked === true) {
+    if (state.commands.get(input) && state.commands.get(input).unlocked === true) {
         inputBufferDiv.style.display = "none";
         inputBufferText.textContent = "";
         inputBuffer.length = 0;
-        return commands.get(input).action;
+        return state.commands.get(input).action;
 
     }
     else if (isPossibleCommand(input)) {
@@ -150,10 +127,10 @@ function handleKeyPress(event) {
 
     if (
         state.mode === "normal" &&
-        unlockedCommands.includes(event.key) &&
-        commands.has(event.key)
+        state.unlockedCommands.includes(event.key) &&
+        state.commands.has(event.key)
     ) {
-        const type = commands.get(event.key).type;
+        const type = state.commands.get(event.key).type;
 
         if (isChallengeFinished(
             type,
@@ -174,13 +151,13 @@ function handleKeyPress(event) {
 /*      Handling Insert Mode        */
 
 // Function which enters the INSERT mode.
-function insertCommand() {
+export function insertCommand() {
     state.mode = "insert";
     modeEl.textContent = "INSERT";
 }
 
 // Function which exits the INSERT mode.
-function exitInsertMode() {
+export function exitInsertMode() {
     if (state.cursor.col > 0) state.cursor.col--;
     updateCursor();
     state.mode = "normal";
@@ -188,7 +165,7 @@ function exitInsertMode() {
 }
 
 // Function which handles parsing the text and other inputs such as Enter.
-function handleInsertMode(event) {
+export function handleInsertMode(event) {
     const span = document.createElement("span");
     span.textContent = event.key;
 
@@ -295,7 +272,7 @@ function startRound() {
     resumeTimer();
 
     const pointsNeededEl = document.getElementById("points-num");
-    pointsNeededEl.style.color = "#ffffff";
+    pointsNeededEl.classList.remove("round-complete");
     pointsNeededEl.textContent = "Points Left: " + state.pointsNeeded.toString();
     
     state.spans = spanify();
