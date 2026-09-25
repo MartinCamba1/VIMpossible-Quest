@@ -23,7 +23,7 @@ export const state = {
 
     soundDisabled: false,       /* Bool value deciding whether SFX play. */
 
-    unlockedTypes: ["movement", "deletion"]     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
+    unlockedTypes: ["movement"]     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
                                                 // Possible values: "movement", "deletion", "single-char-deletion"
 }
 

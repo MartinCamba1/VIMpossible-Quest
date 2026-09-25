@@ -25,18 +25,25 @@ const modeEl = document.getElementById("mode-text");
 // Deletes the character the cursor is on currently.
 export function deleteChar() {
     state.characters[state.cursor.row].splice(state.cursor.col, 1);
-
-    state.spans[state.cursor.row][state.cursor.col].remove();
+    let span = state.spans[state.cursor.row][state.cursor.col]
+    let needNewChallenge = false;
+    if (isChallengeFinished(["single-char-deletion"], span)) {
+        needNewChallenge = true;
+    };
+    span.remove();
     state.spans[state.cursor.row].splice(state.cursor.col, 1);
 
     if (state.cursor.col >= state.characters[state.cursor.row].length) {
         state.cursor.col = Math.max(0, state.characters[state.cursor.row].length - 1);
     }
     updateCursor();
+
+    if (needNewChallenge === true) pickNewChallenge();
 }
 
 // Deletes a whole line the cursor is on
 export function deleteLine() {
+    let needNewChallenge = false;
     if (state.brElArr.length > 0) {
         const cursorWasOnLastLine = state.cursor.row == state.characters.length - 1;
         if (state.brElArr.length > 1) {
@@ -44,9 +51,10 @@ export function deleteLine() {
             state.brElArr.splice(state.cursor.row, 1);
         }
 
+        
         for (const span of state.spans[state.cursor.row]) {
-            if (isChallengeFinished("deletion", span)) {
-                pickNewChallenge();
+            if (isChallengeFinished(["deletion"], span)) {
+                needNewChallenge = true;
             }
             span.remove();
         }
@@ -70,6 +78,8 @@ export function deleteLine() {
             updateCursor();
         }
     }
+
+    if (needNewChallenge === true) pickNewChallenge();
 }
 
 // Jumps to the next word ahead of the cursor.

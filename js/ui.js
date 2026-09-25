@@ -8,7 +8,7 @@ import {
     roundLost
 } from "./audio.js";
 
-let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b"];
+let availableCommands = ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"];
 import {commands} from "./index.js";
 import { isElemAtEdge } from "./cursor.js";
 
@@ -16,8 +16,6 @@ import { isElemAtEdge } from "./cursor.js";
 // Function which comverts the terminal text into spans in the global 'state'.
 // Each row has its own array of spans.
 // Also creates a 'states.characters' array where each row has all of the characters in it.
-
-// Need to fix creating the text the way it checks if it reached the edges doesnt work.
 export function spanify() {
     const terminal = document.getElementById("vim-terminal");
 
@@ -320,19 +318,19 @@ export function unlockCommand(idxs, i, availableCommands, cmnds) {
 /*----------------------------------*/
 
 /*      Bottom Controls     */
-
+/*
 const volumeOn = document.querySelector(".volume-on");
 const volumeOff = document.querySelector(".volume-off");
-
+*/
 const pauseButton = document.querySelector(".pause");
 const playButton = document.querySelector(".play");
 
 const darkMode = document.querySelector(".dark-mode");
 const lightMode = document.querySelector(".light-mode");
-
+/*
 volumeOn.addEventListener("click", toggleIcon);
 volumeOff.addEventListener("click", toggleIcon);
-
+*/
 pauseButton.addEventListener("click", toggleIcon);
 playButton.addEventListener("click", toggleIcon);
 
@@ -342,6 +340,7 @@ lightMode.addEventListener("click", toggleIcon);
 function toggleIcon(event) {
     const pressedSvg = event.currentTarget;
 
+    /*
     if (pressedSvg === volumeOn) {
         state.soundDisabled = true;
 
@@ -352,7 +351,8 @@ function toggleIcon(event) {
         
         volumeOff.classList.add("hidden");
         volumeOn.classList.remove("hidden");
-    } else if (pressedSvg === pauseButton) {
+    */
+     if (pressedSvg === pauseButton) {
         pauseTimer();
 
         pauseButton.classList.add("hidden");

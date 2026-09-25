@@ -59,15 +59,15 @@ export const commands = new Map([
 
     ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
     ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
-    ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
+    ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
 
     ["i",  { action: insertCommand,   unlocked: false, type: ["inserting"] }],
     ["A",  { action: appendAtEndLine, unlocked: false, type: ["inserting"] }],
 
     ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
     ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],
-    ["gg", { action: ggCommand,       unlocked: true, type: ["movement"]}],
-    ["G",  { action: GCommand,        unlocked: true, type: ["movement"]}]
+    ["gg", { action: ggCommand,       unlocked: false, type: ["movement"]}],
+    ["G",  { action: GCommand,        unlocked: false, type: ["movement"]}]
 ]);
 
 
