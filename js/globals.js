@@ -67,7 +67,7 @@ export const state = {
         ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
 
         ["i",  { action: insertCommand,   unlocked: true, type: ["insertion"] }],
-        ["A",  { action: appendAtEndLine, unlocked: false, type: ["end-line-insertion"] }],
+        ["A",  { action: appendAtEndLine, unlocked: true, type: ["end-line-insertion"] }],
 
         ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
         ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],

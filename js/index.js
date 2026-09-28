@@ -110,7 +110,28 @@ function handleKeyPress(event) {
     if (state.paused === true) {
         return;
     }
-    if (state.mode === "normal") {
+
+    if (event.key === "ArrowLeft") {
+        moveLeft();
+        updateCursor();
+    }
+
+    else if (event.key === "ArrowUp") {
+        moveUp();
+        updateCursor();
+    }
+    
+    else if (event.key === "ArrowRight") {
+        moveRight();
+        updateCursor();
+    }
+
+    else if (event.key === "ArrowDown") {
+        moveDown();
+        updateCursor();
+    }
+
+    else if (state.mode === "normal") {
         const func = parseInput(event);
         if (func !== null) {
             func();
