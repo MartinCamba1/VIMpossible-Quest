@@ -52,8 +52,8 @@ export const state = {
 
     soundDisabled: false,       /* Bool value deciding whether SFX play. */
 
-    unlockedTypes: ["movement"],     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
-                                                // Possible values: "movement", "deletion", "single-char-deletion"
+    unlockedTypes: ["movement", "insertion"],     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
+                                                // Possible values: "movement", "deletion", "single-char-deletion", "insertion"
     
     unlockedCommands: ["h", "j", "k", "l"],     /* Unlocked commands this run. */
     commands: new Map([         /* Contains each commands and corresponding information about the command. */
@@ -66,8 +66,8 @@ export const state = {
         ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
         ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
 
-        ["i",  { action: insertCommand,   unlocked: false, type: ["inserting"] }],
-        ["A",  { action: appendAtEndLine, unlocked: false, type: ["inserting"] }],
+        ["i",  { action: insertCommand,   unlocked: true, type: ["insertion"] }],
+        ["A",  { action: appendAtEndLine, unlocked: false, type: ["end-line-insertion"] }],
 
         ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
         ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],
@@ -98,8 +98,8 @@ export function resetGlobals() {
         ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
         ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
 
-        ["i",  { action: insertCommand,   unlocked: false, type: ["inserting"] }],
-        ["A",  { action: appendAtEndLine, unlocked: false, type: ["inserting"] }],
+        ["i",  { action: insertCommand,   unlocked: false, type: ["insertion"] }],
+        ["A",  { action: appendAtEndLine, unlocked: false, type: ["insertion"] }],
 
         ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
         ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],

@@ -108,6 +108,95 @@ function findEdgeOfWord(row, col) {
     return res;
 }
 
+
+function writeWordChallenge() {
+
+    const word = "test";
+
+    let row = Math.floor(Math.random() * state.characters.length);
+
+    while (state.characters[row].length === 0) {
+        row = Math.floor(Math.random() * state.characters.length);
+    }
+
+    let col = Math.floor(Math.random() * state.characters[row].length) - word.length;
+
+    if (col < 0) {
+        col = 0;
+    }
+
+    console.log(row, col);
+
+    const ghostSpans = [];
+
+    for (const char of word) {
+
+        const span = document.createElement("span");
+
+        span.textContent = char;
+        span.classList.add("ghost-character");
+
+        ghostSpans.push(span);
+    }
+
+    // Add to state
+    state.spans[row].splice(col, 0, ...ghostSpans);
+    state.characters[row].splice(col, 0, ...word);
+
+    // Add to DOM
+    const nextSpan = state.spans[row][col + word.length];
+
+    if (nextSpan) {
+
+        nextSpan.before(...ghostSpans);
+
+    } else {
+
+        state.brElArr[row].before(...ghostSpans);
+
+    }
+
+    state.challenge.type = "write-word";
+    state.challenge.targets = ghostSpans;
+
+    checkRowOverflow(row);
+}
+
+function checkRowOverflow(row) {
+    const terminal = document.getElementById("terminal-text");
+    const spans = state.spans[row];
+
+    if (spans.length === 0) {
+        return;
+    }
+
+    const lastSpan = spans.at(-1);
+
+    const terminalRect = terminal.getBoundingClientRect();
+    const spanRect = lastSpan.getBoundingClientRect();
+
+    if (spanRect.right > terminalRect.right) {
+        const nextRow = row + 1;
+
+        if (!state.spans[nextRow]) {
+            state.spans[nextRow] = [];
+        }
+
+        spans.pop();
+        state.spans[nextRow].unshift(lastSpan);
+
+        lastSpan.remove();
+
+        if (state.spans[nextRow].length > 1) {
+            state.spans[nextRow][1].before(lastSpan);
+        } else if (brElArr[row]) {
+            brElArr[row].after(lastSpan);
+        }
+
+        checkRowOverflow(nextRow);
+    }
+}
+
 /*----------------------------------*/
 
 /*      Challenge Completion Handling       */
@@ -165,6 +254,21 @@ export function isChallengeFinished(typeOfAction, span) {
             }
         }
     }
+
+    else if (typeOfAction.includes("insertion")) {
+        if (state.challenge.type === "write-word") {
+            if (state.challenge.targets.includes(span)) {
+                span.classList.remove("ghost-character");
+                state.challenge.targets.splice(state.challenge.targets.findIndex((el) => el === span), 1);
+            }
+
+            if (state.challenge.targets.length === 0) {
+                state.challenge = {};
+                givePoints();
+                return true;
+            }
+        }
+    }
 }
 
 // Function used to pick a new challenge when the previous one is completed
@@ -181,6 +285,10 @@ export function pickNewChallenge() {
 
         ["single-char-deletion", [
             deleteCharChallenge
+        ]],
+
+        ["insertion", [
+            writeWordChallenge
         ]]
     ]);
     console.log(type);
@@ -253,7 +361,8 @@ export function updateObjectiveText(challenge) {
     const challengeObjectives = new Map([
         [moveToCharChallenge, "Reach target"],
         [deleteWordChallenge, "Delete word"],
-        [deleteCharChallenge, "Delete ONLY the letter"]
+        [deleteCharChallenge, "Delete ONLY the letter"],
+        [writeWordChallenge, "Write the text"]
     ]);
 
     const objectiveSpan = document.getElementById("objective-data");

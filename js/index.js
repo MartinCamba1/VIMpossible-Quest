@@ -165,6 +165,7 @@ export function exitInsertMode() {
 }
 
 // Function which handles parsing the text and other inputs such as Enter.
+// !!!!!!!!!!!!!!!!!!!!!! Want to move this to the gameMechanics section but will be a pain in the ass.
 export function handleInsertMode(event) {
     const span = document.createElement("span");
     span.textContent = event.key;
@@ -234,15 +235,21 @@ export function handleInsertMode(event) {
     }
     else {
         if (event.key.length === 1) {
-            state.spans[state.cursor.row].splice(state.cursor.col, 0, span);
-            state.characters[state.cursor.row].splice(state.cursor.col, 0, event.key);
-
-            if (state.spans[state.cursor.row][state.cursor.col + 1]) {
-                state.spans[state.cursor.row][state.cursor.col + 1].before(span);
-            } else {
-                state.brElArr[state.cursor.row].before(span);
+            if (state.challenge.type === "write-word" && state.challenge.targets.includes(state.spans[row][col])) {
+                if (isChallengeFinished(["insertion"], state.spans[row][col])) {
+                    pickNewChallenge();
+                };
             }
+            else {
+                state.spans[state.cursor.row].splice(state.cursor.col, 0, span);
+                state.characters[state.cursor.row].splice(state.cursor.col, 0, event.key);
 
+                if (state.spans[state.cursor.row][state.cursor.col + 1]) {
+                    state.spans[state.cursor.row][state.cursor.col + 1].before(span);
+                } else {
+                    state.brElArr[state.cursor.row].before(span);
+                }
+            }
             state.cursor.col++;
         }
     }

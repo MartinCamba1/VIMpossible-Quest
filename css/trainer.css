@@ -89,6 +89,7 @@
     --move-to-char-color: #000000;
     --delete-word-color: #dc3f3f;
     --delete-char-color: #dc3f3f;
+    --ghost-color: #176b5e;
 }
 .darkmode {
     --bg-color: #121212;
@@ -128,6 +129,7 @@
     --move-to-char-color: #ffffff;
     --delete-word-color: #ff5555;
     --delete-char-color: #ff5555;
+    --ghost-color: #7fb8a9;
 }
 
 html,
@@ -940,4 +942,33 @@ button,
         color 0.4s ease,
         border-color 0.4s ease,
         box-shadow 0.4s ease;
+}
+
+
+.ghost-character {
+    color: var(--ghost-color);
+    opacity: 0.25;
+    pointer-events: none;
+    user-select: none;
+    font-style: italic;
+
+    text-shadow:
+        1px 0 0 var(--terminal-bg),
+        -1px 0 0 var(--terminal-bg),
+        0 1px 0 var(--terminal-bg),
+        0 -1px 0 var(--terminal-bg);
+
+    animation: ghost-appear 0.35s ease-out forwards;
+}
+
+@keyframes ghost-appear {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 0.35;
+        transform: translateY(0);
+    }
 }
