@@ -89,7 +89,7 @@
     --move-to-char-color: #000000;
     --delete-word-color: #dc3f3f;
     --delete-char-color: #dc3f3f;
-    --ghost-color: #176b5e;
+    --ghost-color: rgba(255, 0, 255, 0.65);
 }
 .darkmode {
     --bg-color: #121212;
@@ -952,23 +952,16 @@ button,
     user-select: none;
     font-style: italic;
 
-    text-shadow:
-        1px 0 0 var(--terminal-bg),
-        -1px 0 0 var(--terminal-bg),
-        0 1px 0 var(--terminal-bg),
-        0 -1px 0 var(--terminal-bg);
+    text-shadow: 0 0 6px rgba(50, 255, 140, 0.4);
 
-    animation: ghost-appear 0.35s ease-out forwards;
+    animation: ghost-pulse 1s ease-in-out infinite alternate;
 }
 
-@keyframes ghost-appear {
+@keyframes ghost-pulse {
     from {
-        opacity: 0;
-        transform: translateY(4px);
+        opacity: 0.3;
     }
-
     to {
-        opacity: 0.35;
-        transform: translateY(0);
+        opacity: 1;
     }
 }

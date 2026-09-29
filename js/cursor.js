@@ -1,5 +1,6 @@
 
 import { state } from "./globals.js";
+import { isChallengeFinished, pickNewChallenge} from "./gameMechanics.js";
 const cursorElement = document.createElement("span");
 cursorElement.classList.add("cursor");
 const terminal = document.querySelector("#vim-terminal");
@@ -50,6 +51,9 @@ export function moveCursor(colOrRow, change) {
         }
     }
     updateCursor();
+    if (isChallengeFinished(["movement"], state.spans[state.cursor.row][state.cursor.col])) {
+        pickNewChallenge();
+    }
 
 }
 

@@ -27,9 +27,11 @@ export function deleteChar() {
     state.characters[state.cursor.row].splice(state.cursor.col, 1);
     let span = state.spans[state.cursor.row][state.cursor.col]
     let needNewChallenge = false;
-    if (isChallengeFinished(["single-char-deletion"], span)) {
+    
+    if (isChallengeFinished(state.commands.get("x").type, span)) {
         needNewChallenge = true;
     };
+    
     span.remove();
     state.spans[state.cursor.row].splice(state.cursor.col, 1);
 

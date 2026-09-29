@@ -204,12 +204,13 @@ function checkRowOverflow(row) {
 //Checks if a challenge that is currently active is completed and gives points and picks a new challenge
 
 // !!!!!!!!!!!!!!!!!!!!!!!! There is still a bug where a challenge with delete word does not display the spans still not sure why it happens. !!!!!!!!!!!!!!!!!!!!
-// !!!!!!!!!!!!!!!!!!!!!!!! Another bug where if you use "x" to delete a word it doesnt count as completion, probably need to redo everything about this functions cause its fu****.
+
 export function isChallengeFinished(typeOfAction, span) {
     let col = state.cursor.col;
     let row = state.cursor.row;
 
     let penalty = false;
+    console.log(typeOfAction);
 
     if (typeOfAction.includes("movement")) {
         if (state.challenge?.type === "move-to-char") {
@@ -226,8 +227,10 @@ export function isChallengeFinished(typeOfAction, span) {
     else if (typeOfAction.includes("deletion")) {
         if (state.challenge.type === "delete-word") {
             if (state.challenge.targets.includes(span)) {
+                
                 span.classList.remove("delete-word-challenge");
                 state.challenge.targets.splice(state.challenge.targets.findIndex((el) => el === span), 1);
+                console.log(state.challenge.targets);
             }
 
             if (state.challenge.targets.length === 0) {

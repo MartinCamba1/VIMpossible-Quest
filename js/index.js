@@ -145,14 +145,13 @@ function handleKeyPress(event) {
             handleInsertMode(event);
         }
     }
-
+    /*
     if (
         state.mode === "normal" &&
         state.unlockedCommands.includes(event.key) &&
         state.commands.has(event.key)
     ) {
         const type = state.commands.get(event.key).type;
-
         if (isChallengeFinished(
             type,
             state.spans[state.cursor.row][state.cursor.col]
@@ -160,6 +159,7 @@ function handleKeyPress(event) {
             pickNewChallenge();
         }
     }
+    */
 }
 
 
