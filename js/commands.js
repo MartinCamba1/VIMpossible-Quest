@@ -100,6 +100,20 @@ export function bCommand() {
     updateCursor();
 }
 
+export function eCommand() {
+    const pos = findNextWord(state.cursor.row, state.cursor.col);
+    let row = pos.row;
+    let col = pos.col;
+
+    while (col + 1 < state.characters[row].length && !punctuations.includes(state.characters[row][col + 1]) && state.characters[row][col + 1] != " ") {
+        col += 1
+    }
+
+    state.cursor.row = row;
+    state.cursor.col = col;
+    updateCursor();
+}
+
 // Deletes the next word ahead of the cursor.
 
 /* Need to add not deleting whitespace such as . after the word */
