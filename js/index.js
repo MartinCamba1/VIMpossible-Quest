@@ -26,6 +26,7 @@ import {
 import {
     isChallengeFinished,
     pickNewChallenge,
+    checkRowOverflow,
     updateObjectiveText,
 
     moveToCharChallenge,
@@ -83,6 +84,8 @@ function isPossibleCommand(input) {
 function parseInput(event) {
     const inputBufferDiv = document.getElementById("input-buffer");
     const inputBufferText = document.getElementById("buffer-text");
+    if (event.key.length !== 1) return null;
+    
     inputBuffer.push(event.key);
 
     let input = inputBuffer.join("");
@@ -114,21 +117,33 @@ function handleKeyPress(event) {
     if (event.key === "ArrowLeft") {
         moveLeft();
         updateCursor();
+        if (isChallengeFinished(["movement"], state.spans[state.cursor.row][state.cursor.col])) {
+            pickNewChallenge();
+        }
     }
 
     else if (event.key === "ArrowUp") {
         moveUp();
         updateCursor();
+        if (isChallengeFinished(["movement"], state.spans[state.cursor.row][state.cursor.col])) {
+            pickNewChallenge();
+        }
     }
     
     else if (event.key === "ArrowRight") {
         moveRight();
         updateCursor();
+        if (isChallengeFinished(["movement"], state.spans[state.cursor.row][state.cursor.col])) {
+            pickNewChallenge();
+        }
     }
 
     else if (event.key === "ArrowDown") {
         moveDown();
         updateCursor();
+        if (isChallengeFinished(["movement"], state.spans[state.cursor.row][state.cursor.col])) {
+            pickNewChallenge();
+        }
     }
 
     else if (state.mode === "normal") {
@@ -270,11 +285,13 @@ export function handleInsertMode(event) {
                 } else {
                     state.brElArr[state.cursor.row].before(span);
                 }
+                checkRowOverflow(span);
             }
             state.cursor.col++;
         }
     }
     updateCursor();
+    
 }
 
 /*----------------------------------*/

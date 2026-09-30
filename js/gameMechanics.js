@@ -132,9 +132,11 @@ function writeWordChallenge() {
     for (const char of word) {
 
         const span = document.createElement("span");
+        
 
         span.textContent = char;
         span.classList.add("ghost-character");
+        checkRowOverflow(span);
 
         ghostSpans.push(span);
     }
@@ -159,41 +161,21 @@ function writeWordChallenge() {
     state.challenge.type = "write-word";
     state.challenge.targets = ghostSpans;
 
-    checkRowOverflow(row);
+    
 }
 
-function checkRowOverflow(row) {
+export function checkRowOverflow(span) {
     const terminal = document.getElementById("terminal-text");
-    const spans = state.spans[row];
-
-    if (spans.length === 0) {
-        return;
-    }
-
-    const lastSpan = spans.at(-1);
 
     const terminalRect = terminal.getBoundingClientRect();
-    const spanRect = lastSpan.getBoundingClientRect();
+    const spanRect = span.getBoundingClientRect();
 
     if (spanRect.right > terminalRect.right) {
-        const nextRow = row + 1;
+        const brEl = document.createElement("br");
 
-        if (!state.spans[nextRow]) {
-            state.spans[nextRow] = [];
-        }
+        span.before(brEl);
 
-        spans.pop();
-        state.spans[nextRow].unshift(lastSpan);
-
-        lastSpan.remove();
-
-        if (state.spans[nextRow].length > 1) {
-            state.spans[nextRow][1].before(lastSpan);
-        } else if (brElArr[row]) {
-            brElArr[row].after(lastSpan);
-        }
-
-        checkRowOverflow(nextRow);
+        state.brElArr.push(brEl);
     }
 }
 

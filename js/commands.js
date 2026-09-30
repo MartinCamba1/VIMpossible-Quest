@@ -86,7 +86,7 @@ export function deleteLine() {
 
 // Jumps to the next word ahead of the cursor.
 export function wCommand() {
-    const pos = findNextWord(state.cursor.row, state.cursor.col);
+    const pos = findNextWordW(state.cursor.row, state.cursor.col);
     state.cursor.row = pos.row;
     state.cursor.col = pos.col;
     updateCursor();
@@ -114,16 +114,46 @@ export function eCommand() {
     updateCursor();
 }
 
+export function $Command() {
+    const pos = findEndOfLine(state.cursor.row, state.cursor.col);
+    state.cursor.col = pos.col;
+
+    updateCursor();
+}
+
 // Deletes the next word ahead of the cursor.
 
 /* Need to add not deleting whitespace such as . after the word */
 /* Doesnt delete the first character of the word for some reason. */
     // Need to test it properly on a single punctuation mark.
+
 export function dwCommand() {
+    dCommand("w");
+}
+
+export function d$Command() {
+    const row = state.cursor.row;
+
+    dCommand("$");
+
+    if (state.characters[row].length === 0) {
+        ensureRowHasSpan(row);
+        state.cursor.col = 0;
+    }
+    else if (state.cursor.col >= state.characters[row].length) {
+        state.cursor.col = state.characters[row].length - 1;
+    }
+}
+// !!!!!!!!!!!!!!!!!!!!!!!!!! Need to add it so it deletes a row when you delete a whole line and pushes other ones up one row
+export function dCommand(type) {
+
     const row = state.cursor.row;
     const col = state.cursor.col;
+
     let needNewChallenge = false;
+
     if (punctuations.includes(state.characters[row][col])) {
+
         const span = state.spans[row][col];
 
         if (isChallengeFinished("deletion", span)) {
@@ -137,35 +167,135 @@ export function dwCommand() {
         if (needNewChallenge === true) {
             pickNewChallenge();
         }
+
         return;
     }
 
+    let pos;
 
-    const pos = findNextWord(state.cursor.row, state.cursor.col);
+    if (type == "w") {
+        pos = findNextWordW(row, col);
+    }
+    else if (type == "e") {
+        pos = findNextWordE(row, col);
+    }
+    else if (type == "$") {
+        pos = findEndOfLine(row, col);
+    }
+
     const newRow = pos.row;
-    let newCol = pos.col;
+    const newCol = pos.col;
 
-    if (newRow === row && newCol === col) {
-        newCol++;
-    }
+    if (newRow === row) {
 
-    if (state.cursor.row !== newRow) {
-        /* Add deleting backwards with function findPrevWord() */
-        newCol = state.characters[state.cursor.row].length;
-    }
-    state.characters[state.cursor.row].splice(state.cursor.col, (newCol - state.cursor.col));
-    
-    for (let i = state.cursor.col; i < newCol; i++) {
-        if (isChallengeFinished("deletion", state.spans[state.cursor.row][i])) {
-            needNewChallenge = true;
+        let deleteUntil = newCol;
+
+        for (let i = col; i < newCol; i++) {
+
+            if (type != "$" && punctuations.includes(state.characters[row][i])) {
+                deleteUntil = i;
+                break;
+            }
+
+            const span = state.spans[row][i];
+
+            if (isChallengeFinished("deletion", span)) {
+                needNewChallenge = true;
+            }
+
+            span.remove();
         }
-        state.spans[state.cursor.row][i].remove();
-        
+
+        state.characters[row].splice(col, deleteUntil - col);
+        state.spans[row].splice(col, deleteUntil - col);
     }
-    state.spans[state.cursor.row].splice(state.cursor.col, (newCol - state.cursor.col));
+
+
+    else {
+        let deleteFromCurrent = state.spans[row].length;
+
+        for (let i = col; i < state.spans[row].length; i++) {
+
+            if (punctuations.includes(state.characters[row][i])) {
+                deleteFromCurrent = i;
+                break;
+            }
+
+            const span = state.spans[row][i];
+
+            if (isChallengeFinished("deletion", span)) {
+                needNewChallenge = true;
+            }
+
+            span.remove();
+        }
+
+        state.characters[row].splice(col, deleteFromCurrent - col);
+        state.spans[row].splice(col, deleteFromCurrent - col);
+
+        for (let r = row + 1; r < newRow; r++) {
+
+            let deleteUntil = state.spans[r].length;
+
+            for (let i = 0; i < state.spans[r].length; i++) {
+
+                if (punctuations.includes(state.characters[r][i])) {
+                    deleteUntil = i;
+                    break;
+                }
+
+                const span = state.spans[r][i];
+
+                if (isChallengeFinished("deletion", span)) {
+                    needNewChallenge = true;
+                }
+
+                span.remove();
+            }
+
+            state.characters[r].splice(0, deleteUntil);
+            state.spans[r].splice(0, deleteUntil);
+        }
+
+        let deleteUntil = newCol;
+
+        for (let i = 0; i < newCol; i++) {
+
+            if (punctuations.includes(state.characters[newRow][i])) {
+                deleteUntil = i;
+                break;
+            }
+
+            const span = state.spans[newRow][i];
+
+            if (isChallengeFinished("deletion", span)) {
+                needNewChallenge = true;
+            }
+
+            span.remove();
+        }
+
+        state.characters[newRow].splice(0, deleteUntil);
+        state.spans[newRow].splice(0, deleteUntil);
+    }
+    console.log(state.spans[newRow]);
+    ensureRowHasSpan(newRow);
+    console.log(state.spans[newRow]);
 
     if (needNewChallenge === true) {
         pickNewChallenge();
+    }
+}
+
+function ensureRowHasSpan(row) {
+    if (state.spans[row].length === 0) {
+        const span = document.createElement("span");
+        span.textContent = "";
+        state.spans[row].push(span);
+        state.characters[row].push("");
+
+        // Add it to the DOM at the appropriate position
+        // depending on how your rows are currently rendered.
     }
 }
 
@@ -178,31 +308,60 @@ export function appendAtEndLine() {
 }
 
 // Helper Function used in wCommand and dwCommand
-function findNextWord(inputRow, inputCol) {
+function findNextWordW(inputRow, inputCol) {
+
     let row = inputRow;
-    let col = inputCol;
-    let foundSpace = false;
+    let col = inputCol + 1;
 
-    for (let i = col + 1; i < state.characters[row].length; i++) {
-        const char = state.characters[row][i];
+    while (true) {
 
-        if (punctuations.includes(char)) return {row, col: i};
-        else if (char == " ") {
-            foundSpace = true;
-            if (row < state.characters.length - 1 && 
-                i === state.characters[row].length - 1) {
-                    return {row: row + 1, col: 0};
-            }
+        // Skip the rest of the current word
+        while (
+            col < state.characters[row].length &&
+            state.characters[row][col] !== " "
+        ) {
+            col++;
         }
-        else {
-            if (foundSpace) return {row, col: i};
+
+        // Skip spaces
+        while (
+            col < state.characters[row].length &&
+            state.characters[row][col] === " "
+        ) {
+            col++;
+        }
+
+        // Found the beginning of the next word
+        if (col < state.characters[row].length) {
+            return { row, col };
+        }
+
+        // Reached the end of this logical row
+        if (row >= state.characters.length - 1) {
+            return {
+                row,
+                col: state.characters[row].length - 1
+            };
+        }
+
+        // Continue at the beginning of the next logical row
+        row++;
+        col = 0;
+
+        // Skip leading spaces on the next row
+        while (
+            col < state.characters[row].length &&
+            state.characters[row][col] === " "
+        ) {
+            col++;
+        }
+
+        if (col < state.characters[row].length) {
+            return { row, col };
         }
     }
-    if (row < state.characters.length - 1) {
-        return {row: row + 1, col: 0};
-    }
-    return {row, col};
 }
+
 
 // Helper Function used in bCommand.
 function findPrevWord(inputRow, inputCol) {
@@ -232,6 +391,11 @@ function findPrevWord(inputRow, inputCol) {
     return {row, col: 0};
 }
 
+// Returns the position of the end of the current line
+function findEndOfLine(row, col) {
+    return {row, col: state.spans[row].length - 1};
+}
+
 // gg command jumps to the start of the terminal window
 export function ggCommand() {
     state.cursor.row = 0;
@@ -247,4 +411,11 @@ export function GCommand() {
     state.cursor.col = 0;
 
     updateCursor();
+}
+
+
+export function motion(n, func) {
+    for (i = 0; i < n; i++) {
+        func();
+    }
 }

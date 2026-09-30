@@ -58,20 +58,19 @@ export function spanify() {
 
             if (spanRect.right > horizontalEdge) {
                 span.remove();
-                state.characters.push(rowChars);
-                res.push(rowSpans);
+                
                 const brEl = document.createElement("br");
                 state.brElArr.push(brEl);
                 terminalText.appendChild(brEl);
                 terminalText.appendChild(span);
 
-                rowSpans = [];
-                rowChars = [];
-
             }
             rowChars.push(char);
             rowSpans.push(span);
         }
+        let emptySpan = document.createElement("span");
+        terminalText.appendChild(emptySpan);
+        rowSpans.push(emptySpan);
 
         state.characters.push(rowChars);
         res.push(rowSpans);

@@ -50,7 +50,9 @@ export function moveCursor(colOrRow, change) {
             state.cursor.col = state.spans[state.cursor.row].length - 1;
         }
     }
+
     updateCursor();
+
     if (isChallengeFinished(["movement"], state.spans[state.cursor.row][state.cursor.col])) {
         pickNewChallenge();
     }
@@ -71,6 +73,12 @@ export function updateCursor() {
         block: "nearest",
         inline: "nearest"
     });
+
+    console.log(
+    state.cursor.row,
+    state.cursor.col,
+    state.spans[state.cursor.row]
+);
 }
 
 export function isElemAtEdge(el) {
