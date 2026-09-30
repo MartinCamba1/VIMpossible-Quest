@@ -19,7 +19,8 @@ import {
     eCommand,
     motion,
     $Command,
-    d$Command
+    d$Command,
+    deCommand
 } from "./commands.js";
 
 import {
@@ -69,7 +70,8 @@ export const state = {
         ["x",  { action: deleteChar,      unlocked: true, type: ["deletion", "single-char-deletion"] }],
         ["dd", { action: deleteLine,      unlocked: true, type: ["deletion"] }],
         ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
-        ["d$", { action: d$Command,       unlocked: true,  type: ["deletion"]}],
+        ["d$", { action: d$Command,       unlocked: true, type: ["deletion"]}],
+        ["de", { action: deCommand,       unlocked: true, type: ["deletion"]}],
 
         ["i",  { action: insertCommand,   unlocked: true, type: ["insertion"] }],
         ["A",  { action: appendAtEndLine, unlocked: false, type: ["end-line-insertion"] }],

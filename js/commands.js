@@ -140,6 +140,12 @@ export function d$Command() {
         state.cursor.col = state.characters[row].length - 1;
     }
 }
+
+export function deCommand() {
+    dCommand("e");
+}
+
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!! Need to add it so it deletes a row when you delete a whole line and pushes other ones up one row
 export function dCommand(type) {
 
@@ -148,6 +154,55 @@ export function dCommand(type) {
 
     let needNewChallenge = false;
 
+    // de on the last character of a logical line:
+    // join the next logical line and continue `e` from
+    // the first character of that line.
+    if (
+        type === "e" &&
+        col === state.characters[row].length - 1 &&
+        row + 1 < state.characters.length
+    ) {
+        const oldLength = state.characters[row].length;
+
+        joinNextRow(row);
+
+        const pos = findNextWordE(row, oldLength);
+
+        // de includes the character where e lands
+        const newCol = pos.col + 1;
+
+        for (let i = col; i < newCol; i++) {
+
+            const span = state.spans[row][i];
+
+            if (isChallengeFinished("deletion", span)) {
+                needNewChallenge = true;
+            }
+
+            span.remove();
+        }
+
+        state.characters[row].splice(
+            col,
+            newCol - col
+        );
+
+        state.spans[row].splice(
+            col,
+            newCol - col
+        );
+
+        ensureRowHasSpan(row);
+
+        if (needNewChallenge === true) {
+            pickNewChallenge();
+        }
+
+        return;
+    }
+
+
+    // Delete punctuation directly
     if (punctuations.includes(state.characters[row][col])) {
 
         const span = state.spans[row][col];
@@ -167,20 +222,38 @@ export function dCommand(type) {
         return;
     }
 
+
     let pos;
 
-    if (type == "w") {
+    if (type === "w") {
+
         pos = findNextWordW(row, col);
+
     }
-    else if (type == "e") {
+
+    else if (type === "e") {
+
         pos = findNextWordE(row, col);
+
+        // de includes the character where e lands
+        pos.col += 1;
+
     }
-    else if (type == "$") {
+
+    else if (type === "$") {
+
         pos = findEndOfLine(row, col);
+
     }
+
 
     const newRow = pos.row;
     const newCol = pos.col;
+
+
+    // ============================================================
+    // Same logical row
+    // ============================================================
 
     if (newRow === row) {
 
@@ -188,7 +261,10 @@ export function dCommand(type) {
 
         for (let i = col; i < newCol; i++) {
 
-            if (type != "$" && punctuations.includes(state.characters[row][i])) {
+            if (
+                type !== "$" &&
+                punctuations.includes(state.characters[row][i])
+            ) {
                 deleteUntil = i;
                 break;
             }
@@ -202,17 +278,37 @@ export function dCommand(type) {
             span.remove();
         }
 
-        state.characters[row].splice(col, deleteUntil - col);
-        state.spans[row].splice(col, deleteUntil - col);
+        state.characters[row].splice(
+            col,
+            deleteUntil - col
+        );
+
+        state.spans[row].splice(
+            col,
+            deleteUntil - col
+        );
     }
 
 
+    // ============================================================
+    // Multiple logical rows
+    // ============================================================
+
     else {
-        let deleteFromCurrent = state.spans[row].length;
 
-        for (let i = col; i < state.spans[row].length; i++) {
+        // Delete from cursor to the end of current row
+        let deleteFromCurrent = state.characters[row].length;
 
-            if (punctuations.includes(state.characters[row][i])) {
+        for (
+            let i = col;
+            i < state.characters[row].length;
+            i++
+        ) {
+
+            if (
+                type !== "$" &&
+                punctuations.includes(state.characters[row][i])
+            ) {
                 deleteFromCurrent = i;
                 break;
             }
@@ -226,16 +322,32 @@ export function dCommand(type) {
             span.remove();
         }
 
-        state.characters[row].splice(col, deleteFromCurrent - col);
-        state.spans[row].splice(col, deleteFromCurrent - col);
+        state.characters[row].splice(
+            col,
+            deleteFromCurrent - col
+        );
 
+        state.spans[row].splice(
+            col,
+            deleteFromCurrent - col
+        );
+
+
+        // Delete complete rows in between
         for (let r = row + 1; r < newRow; r++) {
 
-            let deleteUntil = state.spans[r].length;
+            let deleteUntil = state.characters[r].length;
 
-            for (let i = 0; i < state.spans[r].length; i++) {
+            for (
+                let i = 0;
+                i < state.characters[r].length;
+                i++
+            ) {
 
-                if (punctuations.includes(state.characters[r][i])) {
+                if (
+                    type !== "$" &&
+                    punctuations.includes(state.characters[r][i])
+                ) {
                     deleteUntil = i;
                     break;
                 }
@@ -249,15 +361,28 @@ export function dCommand(type) {
                 span.remove();
             }
 
-            state.characters[r].splice(0, deleteUntil);
-            state.spans[r].splice(0, deleteUntil);
+            state.characters[r].splice(
+                0,
+                deleteUntil
+            );
+
+            state.spans[r].splice(
+                0,
+                deleteUntil
+            );
         }
 
+
+        // Delete from beginning of destination row
+        // to destination position
         let deleteUntil = newCol;
 
         for (let i = 0; i < newCol; i++) {
 
-            if (punctuations.includes(state.characters[newRow][i])) {
+            if (
+                type !== "$" &&
+                punctuations.includes(state.characters[newRow][i])
+            ) {
                 deleteUntil = i;
                 break;
             }
@@ -271,12 +396,19 @@ export function dCommand(type) {
             span.remove();
         }
 
-        state.characters[newRow].splice(0, deleteUntil);
-        state.spans[newRow].splice(0, deleteUntil);
+        state.characters[newRow].splice(
+            0,
+            deleteUntil
+        );
+
+        state.spans[newRow].splice(
+            0,
+            deleteUntil
+        );
     }
-    console.log(state.spans[newRow]);
+
+
     ensureRowHasSpan(newRow);
-    console.log(state.spans[newRow]);
 
     if (needNewChallenge === true) {
         pickNewChallenge();
@@ -293,6 +425,63 @@ function ensureRowHasSpan(row) {
         // Add it to the DOM at the appropriate position
         // depending on how your rows are currently rendered.
     }
+}
+
+function joinNextRow(row) {
+    if (row + 1 >= state.characters.length) {
+        return false;
+    }
+
+    const currentSpans = state.spans[row];
+    const nextSpans = state.spans[row + 1];
+
+    // Remove the current row's empty end-position span
+    const currentEndSpan = currentSpans.at(-1);
+
+    if (currentEndSpan && currentEndSpan.textContent === "") {
+        currentEndSpan.remove();
+        currentSpans.pop();
+    }
+
+    // Remove the <br> separating the two logical rows
+    const br = state.brElArr[row];
+
+    if (br) {
+        br.remove();
+        state.brElArr.splice(row, 1);
+    }
+
+    // Move the actual characters into the current row
+    state.characters[row].push(...state.characters[row + 1]);
+
+    // Move the actual spans into the current row
+    const nextActualSpans = nextSpans.slice(
+        0,
+        state.characters[row + 1].length
+    );
+
+    state.spans[row].push(...nextActualSpans);
+
+    // Remove the old next row's data
+    state.characters.splice(row + 1, 1);
+    state.spans.splice(row + 1, 1);
+
+    // Create the new end-position span
+    const endSpan = document.createElement("span");
+    endSpan.textContent = "";
+
+    state.spans[row].push(endSpan);
+
+    // Put it after the last actual character
+    const lastSpan = state.spans[row][state.spans[row].length - 2];
+
+    if (lastSpan) {
+        lastSpan.after(endSpan);
+    } else {
+        document.getElementById("terminal-text").appendChild(endSpan);
+    }
+
+    return true;
 }
 
 // Enters insert mode and jumps to the end of the current line.
@@ -528,7 +717,7 @@ export function GCommand() {
     updateCursor();
 }
 
-
+// Needs implementing
 export function motion(n, func) {
     for (i = 0; i < n; i++) {
         func();

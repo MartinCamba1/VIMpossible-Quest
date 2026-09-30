@@ -68,9 +68,6 @@ export function spanify() {
             rowChars.push(char);
             rowSpans.push(span);
         }
-        let emptySpan = document.createElement("span");
-        terminalText.appendChild(emptySpan);
-        rowSpans.push(emptySpan);
 
         state.characters.push(rowChars);
         res.push(rowSpans);
