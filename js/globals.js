@@ -66,7 +66,7 @@ export const state = {
         ["k",  { action: moveUp,          unlocked: true,  type: ["movement"] }],
         ["l",  { action: moveRight,       unlocked: true,  type: ["movement"] }],
 
-        ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
+        ["x",  { action: deleteChar,      unlocked: true, type: ["deletion", "single-char-deletion"] }],
         ["dd", { action: deleteLine,      unlocked: true, type: ["deletion"] }],
         ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
         ["d$", { action: d$Command,       unlocked: true,  type: ["deletion"]}],

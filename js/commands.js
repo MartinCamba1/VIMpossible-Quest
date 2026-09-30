@@ -101,13 +101,9 @@ export function bCommand() {
 }
 
 export function eCommand() {
-    const pos = findNextWord(state.cursor.row, state.cursor.col);
+    const pos = findNextWordE(state.cursor.row, state.cursor.col);
     let row = pos.row;
     let col = pos.col;
-
-    while (col + 1 < state.characters[row].length && !punctuations.includes(state.characters[row][col + 1]) && state.characters[row][col + 1] != " ") {
-        col += 1
-    }
 
     state.cursor.row = row;
     state.cursor.col = col;
@@ -362,6 +358,125 @@ function findNextWordW(inputRow, inputCol) {
     }
 }
 
+
+export function findNextWordE(row, col) {
+    let currentRow = row;
+    let currentCol = col;
+
+    const isWordChar = (char) => {
+        return char !== " " && !punctuations.includes(char);
+    };
+
+    // Already on punctuation
+    if (punctuations.includes(state.characters[currentRow][currentCol])) {
+
+        // Last character of the logical row
+        if (currentCol === state.characters[currentRow].length - 1) {
+            currentRow++;
+
+            if (currentRow >= state.characters.length) {
+                return {
+                    row: row,
+                    col: col
+                };
+            }
+
+            currentCol = 0;
+        }
+        else {
+            // Move to the next character.
+            // This can be another punctuation character.
+            currentCol++;
+        }
+    }
+
+    // Currently inside a word
+    else if (isWordChar(state.characters[currentRow][currentCol])) {
+
+        // Move to the end of the current word
+        while (
+            currentCol + 1 < state.characters[currentRow].length &&
+            isWordChar(state.characters[currentRow][currentCol + 1])
+        ) {
+            currentCol++;
+        }
+
+        // If we actually moved within the word,
+        // return its last character.
+        if (currentCol !== col) {
+            return {
+                row: currentRow,
+                col: currentCol
+            };
+        }
+
+        // Already at the end of the word.
+        currentCol++;
+
+        // If the word was the last thing on the row,
+        // search from the next logical row.
+        if (currentCol >= state.characters[currentRow].length) {
+            currentRow++;
+
+            if (currentRow >= state.characters.length) {
+                return {
+                    row: row,
+                    col: col
+                };
+            }
+
+            currentCol = 0;
+        }
+    }
+
+    while (true) {
+
+        // Skip spaces
+        while (
+            currentCol < state.characters[currentRow].length &&
+            state.characters[currentRow][currentCol] === " "
+        ) {
+            currentCol++;
+        }
+
+        // Found something that isn't a space.
+        if (currentCol < state.characters[currentRow].length) {
+
+            // If it's punctuation, return that exact character.
+            if (punctuations.includes(state.characters[currentRow][currentCol])) {
+                return {
+                    row: currentRow,
+                    col: currentCol
+                };
+            }
+
+            // Otherwise find the end of the word.
+            while (
+                currentCol + 1 < state.characters[currentRow].length &&
+                isWordChar(state.characters[currentRow][currentCol + 1])
+            ) {
+                currentCol++;
+            }
+
+            return {
+                row: currentRow,
+                col: currentCol
+            };
+        }
+
+        // Nothing left on this logical row.
+        currentRow++;
+
+        if (currentRow >= state.characters.length) {
+            return {
+                row: row,
+                col: col
+            };
+        }
+
+        currentCol = 0;
+    }
+}
 
 // Helper Function used in bCommand.
 function findPrevWord(inputRow, inputCol) {
