@@ -17,7 +17,7 @@ import {
     ggCommand,
     GCommand,
     eCommand,
-    motion,
+    motionCommand,
     $Command,
     d$Command,
     deCommand
@@ -83,7 +83,7 @@ export const state = {
 
         ["gg", { action: ggCommand,       unlocked: false,  type: ["movement"]}],
         ["G",  { action: GCommand,        unlocked: false,  type: ["movement"]}],
-        ["Motion", {action: motion,        unlocked: true,   type: ["motion"]}]
+        ["Motion", {action: motionCommand,        unlocked: true,   type: ["motion"]}]
     ]),
     availableCommands: ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"],        /* A list of commands available to be unlocked. */
     unlockedCommandsDivs: []        /* All the new divs for the commands the player unlocks, used for reseting the round. */

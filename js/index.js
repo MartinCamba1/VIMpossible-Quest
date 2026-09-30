@@ -20,7 +20,8 @@ import {
     dwCommand,
     bCommand,
     ggCommand,
-    GCommand
+    GCommand,
+    motionCommand
 } from "./commands.js";
 
 import {
@@ -73,8 +74,22 @@ const texts = [
 /*      Input Parsing       */
 //Checks whether a string in inputBuffer can lead to an existing command
 function isPossibleCommand(input) {
-    for(const command of state.commands.keys()) {
+
+    for (const command of state.commands.keys()) {
         if (command.startsWith(input)) return true;
+    }
+
+    if (state.commands.get("Motion").unlocked == true) {
+
+        const temp = tryParseMotion(input);
+
+        if (
+            //temp.operator == "d" &&
+            temp.count > 0 &&
+            temp.motion == ""
+        ) {
+            return true;
+        }
     }
     return false;
 }
@@ -90,6 +105,8 @@ function parseInput(event) {
 
     let input = inputBuffer.join("");
 
+    
+
     if (state.commands.get(input) && state.commands.get(input).unlocked === true) {
         inputBufferDiv.style.display = "none";
         inputBufferText.textContent = "";
@@ -97,15 +114,74 @@ function parseInput(event) {
         return state.commands.get(input).action;
 
     }
-    else if (isPossibleCommand(input)) {
+
+    if (state.commands.get("Motion").unlocked == true) {
+        const temp = tryParseMotion(input);
+        let operator = temp.operator;
+        let count = temp.count;
+        let motion = temp.motion;
+
+        operator += motion;
+        const func = state.commands.get(operator);
+        console.log(func);
+
+        if (func !== undefined && count > 1 && motion != "" && func.unlocked === true) {
+            motionCommand(func.action, count);
+            inputBufferDiv.style.display = "none";
+            inputBufferText.textContent = "";
+            inputBuffer.length = 0;
+            return null;
+        }
+    }
+    
+    if (isPossibleCommand(input)) {
         inputBufferDiv.style.display = "flex";
         inputBufferText.textContent = input;
         return null;
     }
-    inputBufferDiv.style.display = "none";
-    inputBufferText.textContent = "";
-    inputBuffer.length = 0;
+    else {
+        inputBufferDiv.style.display = "none";
+        inputBufferText.textContent = "";
+        inputBuffer.length = 0;
+    }
     return null;
+}
+
+function tryParseMotion(input) {
+    let operator = "";
+    let count = 0;
+    let countStr = "";
+    let motion = "";
+
+    let i = 0;
+
+    while (i < input.length && isAlpha(input[i])) {
+        operator += input[i];
+        i += 1
+    }
+
+    while (i < input.length && isNumber(input[i])) {
+        countStr += input[i];
+        i += 1
+    }
+
+    count = Number(countStr);
+
+    while (i < input.length) {
+        motion += input[i];
+        i += 1;
+    }
+
+    console.log(operator, count, motion);
+    return {operator, count, motion};
+}
+
+function isAlpha(ch) {
+    return /^[A-Z]$/i.test(ch);
+}
+
+function isNumber(char) {
+    return char >= "0" && char <= "9";
 }
 
 // Function that handles each key press and decides on whether to look for a command or insert the text.
@@ -160,21 +236,6 @@ function handleKeyPress(event) {
             handleInsertMode(event);
         }
     }
-    /*
-    if (
-        state.mode === "normal" &&
-        state.unlockedCommands.includes(event.key) &&
-        state.commands.has(event.key)
-    ) {
-        const type = state.commands.get(event.key).type;
-        if (isChallengeFinished(
-            type,
-            state.spans[state.cursor.row][state.cursor.col]
-        )) {
-            pickNewChallenge();
-        }
-    }
-    */
 }
 
 

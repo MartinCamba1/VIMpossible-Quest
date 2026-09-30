@@ -492,6 +492,7 @@ export function appendAtEndLine() {
     updateCursor();
 }
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!! Works weirdly with punctuations, needs fixing.
 // Helper Function used in wCommand and dwCommand
 function findNextWordW(inputRow, inputCol) {
 
@@ -717,9 +718,9 @@ export function GCommand() {
     updateCursor();
 }
 
-// Needs implementing
-export function motion(n, func) {
-    for (i = 0; i < n; i++) {
+// Need to add when using dw it deletes further up after the current lin ends.
+export function motionCommand(func, count) {
+    for (let i = 0; i < count; i++) {
         func();
     }
 }
