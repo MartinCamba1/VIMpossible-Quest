@@ -114,19 +114,20 @@ export function resetGlobals() {
 
         ["x",  { action: deleteChar,      unlocked: true, type: ["deletion", "single-char-deletion"] }],
         ["dd", { action: deleteLine,      unlocked: true, type: ["deletion"] }],
-
         ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
         ["d$", { action: d$Command,       unlocked: true, type: ["deletion"]}],
         ["de", { action: deCommand,       unlocked: true, type: ["deletion"]}],
-        ["d^", { action: dStrechaCommand, unlocked: true, type: ["deletion"]}],
+        ["d^", { action: deleteToStartOfLine, unlocked: true, type: ["deletion"]}],
 
         ["i",  { action: insertCommand,   unlocked: true, type: ["insertion"] }],
-        ["A",  { action: appendAtEndLine, unlocked: false, type: ["end-line-insertion"] }],
+        ["A",  { action: appendAtEndLine, unlocked: true, type: ["end-line-insertion"] }],
 
         ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
         ["b",  { action: bCommand,        unlocked: true,  type: ["movement"] }],
         ["e",  { action: eCommand,        unlocked: true,   type: ["movement"]}],
+        
         ["$",  { action: $Command,        unlocked: true,   type: ["movement"]}],
+        ["^",  { action: startOfLineCommand, unlocked: true, type: ["movement"]}],
 
         ["gg", { action: ggCommand,       unlocked: false,  type: ["movement"]}],
         ["G",  { action: GCommand,        unlocked: false,  type: ["movement"]}],
