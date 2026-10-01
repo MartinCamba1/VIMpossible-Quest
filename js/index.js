@@ -108,6 +108,7 @@ function parseInput(event) {
     
 
     if (state.commands.get(input) && state.commands.get(input).unlocked === true) {
+        console.log(state.commands);
         inputBufferDiv.style.display = "none";
         inputBufferText.textContent = "";
         inputBuffer.length = 0;
@@ -238,9 +239,6 @@ function handleKeyPress(event) {
     }
 }
 
-
-
-
 /*----------------------------------*/
 
 
@@ -251,6 +249,11 @@ function handleKeyPress(event) {
 export function insertCommand() {
     state.mode = "insert";
     modeEl.textContent = "INSERT";
+
+    const blankSpan = document.createElement("span");
+    state.spans[state.cursor.row][state.characters[state.cursor.row].length - 1].after(blankSpan);
+    state.spans[state.cursor.row].push(blankSpan);
+    state.blankInsertSpans.push(blankSpan);
 }
 
 // Function which exits the INSERT mode.
@@ -259,6 +262,11 @@ export function exitInsertMode() {
     updateCursor();
     state.mode = "normal";
     modeEl.textContent = "NORMAL";
+
+    for (const span of state.blankInsertSpans) {
+        span.remove();
+    }
+    state.blankInsertSpans.length = 0;
 }
 
 // Function which handles parsing the text and other inputs such as Enter.
@@ -312,8 +320,13 @@ export function handleInsertMode(event) {
 
         state.cursor.row++;
         state.cursor.col = 0;
+
+        const blankSpan = document.createElement("span");
+        state.spans[state.cursor.row][state.characters[row] - 1].after(blankSpan);
+        state.blankInsertSpans.push(blankSpan);
     }
     /*      Need to fix this part when trying to delete a blank line and also update the use of br elements after deleting a line       */
+    /*      Need to add a check whether a delete char or delete word was completed using this.      */
     else if ((event.key === "Backspace" || event.key === "Delete") &&
             (state.characters[row].length >= 0) && ((col != 0) || (row != 0) )) {
         if (col === 0) {
@@ -371,6 +384,8 @@ function startRound() {
     state.cursor.row = 0;
     state.paused = false;
 
+    state.mode = "normal";
+    modeEl.textContent = "NORMAL";
     
     state.remainingTime = 20;
     state.timeOfStart = Date.now();

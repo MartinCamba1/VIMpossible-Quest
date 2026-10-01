@@ -20,7 +20,9 @@ import {
     motionCommand,
     $Command,
     d$Command,
-    deCommand
+    deCommand,
+    deleteToStartOfLine,
+    startOfLineCommand
 } from "./commands.js";
 
 import {
@@ -72,22 +74,27 @@ export const state = {
         ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
         ["d$", { action: d$Command,       unlocked: true, type: ["deletion"]}],
         ["de", { action: deCommand,       unlocked: true, type: ["deletion"]}],
+        ["d^", { action: deleteToStartOfLine, unlocked: true, type: ["deletion"]}],
 
         ["i",  { action: insertCommand,   unlocked: true, type: ["insertion"] }],
-        ["A",  { action: appendAtEndLine, unlocked: false, type: ["end-line-insertion"] }],
+        ["A",  { action: appendAtEndLine, unlocked: true, type: ["end-line-insertion"] }],
 
-        ["w",  { action: wCommand,        unlocked: false,  type: ["movement"] }],
-        ["b",  { action: bCommand,        unlocked: false,  type: ["movement"] }],
+        ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
+        ["b",  { action: bCommand,        unlocked: true,  type: ["movement"] }],
         ["e",  { action: eCommand,        unlocked: true,   type: ["movement"]}],
+        
         ["$",  { action: $Command,        unlocked: true,   type: ["movement"]}],
+        ["^",  { action: startOfLineCommand, unlocked: true, type: ["movement"]}],
 
         ["gg", { action: ggCommand,       unlocked: false,  type: ["movement"]}],
         ["G",  { action: GCommand,        unlocked: false,  type: ["movement"]}],
         ["Motion", {action: motionCommand,        unlocked: true,   type: ["motion"]}]
     ]),
     availableCommands: ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"],        /* A list of commands available to be unlocked. */
-    unlockedCommandsDivs: []        /* All the new divs for the commands the player unlocks, used for reseting the round. */
+    unlockedCommandsDivs: [],        /* All the new divs for the commands the player unlocks, used for reseting the round. */
 
+
+    blankInsertSpans: []            /* An array of spans that can be created when a user is in insert mode and wants to append at the end of the line so he has to be able to get there. */
 }
 
 // Resets all of the values to the starting ones when restarting the game
@@ -105,19 +112,28 @@ export function resetGlobals() {
         ["k",  { action: moveUp,          unlocked: true,  type: ["movement"] }],
         ["l",  { action: moveRight,       unlocked: true,  type: ["movement"] }],
 
-        ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
-        ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
-        ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
+        ["x",  { action: deleteChar,      unlocked: true, type: ["deletion", "single-char-deletion"] }],
+        ["dd", { action: deleteLine,      unlocked: true, type: ["deletion"] }],
 
-        ["i",  { action: insertCommand,   unlocked: false, type: ["insertion"] }],
-        ["A",  { action: appendAtEndLine, unlocked: false, type: ["insertion"] }],
+        ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
+        ["d$", { action: d$Command,       unlocked: true, type: ["deletion"]}],
+        ["de", { action: deCommand,       unlocked: true, type: ["deletion"]}],
+        ["d^", { action: dStrechaCommand, unlocked: true, type: ["deletion"]}],
+
+        ["i",  { action: insertCommand,   unlocked: true, type: ["insertion"] }],
+        ["A",  { action: appendAtEndLine, unlocked: false, type: ["end-line-insertion"] }],
 
         ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
-        ["b",  { action: bCommand,        unlocked: false, type: ["movement"] }],
-        ["gg", { action: ggCommand,       unlocked: false, type: ["movement"]}],
-        ["G",  { action: GCommand,        unlocked: false, type: ["movement"]}]
+        ["b",  { action: bCommand,        unlocked: true,  type: ["movement"] }],
+        ["e",  { action: eCommand,        unlocked: true,   type: ["movement"]}],
+        ["$",  { action: $Command,        unlocked: true,   type: ["movement"]}],
+
+        ["gg", { action: ggCommand,       unlocked: false,  type: ["movement"]}],
+        ["G",  { action: GCommand,        unlocked: false,  type: ["movement"]}],
+        ["Motion", {action: motionCommand,        unlocked: true,   type: ["motion"]}]
     ]);
     state.availableCommands = ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"];
+    state.mode = "normal";
 
     for (const div of state.unlockedCommandsDivs) {
         div.remove();

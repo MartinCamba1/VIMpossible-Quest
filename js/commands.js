@@ -99,7 +99,7 @@ export function bCommand() {
     state.cursor.col = pos.col;
     updateCursor();
 }
-
+// Moves cursor to the end of the current word or if no word is under the cursor to the end of the next word
 export function eCommand() {
     const pos = findNextWordE(state.cursor.row, state.cursor.col);
     let row = pos.row;
@@ -110,10 +110,18 @@ export function eCommand() {
     updateCursor();
 }
 
+// Moves the cursor to the end of the line.
 export function $Command() {
     const pos = findEndOfLine(state.cursor.row, state.cursor.col);
     state.cursor.col = pos.col;
 
+    updateCursor();
+}
+
+// Moves the cursor to the start of the line.
+export function startOfLineCommand() {
+    state.cursor.col = 0;
+    
     updateCursor();
 }
 
@@ -143,6 +151,50 @@ export function d$Command() {
 
 export function deCommand() {
     dCommand("e");
+}
+
+export function deleteToStartOfLine() {
+    const row = state.cursor.row;
+    const col = state.cursor.col;
+
+    const start = findStartOfLine(row, col);
+
+    // Already at the first non-whitespace character.
+    if (col === start.col) {
+        return false;
+    }
+
+    let needNewChallenge = false;
+
+    // Delete from first non-whitespace character
+    // up to, but NOT including, the cursor.
+    for (let i = start.col; i < col; i++) {
+        const span = state.spans[row][i];
+
+        if (isChallengeFinished("deletion", span)) {
+            needNewChallenge = true;
+        }
+
+        span.remove();
+    }
+
+    state.characters[row].splice(
+        start.col,
+        col - start.col
+    );
+
+    state.spans[row].splice(
+        start.col,
+        col - start.col
+    );
+
+    ensureRowHasSpan(row);
+
+    if (needNewChallenge) {
+        pickNewChallenge();
+    }
+
+    return true;
 }
 
 
@@ -243,6 +295,17 @@ export function dCommand(type) {
     else if (type === "$") {
 
         pos = findEndOfLine(row, col);
+
+    }
+    // Doesnt work needs fixing
+    else if (type === "^") {
+
+        pos = findStartOfLine(row, col);
+        col = Math.max(col - 1, 0);
+
+        let temp = col;
+        col = pos.col;
+        pos.col = temp;
 
     }
 
@@ -495,21 +558,50 @@ export function appendAtEndLine() {
 // !!!!!!!!!!!!!!!!!!!!!!!!!!! Works weirdly with punctuations, needs fixing.
 // Helper Function used in wCommand and dwCommand
 function findNextWordW(inputRow, inputCol) {
-
     let row = inputRow;
-    let col = inputCol + 1;
+    let col = inputCol;
 
     while (true) {
 
-        // Skip the rest of the current word
-        while (
+        // If we're currently on a word character,
+        // skip the rest of the word.
+        if (
+            col < state.characters[row].length &&
+            isWordChar(state.characters[row][col])
+        ) {
+            while (
+                col < state.characters[row].length &&
+                isWordChar(state.characters[row][col])
+            ) {
+                col++;
+            }
+
+            // If punctuation immediately follows the word,
+            // stop on it.
+            if (
+                col < state.characters[row].length &&
+                state.characters[row][col] !== " "
+            ) {
+                return { row, col };
+            }
+        }
+
+        // If we're currently on punctuation, skip the
+        // entire punctuation group.
+        else if (
             col < state.characters[row].length &&
             state.characters[row][col] !== " "
         ) {
-            col++;
+            while (
+                col < state.characters[row].length &&
+                !isWordChar(state.characters[row][col]) &&
+                state.characters[row][col] !== " "
+            ) {
+                col++;
+            }
         }
 
-        // Skip spaces
+        // Skip spaces.
         while (
             col < state.characters[row].length &&
             state.characters[row][col] === " "
@@ -517,12 +609,12 @@ function findNextWordW(inputRow, inputCol) {
             col++;
         }
 
-        // Found the beginning of the next word
+        // Found the next word/punctuation.
         if (col < state.characters[row].length) {
             return { row, col };
         }
 
-        // Reached the end of this logical row
+        // Move to the next logical row.
         if (row >= state.characters.length - 1) {
             return {
                 row,
@@ -530,11 +622,10 @@ function findNextWordW(inputRow, inputCol) {
             };
         }
 
-        // Continue at the beginning of the next logical row
         row++;
         col = 0;
 
-        // Skip leading spaces on the next row
+        // Skip indentation.
         while (
             col < state.characters[row].length &&
             state.characters[row][col] === " "
@@ -546,6 +637,10 @@ function findNextWordW(inputRow, inputCol) {
             return { row, col };
         }
     }
+}
+
+function isWordChar(char) {
+    return /[A-Za-z0-9_]/.test(char);
 }
 
 
@@ -699,6 +794,20 @@ function findPrevWord(inputRow, inputCol) {
 // Returns the position of the end of the current line
 function findEndOfLine(row, col) {
     return {row, col: state.spans[row].length - 1};
+}
+
+// Returns the position of the start of the current line
+function findStartOfLine(row, col) {
+    let start = 0;
+
+    while (
+        start < state.characters[row].length &&
+        state.characters[row][start] === " "
+    ) {
+        start++;
+    }
+
+    return { row, col: start };
 }
 
 // gg command jumps to the start of the terminal window
