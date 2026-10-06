@@ -4,7 +4,7 @@ A browser-based roguelite game for learning and practicing Vim commands.
 
 VIMpossible Quest combines a **Vim trainer** with **roguelite mechanics**. Instead of simply practicing commands in a static editor, you complete challenges, earn points, unlock new skills, and progress through increasingly difficult rounds.
 
-![VIMpossible Quest gameplay](./data/visuals/screenshot.png)
+![VIMpossible Quest gameplay](./data/visuals/terminalScreenshot.png)
 
 ## Features
 
