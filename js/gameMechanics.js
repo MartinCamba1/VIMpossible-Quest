@@ -1,4 +1,4 @@
-import { state } from "./globals.js";
+import { state, writeWordChallengeWords } from "./globals.js";
 import {
     pointsAudio
 } from "./audio.js";
@@ -111,7 +111,8 @@ function findEdgeOfWord(row, col) {
 
 function writeWordChallenge() {
 
-    const word = "test";
+    const randWordsArrayLen = writeWordChallengeWords.length;
+    const word = writeWordChallengeWords[Math.floor(Math.random() * randWordsArrayLen)];
 
     let row = Math.floor(Math.random() * state.characters.length);
 

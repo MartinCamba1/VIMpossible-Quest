@@ -59,7 +59,7 @@ export const state = {
 
     soundDisabled: false,       /* Bool value deciding whether SFX play. */
 
-    unlockedTypes: ["movement"],     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
+    unlockedTypes: ["movement", "insertion"],     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
                                                 // Possible values: "movement", "deletion", "single-char-deletion", "insertion"
     
     unlockedCommands: ["h", "j", "k", "l"],     /* Unlocked commands this run. */
@@ -297,4 +297,64 @@ export const codeLines = [
 
     "if player['score'] > 100:",
     "    player['level'] += 1"
+];
+
+export const writeWordChallengeWords = [
+    "data",
+    "value",
+    "item",
+    "user",
+    "name",
+    "file",
+    "path",
+    "node",
+    "tree",
+    "list",
+    "array",
+    "index",
+    "count",
+    "input",
+    "output",
+    "result",
+    "error",
+    "query",
+    "table",
+    "cache",
+    "buffer",
+    "stack",
+    "queue",
+    "loop",
+    "code",
+    "test",
+    "debug",
+    "build",
+    "run",
+    "main",
+    "init",
+    "load",
+    "save",
+    "read",
+    "write",
+    "parse",
+    "print",
+    "return",
+    "append",
+    "remove",
+    "insert",
+    "update",
+    "create",
+    "delete",
+    "search",
+    "sort",
+    "filter",
+    "map",
+    "check",
+    "handle",
+    "process",
+    "createUser",
+    "getValue",
+    "parseData",
+    "loadFile",
+    "saveData",
+    "checkInput"
 ];
