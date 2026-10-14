@@ -63,5 +63,35 @@ export const commandData = {
         name: "Previous Word",
         description: "Jump backwards to the start of a word",
         category: "Motion"
+    },
+
+    e: {
+        name: "End of Word",
+        description: "Move the cursor to the end of the current or next word.",
+        category: "Motion"
+    },
+
+    "$": {
+        name: "End of Line",
+        description: "Move the cursor to the last character of the line.",
+        category: "Navigation"
+    },
+
+    "^": {
+        name: "First Non-Blank Character",
+        description: "Move the cursor to the first non-blank character of the line.",
+        category: "Navigation"
+    },
+
+    gg: {
+        name: "Go to First Line",
+        description: "Move the cursor to the first line of the file.",
+        category: "Navigation"
+    },
+
+    G: {
+        name: "Go to Last Line",
+        description: "Move the cursor to the last line of the file.",
+        category: "Navigation"
     }
 };
