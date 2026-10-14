@@ -50,8 +50,9 @@ export const state = {
 
     timeOfStart: null,    /* A var for when the challenge started so points can be awarded accordingly. */
     timer: undefined,       /* Timer var. */
-    remainingTime: 20,     /* Remaining time of the round. */
+    remainingTime: 30,     /* Remaining time of the round. */
     pausedTime: 0,         /* Time while the game is paused so it can be reduced from the total time of the challenge. */
+    round: 1,
 
     totalPoints: 0,       /* A number of points the player has gained throughout the run. */
     pointsThisRound: 0,      /* A number of points the player has gained this round. */
@@ -59,7 +60,7 @@ export const state = {
 
     soundDisabled: false,       /* Bool value deciding whether SFX play. */
 
-    unlockedTypes: ["movement", "insertion"],     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
+    unlockedTypes: ["movement"],     /* Unlocked types of challenges the user can get depending on the commands he has unlocked. */
                                                 // Possible values: "movement", "deletion", "single-char-deletion", "insertion"
     
     unlockedCommands: ["h", "j", "k", "l"],     /* Unlocked commands this run. */
@@ -69,28 +70,28 @@ export const state = {
         ["k",  { action: moveUp,          unlocked: true,  type: ["movement"] }],
         ["l",  { action: moveRight,       unlocked: true,  type: ["movement"] }],
 
-        ["x",  { action: deleteChar,      unlocked: true, type: ["deletion", "single-char-deletion"] }],
-        ["dd", { action: deleteLine,      unlocked: true, type: ["deletion"] }],
-        ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
-        ["d$", { action: d$Command,       unlocked: true, type: ["deletion"]}],
-        ["de", { action: deCommand,       unlocked: true, type: ["deletion"]}],
-        ["d^", { action: deleteToStartOfLine, unlocked: true, type: ["deletion"]}],
+        ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
+        ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
+        ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
+        ["d$", { action: d$Command,       unlocked: false, type: ["deletion"]}],
+        ["de", { action: deCommand,       unlocked: false, type: ["deletion"]}],
+        ["d^", { action: deleteToStartOfLine, unlocked: false, type: ["deletion"]}],
 
-        ["i",  { action: insertCommand,   unlocked: true, type: ["insertion"] }],
-        ["A",  { action: appendAtEndLine, unlocked: true, type: ["end-line-insertion"] }],
+        ["i",  { action: insertCommand,   unlocked: false, type: ["insertion"] }],
+        ["A",  { action: appendAtEndLine, unlocked: false, type: ["end-line-insertion"] }],
 
-        ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
-        ["b",  { action: bCommand,        unlocked: true,  type: ["movement"] }],
-        ["e",  { action: eCommand,        unlocked: true,   type: ["movement"]}],
+        ["w",  { action: wCommand,        unlocked: false,  type: ["movement"] }],
+        ["b",  { action: bCommand,        unlocked: false,  type: ["movement"] }],
+        ["e",  { action: eCommand,        unlocked: false,   type: ["movement"]}],
         
-        ["$",  { action: $Command,        unlocked: true,   type: ["movement"]}],
-        ["^",  { action: startOfLineCommand, unlocked: true, type: ["movement"]}],
+        ["$",  { action: $Command,        unlocked: false,   type: ["movement"]}],
+        ["^",  { action: startOfLineCommand, unlocked: false, type: ["movement"]}],
 
         ["gg", { action: ggCommand,       unlocked: false,  type: ["movement"]}],
         ["G",  { action: GCommand,        unlocked: false,  type: ["movement"]}],
-        ["Motion", {action: motionCommand,        unlocked: true,   type: ["motion"]}]
+        ["Motion", {action: motionCommand,        unlocked: false,   type: ["motion"]}]
     ]),
-    availableCommands: ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"],        /* A list of commands available to be unlocked. */
+    availableCommands: ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg", "Motion"],        /* A list of commands available to be unlocked. */
     unlockedCommandsDivs: [],        /* All the new divs for the commands the player unlocks, used for reseting the round. */
 
 
@@ -103,6 +104,9 @@ export function resetGlobals() {
     state.pointsScored = 0;
     state.totalPoints = 0;
 
+    state.remainingTime = 30;
+    state.round = 1;
+
     state.unlockedTypes = ["movement"];     
     
     state.unlockedCommands = ["h", "j", "k", "l"];     
@@ -112,28 +116,28 @@ export function resetGlobals() {
         ["k",  { action: moveUp,          unlocked: true,  type: ["movement"] }],
         ["l",  { action: moveRight,       unlocked: true,  type: ["movement"] }],
 
-        ["x",  { action: deleteChar,      unlocked: true, type: ["deletion", "single-char-deletion"] }],
-        ["dd", { action: deleteLine,      unlocked: true, type: ["deletion"] }],
-        ["dw", { action: dwCommand,       unlocked: true, type: ["deletion"] }],
-        ["d$", { action: d$Command,       unlocked: true, type: ["deletion"]}],
-        ["de", { action: deCommand,       unlocked: true, type: ["deletion"]}],
-        ["d^", { action: deleteToStartOfLine, unlocked: true, type: ["deletion"]}],
+        ["x",  { action: deleteChar,      unlocked: false, type: ["deletion", "single-char-deletion"] }],
+        ["dd", { action: deleteLine,      unlocked: false, type: ["deletion"] }],
+        ["dw", { action: dwCommand,       unlocked: false, type: ["deletion"] }],
+        ["d$", { action: d$Command,       unlocked: false, type: ["deletion"]}],
+        ["de", { action: deCommand,       unlocked: false, type: ["deletion"]}],
+        ["d^", { action: deleteToStartOfLine, unlocked: false, type: ["deletion"]}],
 
-        ["i",  { action: insertCommand,   unlocked: true, type: ["insertion"] }],
-        ["A",  { action: appendAtEndLine, unlocked: true, type: ["end-line-insertion"] }],
+        ["i",  { action: insertCommand,   unlocked: false, type: ["insertion"] }],
+        ["A",  { action: appendAtEndLine, unlocked: false, type: ["end-line-insertion"] }],
 
-        ["w",  { action: wCommand,        unlocked: true,  type: ["movement"] }],
-        ["b",  { action: bCommand,        unlocked: true,  type: ["movement"] }],
-        ["e",  { action: eCommand,        unlocked: true,   type: ["movement"]}],
+        ["w",  { action: wCommand,        unlocked: false,  type: ["movement"] }],
+        ["b",  { action: bCommand,        unlocked: false,  type: ["movement"] }],
+        ["e",  { action: eCommand,        unlocked: false,   type: ["movement"]}],
         
-        ["$",  { action: $Command,        unlocked: true,   type: ["movement"]}],
-        ["^",  { action: startOfLineCommand, unlocked: true, type: ["movement"]}],
+        ["$",  { action: $Command,        unlocked: false,   type: ["movement"]}],
+        ["^",  { action: startOfLineCommand, unlocked: false, type: ["movement"]}],
 
         ["gg", { action: ggCommand,       unlocked: false,  type: ["movement"]}],
         ["G",  { action: GCommand,        unlocked: false,  type: ["movement"]}],
-        ["Motion", {action: motionCommand,        unlocked: true,   type: ["motion"]}]
+        ["Motion", {action: motionCommand,        unlocked: false,   type: ["motion"]}]
     ]);
-    state.availableCommands = ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg"];
+    state.availableCommands = ["x", "dd", "i", "A", "w", "dw", "b", "G", "gg", "Motion"];
     state.mode = "normal";
 
     for (const div of state.unlockedCommandsDivs) {

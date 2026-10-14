@@ -126,7 +126,6 @@ function writeWordChallenge() {
         col = 0;
     }
 
-    console.log(row, col);
 
     const ghostSpans = [];
 
@@ -193,7 +192,6 @@ export function isChallengeFinished(typeOfAction, span) {
     let row = state.cursor.row;
 
     let penalty = false;
-    console.log(typeOfAction);
 
     if (typeOfAction.includes("movement")) {
         if (state.challenge?.type === "move-to-char") {
@@ -213,7 +211,6 @@ export function isChallengeFinished(typeOfAction, span) {
                 
                 span.classList.remove("delete-word-challenge");
                 state.challenge.targets.splice(state.challenge.targets.findIndex((el) => el === span), 1);
-                console.log(state.challenge.targets);
             }
 
             if (state.challenge.targets.length === 0) {
@@ -277,7 +274,6 @@ export function pickNewChallenge() {
             writeWordChallenge
         ]]
     ]);
-    console.log(type);
     const i = Math.floor(Math.random() * typesOfChallenges.get(type).length);
     const challenge = typesOfChallenges.get(type)[i];
     state.challengeStartTime = Date.now();

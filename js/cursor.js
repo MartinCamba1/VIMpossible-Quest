@@ -73,12 +73,6 @@ export function updateCursor() {
         block: "nearest",
         inline: "nearest"
     });
-
-    console.log(
-    state.cursor.row,
-    state.cursor.col,
-    state.spans[state.cursor.row]
-);
 }
 
 export function isElemAtEdge(el) {

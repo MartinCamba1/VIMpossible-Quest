@@ -108,7 +108,6 @@ function parseInput(event) {
     
 
     if (state.commands.get(input) && state.commands.get(input).unlocked === true) {
-        console.log(state.commands);
         inputBufferDiv.style.display = "none";
         inputBufferText.textContent = "";
         inputBuffer.length = 0;
@@ -124,7 +123,6 @@ function parseInput(event) {
 
         operator += motion;
         const func = state.commands.get(operator);
-        console.log(func);
 
         if (func !== undefined && count > 1 && motion != "" && func.unlocked === true) {
             motionCommand(func.action, count);
@@ -173,7 +171,6 @@ function tryParseMotion(input) {
         i += 1;
     }
 
-    console.log(operator, count, motion);
     return {operator, count, motion};
 }
 
@@ -387,7 +384,6 @@ function startRound() {
     state.mode = "normal";
     modeEl.textContent = "NORMAL";
     
-    state.remainingTime = 20;
     state.timeOfStart = Date.now();
     state.timer = undefined;
     resumeTimer();

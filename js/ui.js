@@ -219,7 +219,9 @@ export function stopTimer() {
         const btn2 = document.getElementById("command-2");
         const btn3 = document.getElementById("command-3");
 
-        state.pointsNeeded = Math.round(state.pointsNeeded * 1.25);
+        state.round += 1;
+        scaleDifficultyTime();
+        scaleDifficultyPoints();
         pointsNeeded = state.pointsNeeded;
         
         endRoundDg.style.display = "block";
@@ -230,7 +232,6 @@ export function stopTimer() {
         btn2.onclick = () => unlockCommand(idxs, 1);
         btn3.onclick = () => unlockCommand(idxs, 2);
     }
-    console.log(pointsScored, pointsNeeded);
     pointsScoredSpan.textContent = pointsScored;
     state.pointsThisRound = 0;
     pointsNeededEl.textContent = pointsNeeded;
@@ -238,7 +239,13 @@ export function stopTimer() {
     dialogEl.showModal();
 }
 
+function scaleDifficultyTime() {
+    state.remainingTime = Math.max(10, Math.round(30 * Math.pow(0.95, state.round - 1)));
+}
 
+function scaleDifficultyPoints() {
+    state.pointsNeeded = Math.round(1000 * Math.pow(1.1, state.round - 1));
+}
 
 
 /*----------------------------------*/
